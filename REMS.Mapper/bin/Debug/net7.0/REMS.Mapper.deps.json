@@ -1,0 +1,64 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v7.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v7.0": {
+      "REMS.Mapper/1.0.0": {
+        "dependencies": {
+          "REMS.Models": "1.0.0",
+          "REMS.Shared": "1.0.0"
+        },
+        "runtime": {
+          "REMS.Mapper.dll": {}
+        }
+      },
+      "REMS.Database/1.0.0": {
+        "runtime": {
+          "REMS.Database.dll": {}
+        }
+      },
+      "REMS.Models/1.0.0": {
+        "dependencies": {
+          "REMS.Database": "1.0.0"
+        },
+        "runtime": {
+          "REMS.Models.dll": {}
+        }
+      },
+      "REMS.Shared/1.0.0": {
+        "dependencies": {
+          "REMS.Database": "1.0.0",
+          "REMS.Models": "1.0.0"
+        },
+        "runtime": {
+          "REMS.Shared.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "REMS.Mapper/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "REMS.Database/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "REMS.Models/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "REMS.Shared/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

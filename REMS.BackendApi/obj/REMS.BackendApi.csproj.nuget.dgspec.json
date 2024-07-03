@@ -1,0 +1,522 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.BackendApi\\REMS.BackendApi.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.BackendApi\\REMS.BackendApi.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.BackendApi\\REMS.BackendApi.csproj",
+        "projectName": "REMS.BackendApi",
+        "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.BackendApi\\REMS.BackendApi.csproj",
+        "packagesPath": "C:\\Users\\hlain\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.BackendApi\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\hlain\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Database\\REMS.Database.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Database\\REMS.Database.csproj"
+              },
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Mapper\\REMS.Mapper.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Mapper\\REMS.Mapper.csproj"
+              },
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Models\\REMS.Models.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Models\\REMS.Models.csproj"
+              },
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Modules\\REMS.Modules.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Modules\\REMS.Modules.csproj"
+              },
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Shared\\REMS.Shared.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Shared\\REMS.Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.OpenApi": {
+              "target": "Package",
+              "version": "[7.0.20, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[7.0.19, 7.0.19]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Database\\REMS.Database.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Database\\REMS.Database.csproj",
+        "projectName": "REMS.Database",
+        "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Database\\REMS.Database.csproj",
+        "packagesPath": "C:\\Users\\hlain\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Database\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\hlain\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Mapper\\REMS.Mapper.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Mapper\\REMS.Mapper.csproj",
+        "projectName": "REMS.Mapper",
+        "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Mapper\\REMS.Mapper.csproj",
+        "packagesPath": "C:\\Users\\hlain\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Mapper\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\hlain\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Models\\REMS.Models.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Models\\REMS.Models.csproj"
+              },
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Shared\\REMS.Shared.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Shared\\REMS.Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Models\\REMS.Models.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Models\\REMS.Models.csproj",
+        "projectName": "REMS.Models",
+        "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Models\\REMS.Models.csproj",
+        "packagesPath": "C:\\Users\\hlain\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Models\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\hlain\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Database\\REMS.Database.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Database\\REMS.Database.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Modules\\REMS.Modules.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Modules\\REMS.Modules.csproj",
+        "projectName": "REMS.Modules",
+        "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Modules\\REMS.Modules.csproj",
+        "packagesPath": "C:\\Users\\hlain\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Modules\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\hlain\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Database\\REMS.Database.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Database\\REMS.Database.csproj"
+              },
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Mapper\\REMS.Mapper.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Mapper\\REMS.Mapper.csproj"
+              },
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Models\\REMS.Models.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Models\\REMS.Models.csproj"
+              },
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Shared\\REMS.Shared.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Shared\\REMS.Shared.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Shared\\REMS.Shared.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Shared\\REMS.Shared.csproj",
+        "projectName": "REMS.Shared",
+        "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Shared\\REMS.Shared.csproj",
+        "packagesPath": "C:\\Users\\hlain\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Shared\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\hlain\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net7.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net7.0": {
+            "targetAlias": "net7.0",
+            "projectReferences": {
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Database\\REMS.Database.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Database\\REMS.Database.csproj"
+              },
+              "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Models\\REMS.Models.csproj": {
+                "projectPath": "C:\\Users\\hlain\\source\\repos\\REMS_csharp\\REMS.Models\\REMS.Models.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net7.0": {
+          "targetAlias": "net7.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[7.0.19, 7.0.19]"
+            }
+          ],
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.300\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

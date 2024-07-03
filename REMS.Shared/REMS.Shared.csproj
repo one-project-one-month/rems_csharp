@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\REMS.Database\REMS.Database.csproj" />
+    <ProjectReference Include="..\REMS.Models\REMS.Models.csproj" />
+  </ItemGroup>
+
+</Project>

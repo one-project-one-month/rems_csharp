@@ -1,0 +1,12 @@
+C:\Users\hlain\source\repos\REMS_csharp\REMS\REMS.Database\bin\Debug\net7.0\REMS.Database.deps.json
+C:\Users\hlain\source\repos\REMS_csharp\REMS\REMS.Database\bin\Debug\net7.0\REMS.Database.dll
+C:\Users\hlain\source\repos\REMS_csharp\REMS\REMS.Database\bin\Debug\net7.0\REMS.Database.pdb
+C:\Users\hlain\source\repos\REMS_csharp\REMS\REMS.Database\obj\Debug\net7.0\REMS.Database.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hlain\source\repos\REMS_csharp\REMS\REMS.Database\obj\Debug\net7.0\REMS.Database.AssemblyInfoInputs.cache
+C:\Users\hlain\source\repos\REMS_csharp\REMS\REMS.Database\obj\Debug\net7.0\REMS.Database.AssemblyInfo.cs
+C:\Users\hlain\source\repos\REMS_csharp\REMS\REMS.Database\obj\Debug\net7.0\REMS.Database.csproj.CoreCompileInputs.cache
+C:\Users\hlain\source\repos\REMS_csharp\REMS\REMS.Database\obj\Debug\net7.0\REMS.Database.sourcelink.json
+C:\Users\hlain\source\repos\REMS_csharp\REMS\REMS.Database\obj\Debug\net7.0\REMS.Database.dll
+C:\Users\hlain\source\repos\REMS_csharp\REMS\REMS.Database\obj\Debug\net7.0\refint\REMS.Database.dll
+C:\Users\hlain\source\repos\REMS_csharp\REMS\REMS.Database\obj\Debug\net7.0\REMS.Database.pdb
+C:\Users\hlain\source\repos\REMS_csharp\REMS\REMS.Database\obj\Debug\net7.0\ref\REMS.Database.dll
