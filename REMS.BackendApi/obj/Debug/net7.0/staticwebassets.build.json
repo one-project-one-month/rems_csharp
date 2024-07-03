@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "f2PfwZGZnCLlCp8KDs76qUDFSSyaDbvLB9lrg4bg4OI=",
+  "Source": "REMS.BackendApi",
+  "BasePath": "_content/REMS.BackendApi",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
