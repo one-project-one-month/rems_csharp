@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35017.193
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REMS.BackendApi", "REMS.BackendApi\REMS.BackendApi.csproj", "{EB10FBE7-48AD-4FEA-939D-818918FC456A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REMS.BackendApi", "REMS.BackendApi\REMS.BackendApi.csproj", "{EB10FBE7-48AD-4FEA-939D-818918FC456A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{C8E774DC-69FC-473E-A65A-188A4873A2D9}"
 EndProject
@@ -13,17 +13,22 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Modules", "Modules", "{F27D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{482ADF80-CB00-4660-A338-0234A05E9F33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REMS.App", "REMS.App\REMS.App.csproj", "{C3D4F937-B230-40E3-AA0F-9713AD6FA4DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REMS.App", "REMS.App\REMS.App.csproj", "{C3D4F937-B230-40E3-AA0F-9713AD6FA4DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REMS.Modules", "REMS.Modules\REMS.Modules.csproj", "{F848104F-696C-4D88-98AF-BA9EF54B5ACD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REMS.Modules", "REMS.Modules\REMS.Modules.csproj", "{F848104F-696C-4D88-98AF-BA9EF54B5ACD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REMS.Database", "REMS.Database\REMS.Database.csproj", "{55F47526-BE84-40FA-A143-D014FD1E623F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REMS.Database", "REMS.Database\REMS.Database.csproj", "{55F47526-BE84-40FA-A143-D014FD1E623F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REMS.Mapper", "REMS.Mapper\REMS.Mapper.csproj", "{B3B8E1A6-4A31-4555-9C5D-E09A5F70BCE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REMS.Mapper", "REMS.Mapper\REMS.Mapper.csproj", "{B3B8E1A6-4A31-4555-9C5D-E09A5F70BCE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REMS.Models", "REMS.Models\REMS.Models.csproj", "{2218B973-DB43-4B64-81C3-44409D6A22A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REMS.Models", "REMS.Models\REMS.Models.csproj", "{2218B973-DB43-4B64-81C3-44409D6A22A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "REMS.Shared", "REMS.Shared\REMS.Shared.csproj", "{EA32D21E-D173-49B7-8E8D-3868E1A953E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "REMS.Shared", "REMS.Shared\REMS.Shared.csproj", "{EA32D21E-D173-49B7-8E8D-3868E1A953E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Documents", "_Documents", "{5D8114B1-FFB1-4D66-95C1-CC7CA617CE96}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
