@@ -28,6 +28,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Documents", "_Documents", "{5D8114B1-FFB1-4D66-95C1-CC7CA617CE96}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
+		REMS.sql = REMS.sql
 	EndProjectSection
 EndProject
 Global
