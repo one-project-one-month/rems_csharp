@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using REMS.Models;
-using REMS.Models.Property;
-using REMS.Models.Review;
-using REMS.Modules.Features.Property;
-
-namespace REMS.Modules.Features.Review;
+﻿namespace REMS.Modules.Features.Review;
 
 public class BL_Review
 {

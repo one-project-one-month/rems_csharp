@@ -1,17 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using REMS.Database.AppDbContextModels;
-using REMS.Mapper;
-using REMS.Models;
-using REMS.Models.Custom;
-using REMS.Models.Property;
-using REMS.Models.Review;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace REMS.Modules.Features.Review;
+﻿namespace REMS.Modules.Features.Review;
 
 public class DA_Review
 {

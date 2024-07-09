@@ -1,15 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using REMS.Database.AppDbContextModels;
-using REMS.Mapper;
-using REMS.Models;
-using REMS.Models.Agent;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace REMS.Modules.Features.Agent;
+﻿namespace REMS.Modules.Features.Agent;
 
 public class DA_Agent
 {

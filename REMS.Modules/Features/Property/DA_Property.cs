@@ -1,11 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using REMS.Database.AppDbContextModels;
-using REMS.Mapper;
-using REMS.Models.Property;
-using REMS.Models.Custom;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
-
-namespace REMS.Modules.Features.Property;
+﻿namespace REMS.Modules.Features.Property;
 
 public class DA_Property
 {

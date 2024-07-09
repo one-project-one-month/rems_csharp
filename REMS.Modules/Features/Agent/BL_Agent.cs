@@ -1,13 +1,4 @@
-﻿using REMS.Models.Agent;
-using REMS.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.IdentityModel.Tokens;
-
-namespace REMS.Modules.Features.Agent;
+﻿namespace REMS.Modules.Features.Agent;
 
 public class BL_Agent
 {
