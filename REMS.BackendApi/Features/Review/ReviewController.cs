@@ -1,0 +1,63 @@
+﻿using Azure;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using REMS.Models.Review;
+using REMS.Modules.Features.Review;
+
+namespace REMS.BackendApi.Features.Review
+{
+    [Route("api/v1/reviews")]
+    [ApiController]
+    public class ReviewController : ControllerBase
+    {
+        public readonly BL_Review _blReview;
+
+        public ReviewController(BL_Review blReview)
+        {
+            _blReview = blReview;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetReview()
+        {
+            try
+            {
+                var reviewList = await _blReview.GetReview();
+                return Ok(reviewList);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{reviewId}")]
+        public async Task<IActionResult> GetReviewById(int reviewId)
+        {
+            try
+            {
+                var response = await _blReview.GetReviewById(reviewId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateReview(ReviewModel requestModel)
+        {
+            try
+            {
+                var customer = await _blReview.CreateReview(requestModel);
+                return Ok(customer);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            }
+
+        }
+    }
+}

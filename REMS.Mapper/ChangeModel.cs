@@ -1,6 +1,7 @@
 ﻿using REMS.Database.AppDbContextModels;
 using REMS.Models.Agent;
 using REMS.Models.Property;
+using REMS.Models.Review;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -84,6 +85,40 @@ namespace REMS.Mapper
             };
 
             return propertyModel;
+        }
+
+        #endregion
+
+        #region Review
+
+        public static ReviewModel Change(this Review dataModel)
+        {
+            var reviewModel = new ReviewModel()
+            {
+                ReviewId = dataModel.ReviewId,
+                UserId = dataModel.UserId,
+                PropertyId = dataModel.PropertyId,
+                Rating = dataModel.Rating,
+                Comments = dataModel.Comments,
+                DateCreated = dataModel.DateCreated
+            };
+
+            return reviewModel;
+        }
+
+        public static Review Change(this ReviewModel dataModel)
+        {
+            var review = new Review()
+            {
+                ReviewId = dataModel.ReviewId,
+                UserId = dataModel.UserId,
+                PropertyId = dataModel.PropertyId,
+                Rating = dataModel.Rating,
+                Comments = dataModel.Comments,
+                DateCreated = dataModel.DateCreated
+            };
+
+            return review;
         }
 
         #endregion
