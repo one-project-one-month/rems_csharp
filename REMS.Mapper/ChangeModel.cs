@@ -45,42 +45,41 @@ public static class ChangeModel
 
     #endregion
 
-    
-        #region Client
-        public static User ChangeUser(this ClientRequestModel requestModel)
+    #region Client
+    public static User ChangeUser(this ClientRequestModel requestModel)
+    {
+        string firstName = requestModel.FirstName ?? string.Empty;
+        string lastName = requestModel.LastName ?? string.Empty;
+        string Name = string.Concat(firstName, (!string.IsNullOrEmpty(firstName) ? " " : string.Empty), lastName);
+        User user = new User
         {
-            string firstName = requestModel.FirstName ?? string.Empty;
-            string lastName = requestModel.LastName ?? string.Empty;
-            string Name = string.Concat(firstName, (!string.IsNullOrEmpty(firstName) ? " ": string.Empty), lastName);
-            User user = new User
-            {
-                Name = Name,
-                Email = requestModel.Email!,
-                Password = requestModel.Password!,
-                Phone = requestModel.Phone,
-                Role = "Client",
-                DateCreated = requestModel.DateCreate
-            };
-            return user;
-        }
+            Name = Name,
+            Email = requestModel.Email!,
+            Password = requestModel.Password!,
+            Phone = requestModel.Phone,
+            Role = "Client",
+            DateCreated = requestModel.DateCreate
+        };
+        return user;
+    }
 
-        public static Client Change(this ClientRequestModel requestModel)
+    public static Client Change(this ClientRequestModel requestModel)
+    {
+        Client client = new Client
         {
-            Client client = new Client
-            {
-                UserId = requestModel.UserId,
-                AgentId = requestModel.AgentId,
-                FirstName = requestModel.FirstName,
-                LastName = requestModel.LastName,
-                Phone = requestModel.Phone,
-                Email = requestModel.Email,
-                Address = requestModel.Address,
-            };
-            return client;
-        }
-        #endregion
+            UserId = requestModel.UserId,
+            AgentId = requestModel.AgentId,
+            FirstName = requestModel.FirstName,
+            LastName = requestModel.LastName,
+            Phone = requestModel.Phone,
+            Email = requestModel.Email,
+            Address = requestModel.Address,
+        };
+        return client;
+    }
+    #endregion
 
-        #region Property
+    #region Property
 
     public static PropertyModel Change(this Property dataModel)
     {
