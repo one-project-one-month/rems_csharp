@@ -1,4 +1,6 @@
-﻿using System;
+﻿using REMS.Models.Agent;
+using REMS.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,6 +15,12 @@ namespace REMS.Modules.Features.Agent
         public BL_Agent(DA_Agent daAgent)
         {
             _daAgent = daAgent;
+        }
+
+        public async Task<MessageResponseModel> CreateAgentAsync(AgentRequestModel requestModel)
+        {
+            var response = await _daAgent.CreateAgentAsync(requestModel);
+            return response;
         }
     }
 }
