@@ -1,11 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using REMS.Models.Agent;
-using REMS.Models.Client;
-using REMS.Modules.Features.Agent;
-using REMS.Modules.Features.Client;
-
-namespace REMS.BackendApi.Features.Client;
+﻿namespace REMS.BackendApi.Features.Client;
 
 [Route("api/v1/clients")]
 [ApiController]

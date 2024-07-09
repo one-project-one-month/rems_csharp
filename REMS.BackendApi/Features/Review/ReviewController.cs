@@ -65,7 +65,6 @@ public class ReviewController : ControllerBase
         {
             return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
-
     }
 
     [HttpPatch("{id}")]
