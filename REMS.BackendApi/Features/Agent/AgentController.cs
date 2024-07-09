@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using REMS.Models;
 using REMS.Models.Agent;
 using REMS.Modules.Features.Agent;
 
@@ -33,7 +34,6 @@ namespace REMS.BackendApi.Features.Agent
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
             }
         }
-
         [HttpDelete("{userId}")]
         public async Task<IActionResult> DeleteAgent(int userId)
         {
@@ -68,6 +68,37 @@ namespace REMS.BackendApi.Features.Agent
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
             }
+        }
+        [HttpPost("LoginAgent",Name = "LoginAgent")]
+        public async Task<IActionResult> LoginAgent(AgentLoginRequestModel agentLoginInfo)
+        {
+            MessageResponseModel agentList = await _blAgent.LoginAgentAsync(agentLoginInfo);
+
+            return Ok(agentList);
+        }
+
+        [HttpGet("SearchUser/{id}", Name = "SearchUser")]
+        public async Task<IActionResult> SearchUser(int id)
+        {
+            AgentResponseModel agentList = await _blAgent.SearchAgentAsync(id);
+
+            return Ok(agentList);
+        }
+
+        [HttpGet("SearchUserByName/{name}", Name = "SearchUserByName")]
+        public async Task<IActionResult> SearchUserByName(string name)
+        {
+            AgentListResponseModel agentList = await _blAgent.SearchAgentByNameAsync(name);
+
+            return Ok(agentList);
+        }
+
+        [HttpPost("SearchAgentByNameAndLocation", Name = "SearchAgentByNameAndLocation")]
+        public async Task<IActionResult> SearchAgentByNameAndLocation(SearchAgentRequestModel _searchAgentReqeustModel)
+        {
+            AgentListResponseModel agentList = await _blAgent.SearchAgentByNameAndLocationAsync(_searchAgentReqeustModel);
+            
+            return Ok(agentList);
         }
     }
 }
