@@ -46,5 +46,86 @@ namespace REMS.Modules.Features.Agent
                 return new MessageResponseModel(false, ex);
             }
         }
+
+        public async Task<MessageResponseModel> UpdateAgentAsync(int id, AgentRequestModel requestModel)
+        {
+            try
+            {
+                var user = await _db.Users
+                                    .AsNoTracking()
+                                    .FirstOrDefaultAsync(x => x.UserId == id);
+                var agent = await _db.Agents
+                                   .AsNoTracking()
+                                   .FirstOrDefaultAsync(x => x.UserId == id);
+                if (user is null || agent is null)
+                {
+                    return new MessageResponseModel(false, "User Not Found");
+                }
+                if (!string.IsNullOrWhiteSpace(requestModel.AgentName))
+                {
+                    user.Name = requestModel.AgentName;
+                    agent.AgencyName = requestModel.AgentName;
+                }
+                if (!string.IsNullOrWhiteSpace(requestModel.LicenseNumber))
+                {
+                    agent.LicenseNumber = requestModel.LicenseNumber;
+                }
+                if (!string.IsNullOrWhiteSpace(requestModel.Email))
+                {
+                    user.Email = requestModel.Email;
+                    agent.Email = requestModel.Email;
+                }
+                if (!string.IsNullOrWhiteSpace(requestModel.Password))
+                {
+                    user.Password = requestModel.Password;
+                }
+                if (!string.IsNullOrWhiteSpace(requestModel.Phone))
+                {
+                    user.Phone = requestModel.Phone;
+                    agent.Phone = requestModel.Phone;
+                }
+                if (!string.IsNullOrWhiteSpace(requestModel.Address))
+                {
+                    agent.Address = requestModel.Address;
+                }
+                _db.Entry(user).State = EntityState.Modified;
+                _db.Entry(agent).State = EntityState.Modified;
+                int result = await _db.SaveChangesAsync();
+                var response = result > 0 ? new MessageResponseModel(true, "Successfully Update") :
+                                            new MessageResponseModel(false, "Updating Fail");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new MessageResponseModel(false, ex);
+            }
+        }
+
+        public async Task<MessageResponseModel> DeleteAgentAsync(int userId)
+        {
+            try
+            {
+                var user = await _db.Users
+                                  .AsNoTracking()
+                                  .FirstOrDefaultAsync(x => x.UserId == userId);
+                var agent = await _db.Agents
+                                    .AsNoTracking()
+                                    .FirstOrDefaultAsync(x => x.UserId == userId);
+                if (user is null || agent is null)
+                {
+                    return new MessageResponseModel(false, "User Not Found");
+                }
+                _db.Users.Remove(user);
+                _db.Agents.Remove(agent);
+                int result = await _db.SaveChangesAsync();
+                var response = result > 0 ? new MessageResponseModel(true, "Successfully Delete") :
+                                            new MessageResponseModel(false, "Deleting Fail");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new MessageResponseModel(false, ex);
+            }
+        }
     }
 }
