@@ -14,6 +14,35 @@ namespace REMS.Modules.Features.Property
             _db = db;
         }
 
+        public async Task<List<PropertyResponseModel>> GetProperties()
+        {
+            try
+            {
+                var properties = await _db.Properties.AsNoTracking().ToListAsync();
+
+                var propertyResponseModels = new List<PropertyResponseModel>();
+
+                foreach (var property in properties)
+                {
+                    var propertyImages = await GetPropertyImagesById(property.PropertyId);
+                    var responseModel = new PropertyResponseModel
+                    {
+                        Property = property.Change(),
+                        Images = propertyImages.Select(x => x.Change()).ToList()
+                    };
+
+                    propertyResponseModels.Add(responseModel);
+                }
+
+                return propertyResponseModels;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+        }
+
         public async Task<PropertyResponseModel> GetPropertyById(int propertyId)
         {
             try

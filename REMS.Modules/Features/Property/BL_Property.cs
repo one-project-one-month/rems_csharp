@@ -16,6 +16,13 @@ namespace REMS.Modules.Features.Property
             _daProperty = daProperty;
         }
 
+        public async Task<List<PropertyResponseModel>> GetProperties()
+        {
+            var response = await _daProperty.GetProperties();
+            return response;
+        }
+
+
         public async Task<PropertyResponseModel> GetPropertyById(int propertyId)
         {
             if (propertyId < 1)
