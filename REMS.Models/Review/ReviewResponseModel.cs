@@ -1,7 +1,6 @@
-﻿namespace REMS.Models.Review
+﻿namespace REMS.Models.Review;
+
+public class ReviewResponseModel
 {
-    public class ReviewResponseModel
-    {
-        public ReviewModel Review { get; set; }
-    }
+    public ReviewModel Review { get; set; }
 }

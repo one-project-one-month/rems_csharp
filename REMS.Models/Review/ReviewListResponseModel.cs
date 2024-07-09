@@ -1,11 +1,10 @@
 ﻿using REMS.Models.Custom;
 
-namespace REMS.Models.Review
-{
-    public class ReviewListResponseModel
-    {
-        public List<ReviewModel> DataList { get; set; }
+namespace REMS.Models.Review;
 
-        public PageSettingModel PageSetting { get; set; }
-    }
+public class ReviewListResponseModel
+{
+    public List<ReviewModel> DataList { get; set; }
+
+    public PageSettingModel PageSetting { get; set; }
 }
