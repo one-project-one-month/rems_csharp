@@ -23,6 +23,18 @@ namespace REMS.Modules.Features.Agent
             var response = await _daAgent.CreateAgentAsync(requestModel);
             return response;
         }
+
+        public async Task<MessageResponseModel> UpdateAgentAsync(int id, AgentRequestModel requestModel)
+        {
+            var response = await _daAgent.UpdateAgentAsync(id, requestModel);
+            return response;
+        }
+
+        public async Task<MessageResponseModel> DeleteAgentAsync(int id)
+        {
+            var response = await _daAgent.DeleteAgentAsync(id);
+            return response;
+        }
         public async Task<AgentResponseModel> SearchAgentAsync(int id)
         {
             return await _daAgent.SearchAgentAsync(id);
