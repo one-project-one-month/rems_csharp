@@ -14,14 +14,16 @@ namespace REMS.Models
             Message = message;
         }
 
-        public MessageResponseModel(bool isSuccess,Exception ex)
+        public MessageResponseModel(bool isSuccess, Exception ex)
         {
             IsSuccess = IsSuccess;
             Message = ex.ToString();
         }
 
         public bool IsSuccess { get; set; }
+
         public bool IsError { get { return !IsSuccess; } }
+
         public string? Message { get; set; }
     }
 }
