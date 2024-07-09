@@ -1,7 +1,6 @@
-﻿namespace REMS.Shared
-{
-    public class Class1
-    {
+﻿namespace REMS.Shared;
 
-    }
+public class Class1
+{
+
 }
