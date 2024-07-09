@@ -1,6 +1,4 @@
-﻿using REMS.Database.AppDbContextModels;
-
-namespace REMS.Models.Review;
+﻿namespace REMS.Models.Review;
 
 public class ReviewModel
 {

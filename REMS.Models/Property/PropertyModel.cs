@@ -1,6 +1,4 @@
-﻿using REMS.Database.AppDbContextModels;
-
-namespace REMS.Models.Property;
+﻿namespace REMS.Models.Property;
 
 public class PropertyModel
 {
