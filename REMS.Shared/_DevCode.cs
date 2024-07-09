@@ -1,6 +1,6 @@
 ﻿namespace REMS.Shared;
 
-public class Class1
+public static class _DevCode
 {
 
 }
