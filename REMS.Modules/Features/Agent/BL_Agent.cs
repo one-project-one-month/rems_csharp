@@ -26,14 +26,17 @@ public class BL_Agent
         var response = await _daAgent.DeleteAgentAsync(id);
         return response;
     }
+
     public async Task<AgentResponseModel> SearchAgentAsync(int id)
     {
         return await _daAgent.SearchAgentAsync(id);
     }
+
     public async Task<MessageResponseModel> LoginAgentAsync(AgentLoginRequestModel agentLoginInfo)
     {
         return await _daAgent.LoginAgentAsync(agentLoginInfo);
     }
+
     public async Task<AgentListResponseModel> SearchAgentByNameAsync(string name)
     {
         return await _daAgent.SearchAgentByNameAsync(name);
@@ -44,12 +47,14 @@ public class BL_Agent
         AgentListResponseModel _agentList = new AgentListResponseModel();
         if (!string.IsNullOrEmpty(_searchAgent.Address))
         {
-            _agentList = await _daAgent.SearchAgentByNameAndLocationAsync(_searchAgent.AgentName ?? "", _searchAgent.Address);
+            _agentList =
+                await _daAgent.SearchAgentByNameAndLocationAsync(_searchAgent.AgentName ?? "", _searchAgent.Address);
         }
         else
         {
-            _agentList= await _daAgent.SearchAgentByNameAsync(_searchAgent.AgentName ?? "");
+            _agentList = await _daAgent.SearchAgentByNameAsync(_searchAgent.AgentName ?? "");
         }
+
         return _agentList;
     }
 }

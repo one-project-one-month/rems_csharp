@@ -3,7 +3,7 @@
 public class DA_Review
 {
     private readonly AppDbContext _context;
-        
+
     public DA_Review(AppDbContext context) => _context = context;
 
     public async Task<ReviewListResponseModel> GetReview()
@@ -30,11 +30,9 @@ public class DA_Review
     {
         try
         {
-            // Calculate the total count and page count
             var totalCount = await _context.Reviews.CountAsync();
             var pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
 
-            // Retrieve the paginated reviews
             var query = await _context
                 .Reviews
                 .AsNoTracking()
@@ -42,9 +40,7 @@ public class DA_Review
                 .Take(pageSize)
                 .ToListAsync();
 
-            // Construct the response model
             var response = new ReviewListResponseModel
-
             {
                 DataList = query.Select(x => x.Change()).ToList(),
                 PageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount)
@@ -52,13 +48,12 @@ public class DA_Review
 
             return response;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            Console.WriteLine(ex);
             return null;
         }
     }
-
 
     public async Task<ReviewResponseModel> GetReviewById(int reviewId)
     {
@@ -75,9 +70,9 @@ public class DA_Review
             };
             return responseModel;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            Console.WriteLine(ex);
             return null;
         }
     }
@@ -88,8 +83,9 @@ public class DA_Review
         {
             await _context.Reviews.AddAsync(requestModel.Change());
             int addReview = await _context.SaveChangesAsync();
-            var response = addReview > 0 ? new MessageResponseModel(true, "Successfully Save") :
-                new MessageResponseModel(false, "Review Create Fail");
+            var response = addReview > 0
+                ? new MessageResponseModel(true, "Successfully Saved.")
+                : new MessageResponseModel(false, "Review Create Failed.");
             return response;
         }
         catch (Exception ex)
@@ -102,7 +98,8 @@ public class DA_Review
     {
         try
         {
-            var review = await _context.Reviews.AsNoTracking()
+            var review = await _context.Reviews
+                .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ReviewId == id);
 
             if (review is null)
@@ -121,16 +118,18 @@ public class DA_Review
             {
                 review.PropertyId = requestModel.PropertyId;
             }
+
             if (requestModel.Rating != null)
             {
                 review.Rating = requestModel.Rating;
             }
+
             if (!string.IsNullOrEmpty(requestModel.Comments))
             {
                 review.Comments = requestModel.Comments;
             }
 
-            if(requestModel.DateCreated != null)
+            if (requestModel.DateCreated != null)
             {
                 review.DateCreated = requestModel.DateCreated;
             }
@@ -162,7 +161,6 @@ public class DA_Review
             if (review is null)
             {
                 new MessageResponseModel(false, "Review Not Found");
-                   
             }
 
             _context.Reviews.Remove(review);
@@ -177,5 +175,4 @@ public class DA_Review
             return new MessageResponseModel(false, ex);
         }
     }
-
 }

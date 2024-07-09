@@ -19,6 +19,7 @@ public class DA_Agent
             {
                 return new MessageResponseModel(false, "Registration Fail");
             }
+
             var user = await _db.Users
                 .OrderByDescending(x => x.UserId)
                 .AsNoTracking()
@@ -26,8 +27,9 @@ public class DA_Agent
             requestModel.UserId = user.UserId;
             await _db.Agents.AddAsync(requestModel.Change());
             int addAgent = await _db.SaveChangesAsync();
-            var response = addAgent > 0 ? new MessageResponseModel(true, "Successfully Save") :
-                new MessageResponseModel(false, "Agent Register Fail");
+            var response = addAgent > 0
+                ? new MessageResponseModel(true, "Successfully Save")
+                : new MessageResponseModel(false, "Agent Register Fail");
             return response;
         }
         catch (Exception ex)
@@ -35,6 +37,7 @@ public class DA_Agent
             return new MessageResponseModel(false, ex);
         }
     }
+
     public async Task<MessageResponseModel> UpdateAgentAsync(int id, AgentRequestModel requestModel)
     {
         try
@@ -49,38 +52,46 @@ public class DA_Agent
             {
                 return new MessageResponseModel(false, "User Not Found");
             }
+
             if (!string.IsNullOrWhiteSpace(requestModel.AgentName))
             {
                 user.Name = requestModel.AgentName;
                 agent.AgencyName = requestModel.AgentName;
             }
+
             if (!string.IsNullOrWhiteSpace(requestModel.LicenseNumber))
             {
                 agent.LicenseNumber = requestModel.LicenseNumber;
             }
+
             if (!string.IsNullOrWhiteSpace(requestModel.Email))
             {
                 user.Email = requestModel.Email;
                 agent.Email = requestModel.Email;
             }
+
             if (!string.IsNullOrWhiteSpace(requestModel.Password))
             {
                 user.Password = requestModel.Password;
             }
+
             if (!string.IsNullOrWhiteSpace(requestModel.Phone))
             {
                 user.Phone = requestModel.Phone;
                 agent.Phone = requestModel.Phone;
             }
+
             if (!string.IsNullOrWhiteSpace(requestModel.Address))
             {
                 agent.Address = requestModel.Address;
             }
+
             _db.Entry(user).State = EntityState.Modified;
             _db.Entry(agent).State = EntityState.Modified;
             int result = await _db.SaveChangesAsync();
-            var response = result > 0 ? new MessageResponseModel(true, "Successfully Update") :
-                new MessageResponseModel(false, "Updating Fail");
+            var response = result > 0
+                ? new MessageResponseModel(true, "Successfully Update")
+                : new MessageResponseModel(false, "Updating Fail");
             return response;
         }
         catch (Exception ex)
@@ -101,13 +112,17 @@ public class DA_Agent
                 .FirstOrDefaultAsync(x => x.UserId == userId);
             if (user is null || agent is null)
             {
-                return new MessageResponseModel(false, "User Not Found");
+                return new MessageResponseModel(false, "User Not Found.");
             }
+            
             _db.Users.Remove(user);
+            _db.Entry(user).State = EntityState.Deleted;
             _db.Agents.Remove(agent);
+            _db.Entry(agent).State = EntityState.Deleted;
             int result = await _db.SaveChangesAsync();
-            var response = result > 0 ? new MessageResponseModel(true, "Successfully Delete") :
-                new MessageResponseModel(false, "Deleting Fail");
+            var response = result > 0
+                ? new MessageResponseModel(true, "Successfully Deleted.")
+                : new MessageResponseModel(false, "Deleting Failed.");
             return response;
         }
         catch (Exception ex)
@@ -115,29 +130,42 @@ public class DA_Agent
             return new MessageResponseModel(false, ex);
         }
     }
+
     public async Task<MessageResponseModel> LoginAgentAsync(AgentLoginRequestModel agentLoginInfo)
     {
+        var model = new MessageResponseModel();
         try
         {
             User? user = await _db.Users
                 .Where(us => us.Name == agentLoginInfo.UserName && us.Password == agentLoginInfo.Password)
                 .FirstOrDefaultAsync();
 
-            if (user != null)
+            // if (user != null)
+            // {
+            //     return new MessageResponseModel(true, "Login Success");
+            // }
+            // else
+            // {
+            //     return new MessageResponseModel(false, "Login Fail");
+            // }
+
+            if (user is null)
             {
-                return new MessageResponseModel(true, "Login Success");
-            }
-            else
-            {
-                return new MessageResponseModel(false, "Login Fail");
+                model = new MessageResponseModel(false, "Login Fail");
+                goto result;
             }
 
+            model = new MessageResponseModel(true, "Login Success");
         }
         catch (Exception ex)
         {
-            return new MessageResponseModel(true, ex.ToString());
+            model = new MessageResponseModel(true, ex.ToString());
         }
+
+        result:
+        return model;
     }
+
     public async Task<AgentResponseModel> SearchAgentAsync(int id)
     {
         AgentResponseModel model = new AgentResponseModel();
@@ -156,8 +184,8 @@ public class DA_Agent
                     Address = ag.Address
                 })
                 .FirstOrDefaultAsync();
-                
-            if (agent == null)
+
+            if (agent is null)
             {
                 model.Status = "User Not Found";
             }
@@ -166,6 +194,7 @@ public class DA_Agent
                 model.IsSuccess = true;
                 model.Status = "Success";
             }
+
             model.Agent = agent;
             return model;
         }
@@ -182,7 +211,7 @@ public class DA_Agent
         try
         {
             List<AgentDto> agents = await _db.Agents
-                .Where(ag => string.IsNullOrEmpty(name)  || ag.AgencyName.Contains(name))
+                .Where(ag => string.IsNullOrEmpty(name) || ag.AgencyName.Contains(name))
                 .OrderBy(ag => ag.AgencyName)
                 .Select(ag => new AgentDto
                 {
@@ -207,7 +236,7 @@ public class DA_Agent
         }
     }
 
-    public async Task<AgentListResponseModel> SearchAgentByNameAndLocationAsync(string name,string location)
+    public async Task<AgentListResponseModel> SearchAgentByNameAndLocationAsync(string name, string location)
     {
         AgentListResponseModel model = new AgentListResponseModel();
         try

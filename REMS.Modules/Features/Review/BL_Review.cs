@@ -3,9 +3,9 @@
 public class BL_Review
 {
     private readonly DA_Review _daReview;
-        
+
     public BL_Review(DA_Review daReview) => _daReview = daReview;
-        
+
 
     public async Task<ReviewListResponseModel> GetReview()
     {
@@ -26,10 +26,11 @@ public class BL_Review
 
     public async Task<ReviewResponseModel> GetReviewById(int reviewId)
     {
-        if (reviewId < 1 )
+        if (reviewId < 1)
         {
             throw new Exception("Invalid ReviewId");
         }
+
         var response = await _daReview.GetReviewById(reviewId);
         return response;
     }

@@ -31,9 +31,9 @@ public class DA_Property
 
             return propertyResponseModels;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            Console.WriteLine(ex);
             return null;
         }
     }
@@ -73,9 +73,9 @@ public class DA_Property
 
             return response;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            Console.WriteLine(ex);
             return null;
         }
     }
@@ -100,16 +100,18 @@ public class DA_Property
 
             return responseModel;
         }
-        catch (Exception e)
+        catch (Exception ex)
         {
-            Console.WriteLine(e);
+            Console.WriteLine(ex);
             return null;
         }
     }
 
-    public async Task<List<PropertyImage>> GetPropertyImagesById(int propertyId)
+    private async Task<List<PropertyImage>> GetPropertyImagesById(int propertyId)
     {
-        var propertyImages = await _db.PropertyImages.AsNoTracking().Where(x => x.PropertyId == propertyId).ToListAsync();
+        var propertyImages = await _db.PropertyImages
+            .AsNoTracking()
+            .Where(x => x.PropertyId == propertyId).ToListAsync();
         return propertyImages;
     }
 }
