@@ -46,5 +46,128 @@ namespace REMS.Modules.Features.Agent
                 return new MessageResponseModel(false, ex);
             }
         }
+
+        public async Task<MessageResponseModel> LoginAgentAsync(AgentLoginRequestModel agentLoginInfo)
+        {
+            try
+            {
+                User? user = await _db.Users
+                    .Where(us => us.Name == agentLoginInfo.UserName && us.Password == agentLoginInfo.Password)
+                    .FirstOrDefaultAsync();
+
+                if (user != null)
+                {
+                    return new MessageResponseModel(true, "Login Success");
+                }
+                else
+                {
+                    return new MessageResponseModel(false, "Login Fail");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new MessageResponseModel(true, ex.ToString());
+            }
+        }
+        public async Task<AgentResponseModel> SearchAgentAsync(int id)
+        {
+            AgentResponseModel model = new AgentResponseModel();
+            try
+            {
+                AgentDto? agent = await _db.Agents
+                                    .Where(ag => ag.AgentId == id)
+                                    .Select(ag => new AgentDto
+                                    {
+                                        AgentId = ag.AgentId,
+                                        UserId = ag.UserId,
+                                        AgencyName = ag.AgencyName,
+                                        LicenseNumber = ag.LicenseNumber,
+                                        Phone = ag.Phone,
+                                        Email = ag.Email,
+                                        Address = ag.Address
+                                    })
+                                    .FirstOrDefaultAsync();
+                
+                if (agent == null)
+                {
+                    model.Status = "User Not Found";
+                }
+                else
+                {
+                    model.IsSuccess = true;
+                    model.Status = "Success";
+                }
+                model.Agent = agent;
+                return model;
+            }
+            catch (Exception ex)
+            {
+                model.Status = ex.ToString();
+                return model;
+            }
+        }
+
+        public async Task<AgentListResponseModel> SearchAgentByNameAsync(string? name)
+        {
+            AgentListResponseModel model = new AgentListResponseModel();
+            try
+            {
+                List<AgentDto> agents = await _db.Agents
+                .Where(ag => string.IsNullOrEmpty(name)  || ag.AgencyName.Contains(name))
+                .OrderBy(ag => ag.AgencyName)
+                .Select(ag => new AgentDto
+                {
+                    AgentId = ag.AgentId,
+                    UserId = ag.UserId,
+                    AgencyName = ag.AgencyName,
+                    LicenseNumber = ag.LicenseNumber,
+                    Phone = ag.Phone,
+                    Email = ag.Email,
+                    Address = ag.Address
+                })
+                .ToListAsync();
+                model.IsSuccess = true;
+                model.Status = "Success";
+                model.AgentList = agents;
+                return model;
+            }
+            catch (Exception ex)
+            {
+                model.Status = ex.ToString();
+                return model;
+            }
+        }
+
+        public async Task<AgentListResponseModel> SearchAgentByNameAndLocationAsync(string name,string location)
+        {
+            AgentListResponseModel model = new AgentListResponseModel();
+            try
+            {
+                List<AgentDto> agents = await _db.Agents
+                .Where(ag => ag.AgencyName.Contains(name) && ag.Address != null && ag.Address.Contains(location))
+                .OrderBy(ag => ag.AgencyName)
+                .Select(ag => new AgentDto
+                {
+                    AgentId = ag.AgentId,
+                    UserId = ag.UserId,
+                    AgencyName = ag.AgencyName,
+                    LicenseNumber = ag.LicenseNumber,
+                    Phone = ag.Phone,
+                    Email = ag.Email,
+                    Address = ag.Address
+                })
+                .ToListAsync();
+                model.IsSuccess = true;
+                model.Status = "Success";
+                model.AgentList = agents;
+                return model;
+            }
+            catch (Exception ex)
+            {
+                model.Status = ex.ToString();
+                return model;
+            }
+        }
     }
 }
