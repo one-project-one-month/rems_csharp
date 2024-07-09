@@ -1,15 +1,4 @@
-﻿using REMS.Database.AppDbContextModels;
-using REMS.Models.Agent;
-using REMS.Models.Client;
-using REMS.Models.Property;
-using REMS.Models.Review;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace REMS.Mapper;
+﻿namespace REMS.Mapper;
 
 public static class ChangeModel
 {
