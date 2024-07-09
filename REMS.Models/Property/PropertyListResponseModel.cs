@@ -6,11 +6,10 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace REMS.Models.Property
+namespace REMS.Models.Property;
+
+public class PropertyListResponseModel
 {
-    public class PropertyListResponseModel
-    {
-        public List<PropertyResponseModel> Properties {  get; set; }
-        public PageSettingModel PageSetting {  get; set; }
-    }
+    public List<PropertyResponseModel> Properties {  get; set; }
+    public PageSettingModel PageSetting {  get; set; }
 }
