@@ -22,6 +22,16 @@ namespace REMS.Modules.Features.Property
             return response;
         }
 
+        public async Task<PropertyListResponseModel> GetProperties(int pageNo, int pageSize)
+        {
+            if(pageNo < 1 || pageSize < 1)
+            {
+                throw new Exception("PageNo or PageSize Cannot be less than 1");
+            }
+
+            var response = await _daProperty.GetProperties(pageNo, pageSize);
+            return response;
+        }
 
         public async Task<PropertyResponseModel> GetPropertyById(int propertyId)
         {

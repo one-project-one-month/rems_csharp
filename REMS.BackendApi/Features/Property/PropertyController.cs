@@ -29,6 +29,20 @@ namespace REMS.BackendApi.Features.Property
             }
         }
 
+        [HttpGet("{pageNo}/{pageSize}")]
+        public async Task<IActionResult> GetProperties(int pageNo, int pageSize)
+        {
+            try
+            {
+                var response = await _blProperties.GetProperties(pageNo, pageSize);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("{propertyId}")]
         public async Task<IActionResult> GetPropertyById(int propertyId)
         {
