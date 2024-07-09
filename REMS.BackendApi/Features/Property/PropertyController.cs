@@ -15,6 +15,34 @@ namespace REMS.BackendApi.Features.Property
             _blProperties = blProperties;
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetProperties()
+        {
+            try
+            {
+                var response = await _blProperties.GetProperties();
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{pageNo}/{pageSize}")]
+        public async Task<IActionResult> GetProperties(int pageNo, int pageSize)
+        {
+            try
+            {
+                var response = await _blProperties.GetProperties(pageNo, pageSize);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("{propertyId}")]
         public async Task<IActionResult> GetPropertyById(int propertyId)
         {
