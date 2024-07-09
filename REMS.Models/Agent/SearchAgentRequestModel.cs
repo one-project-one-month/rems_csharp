@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace REMS.Models.Agent
+namespace REMS.Models.Agent;
+
+public class SearchAgentRequestModel
 {
-    public class SearchAgentRequestModel
-    {
-        public string? AgentName { get; set; }
-        public string? Address { get; set; }
-    }
+    public string? AgentName { get; set; }
+    public string? Address { get; set; }
 }

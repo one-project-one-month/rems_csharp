@@ -1,104 +1,99 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using REMS.Models;
-using REMS.Models.Agent;
-using REMS.Modules.Features.Agent;
+﻿namespace REMS.BackendApi.Features.Agent;
 
-namespace REMS.BackendApi.Features.Agent
+[Route("api/v1/agents")]
+[ApiController]
+public class AgentController : ControllerBase
 {
-    [Route("api/v1/agents")]
-    [ApiController]
-    public class AgentController : ControllerBase
+    private readonly BL_Agent _blAgent;
+
+    public AgentController(BL_Agent blAgent)
     {
-        private readonly BL_Agent _blAgent;
+        _blAgent = blAgent;
+    }
 
-        public AgentController(BL_Agent blAgent)
+    [HttpPost]
+    public async Task<IActionResult> PostAgent(AgentRequestModel requestModel)
+    {
+        try
         {
-            _blAgent = blAgent;
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> PostAgent(AgentRequestModel requestModel)
-        {
-            try
+            var response = await _blAgent.CreateAgentAsync(requestModel);
+            if (response.IsError)
             {
-                var response = await _blAgent.CreateAgentAsync(requestModel);
-                if (response.IsError)
-                {
-                    return BadRequest(response);
-                }
-                return Ok(response);
+                return BadRequest(response);
             }
-            catch (Exception ex)
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+        }
+    }
+
+    [HttpDelete("{userId}")]
+    public async Task<IActionResult> DeleteAgent(int userId)
+    {
+        try
+        {
+            var response = await _blAgent.DeleteAgentAsync(userId);
+            if (response.IsError)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+                return BadRequest(response);
             }
+            return Ok(response);
         }
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteAgent(int userId)
+        catch (Exception ex)
         {
-            try
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+        }
+    }
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateAgent(int id, AgentRequestModel requestModel)
+    {
+        try
+        {
+            var response = await _blAgent.UpdateAgentAsync(id, requestModel);
+            if (response.IsError)
             {
-                var response = await _blAgent.DeleteAgentAsync(userId);
-                if (response.IsError)
-                {
-                    return BadRequest(response);
-                }
-                return Ok(response);
+                return BadRequest(response);
             }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
-            }
+            return Ok(response);
         }
-
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateAgent(int id, AgentRequestModel requestModel)
+        catch (Exception ex)
         {
-            try
-            {
-                var response = await _blAgent.UpdateAgentAsync(id, requestModel);
-                if (response.IsError)
-                {
-                    return BadRequest(response);
-                }
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
-            }
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
-        [HttpPost("LoginAgent",Name = "LoginAgent")]
-        public async Task<IActionResult> LoginAgent(AgentLoginRequestModel agentLoginInfo)
-        {
-            MessageResponseModel agentList = await _blAgent.LoginAgentAsync(agentLoginInfo);
+    }
 
-            return Ok(agentList);
-        }
+    [HttpPost("LoginAgent", Name = "LoginAgent")]
+    public async Task<IActionResult> LoginAgent(AgentLoginRequestModel agentLoginInfo)
+    {
+        MessageResponseModel agentList = await _blAgent.LoginAgentAsync(agentLoginInfo);
 
-        [HttpGet("SearchUser/{id}", Name = "SearchUser")]
-        public async Task<IActionResult> SearchUser(int id)
-        {
-            AgentResponseModel agentList = await _blAgent.SearchAgentAsync(id);
+        return Ok(agentList);
+    }
 
-            return Ok(agentList);
-        }
+    [HttpGet("SearchUser/{id}", Name = "SearchUser")]
+    public async Task<IActionResult> SearchUser(int id)
+    {
+        AgentResponseModel agentList = await _blAgent.SearchAgentAsync(id);
 
-        [HttpGet("SearchUserByName/{name}", Name = "SearchUserByName")]
-        public async Task<IActionResult> SearchUserByName(string name)
-        {
-            AgentListResponseModel agentList = await _blAgent.SearchAgentByNameAsync(name);
+        return Ok(agentList);
+    }
 
-            return Ok(agentList);
-        }
+    [HttpGet("SearchUserByName/{name}", Name = "SearchUserByName")]
+    public async Task<IActionResult> SearchUserByName(string name)
+    {
+        AgentListResponseModel agentList = await _blAgent.SearchAgentByNameAsync(name);
 
-        [HttpPost("SearchAgentByNameAndLocation", Name = "SearchAgentByNameAndLocation")]
-        public async Task<IActionResult> SearchAgentByNameAndLocation(SearchAgentRequestModel _searchAgentReqeustModel)
-        {
-            AgentListResponseModel agentList = await _blAgent.SearchAgentByNameAndLocationAsync(_searchAgentReqeustModel);
-            
-            return Ok(agentList);
-        }
+        return Ok(agentList);
+    }
+
+    [HttpPost("SearchAgentByNameAndLocation", Name = "SearchAgentByNameAndLocation")]
+    public async Task<IActionResult> SearchAgentByNameAndLocation(SearchAgentRequestModel _searchAgentReqeustModel)
+    {
+        AgentListResponseModel agentList = await _blAgent.SearchAgentByNameAndLocationAsync(_searchAgentReqeustModel);
+
+        return Ok(agentList);
     }
 }
