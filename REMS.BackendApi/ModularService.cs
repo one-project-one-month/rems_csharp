@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using REMS.Database.AppDbContextModels;
 using REMS.Modules.Features.Agent;
+using REMS.Modules.Features.Client;
 using REMS.Modules.Features.Property;
 using REMS.Modules.Features.Review;
 
@@ -28,6 +29,7 @@ namespace REMS.BackendApi
         public static WebApplicationBuilder AddDataAccessService(this WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<DA_Agent>();
+            builder.Services.AddScoped<DA_Client>();
             builder.Services.AddScoped<DA_Property>();
             builder.Services.AddScoped<DA_Review>();
             return builder;
@@ -36,6 +38,7 @@ namespace REMS.BackendApi
         public static WebApplicationBuilder AddBusinessLogicService(this WebApplicationBuilder builder)
         {
             builder.Services.AddScoped<BL_Agent>();
+            builder.Services.AddScoped<BL_Client>();
             builder.Services.AddScoped<BL_Property>();
             builder.Services.AddScoped<BL_Review>();
             return builder;
