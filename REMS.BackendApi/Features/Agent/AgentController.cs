@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using REMS.Models.Agent;
 using REMS.Modules.Features.Agent;
 
 namespace REMS.BackendApi.Features.Agent
@@ -13,6 +14,24 @@ namespace REMS.BackendApi.Features.Agent
         public AgentController(BL_Agent blAgent)
         {
             _blAgent = blAgent;
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> PostAgent(AgentRequestModel requestModel)
+        {
+            try
+            {
+                var response = await _blAgent.CreateAgentAsync(requestModel);
+                if (response.IsError)
+                {
+                    return BadRequest(response);
+                }
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            }
         }
     }
 }

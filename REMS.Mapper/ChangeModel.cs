@@ -1,4 +1,5 @@
 ﻿using REMS.Database.AppDbContextModels;
+using REMS.Models.Agent;
 using REMS.Models.Property;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,38 @@ namespace REMS.Mapper
 {
     public static class ChangeModel
     {
+        #region Agent
+
+        public static User ChangeUser(this AgentRequestModel requestModel)
+        {
+            User user = new User
+            {
+                Name = requestModel.AgentName!,
+                Email = requestModel.Email!,
+                Password = requestModel.Password!,
+                Phone = requestModel.Phone,
+                Role = "Agent",
+                DateCreated = requestModel.DateCreate
+            };
+            return user;
+        }
+
+        public static Agent Change(this AgentRequestModel requestModel)
+        {
+            Agent agent = new Agent
+            {
+                UserId = requestModel.UserId,
+                AgencyName = requestModel.AgentName!,
+                LicenseNumber = requestModel.LicenseNumber!,
+                Phone = requestModel.Phone!,
+                Email = requestModel.Email!,
+                Address = requestModel.Address!
+            };
+            return agent;
+        }
+
+        #endregion
+
         #region Property
 
         public static PropertyModel Change(this Property dataModel)

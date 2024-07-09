@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace REMS.Models.Agent
 {
-    internal class AgentResponseModel
+    public class AgentResponseModel
     {
     }
 }
