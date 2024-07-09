@@ -1,8 +1,3 @@
-using Microsoft.EntityFrameworkCore;
-using REMS.BackendApi;
-using REMS.Database.AppDbContextModels;
-using REMS.Modules.Features.Agent;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

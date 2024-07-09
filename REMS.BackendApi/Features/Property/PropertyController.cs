@@ -1,60 +1,55 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using REMS.Modules.Features.Property;
+﻿namespace REMS.BackendApi.Features.Property;
 
-namespace REMS.BackendApi.Features.Property
+[Route("api/v1/properties")]
+[ApiController]
+public class PropertyController : ControllerBase
 {
-    [Route("api/v1/properties")]
-    [ApiController]
-    public class PropertyController : ControllerBase
+    private readonly BL_Property _blProperties;
+
+    public PropertyController(BL_Property blProperties)
     {
-        private readonly BL_Property _blProperties;
+        _blProperties = blProperties;
+    }
 
-        public PropertyController(BL_Property blProperties)
+    [HttpGet]
+    public async Task<IActionResult> GetProperties()
+    {
+        try
         {
-            _blProperties = blProperties;
+            var response = await _blProperties.GetProperties();
+            return Ok(response);
         }
-
-        [HttpGet]
-        public async Task<IActionResult> GetProperties()
+        catch (Exception ex)
         {
-            try
-            {
-                var response = await _blProperties.GetProperties();
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return BadRequest(ex.Message);
         }
+    }
 
-        [HttpGet("{pageNo}/{pageSize}")]
-        public async Task<IActionResult> GetProperties(int pageNo, int pageSize)
+    [HttpGet("{pageNo}/{pageSize}")]
+    public async Task<IActionResult> GetProperties(int pageNo, int pageSize)
+    {
+        try
         {
-            try
-            {
-                var response = await _blProperties.GetProperties(pageNo, pageSize);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            var response = await _blProperties.GetProperties(pageNo, pageSize);
+            return Ok(response);
         }
-
-        [HttpGet("{propertyId}")]
-        public async Task<IActionResult> GetPropertyById(int propertyId)
+        catch (Exception ex)
         {
-            try
-            {
-                var response = await _blProperties.GetPropertyById(propertyId);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("{propertyId}")]
+    public async Task<IActionResult> GetPropertyById(int propertyId)
+    {
+        try
+        {
+            var response = await _blProperties.GetPropertyById(propertyId);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
         }
     }
 }
