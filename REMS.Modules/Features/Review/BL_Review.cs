@@ -23,6 +23,17 @@ namespace REMS.Modules.Features.Review
             return response;
         }
 
+        public async Task<ReviewListResponseModel> GetReviews(int pageNo, int pageSize)
+        {
+            if (pageNo < 1 || pageSize < 1)
+            {
+                throw new Exception("PageNo or PageSize Cannot be less than 1");
+            }
+
+            var response = await _daReview.GetReviews(pageNo, pageSize);
+            return response;
+        }
+
         public async Task<ReviewResponseModel> GetReviewById(int reviewId)
         {
             if (reviewId < 1 )
@@ -36,6 +47,21 @@ namespace REMS.Modules.Features.Review
         public async Task<MessageResponseModel> CreateReview(ReviewModel requestModel)
         {
             var response = await _daReview.CreateReview(requestModel);
+            return response;
+        }
+
+        public async Task<MessageResponseModel> UpdateReview(int id, ReviewModel requestModel)
+        {
+            if (id <= 0) throw new Exception("ReviewId is null");
+            //CheckProductNullValue(requestModel);
+            var response = await _daReview.UpdateReview(id, requestModel);
+            return response;
+        }
+
+        public async Task<MessageResponseModel> DeleteReview(int id)
+        {
+            if (id <= 0) throw new Exception("ReviewId is null");
+            var response = await _daReview.DeleteReview(id);
             return response;
         }
     }

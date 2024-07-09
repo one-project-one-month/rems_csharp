@@ -31,6 +31,20 @@ namespace REMS.BackendApi.Features.Review
             }
         }
 
+        [HttpGet("{pageNo}/{pageSize}")]
+        public async Task<IActionResult> GetReviews(int pageNo, int pageSize)
+        {
+            try
+            {
+                var response = await _blReview.GetReviews(pageNo, pageSize);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("{reviewId}")]
         public async Task<IActionResult> GetReviewById(int reviewId)
         {
@@ -58,6 +72,34 @@ namespace REMS.BackendApi.Features.Review
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
             }
 
+        }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> Update(int id, ReviewModel requestModel)
+        {
+            try
+            {
+                var review = await _blReview.UpdateReview(id, requestModel);
+                return Ok(review);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var review = await _blReview.DeleteReview(id);
+                return Ok(review);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
