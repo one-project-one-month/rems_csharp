@@ -66,6 +66,22 @@ public static class ChangeModel
         };
         return client;
     }
+
+    public static ClientResponseModel Change(this Client dataModel)
+    {
+        var clientResponseModel = new ClientResponseModel
+        {
+            ClientId = dataModel.ClientId,
+            UserId = dataModel.UserId,
+            AgentId = dataModel.AgentId,
+            FirstName = dataModel.FirstName,
+            LastName = dataModel.LastName,
+            Phone = dataModel.Phone,
+            Email = dataModel.Email,
+            Address = dataModel.Address,
+        };
+        return clientResponseModel;
+    }
     #endregion
 
     #region Property
