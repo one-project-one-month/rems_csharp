@@ -1,4 +1,6 @@
-﻿namespace REMS.Modules.Features.Client;
+﻿using REMS.Modules.Features.Review;
+
+namespace REMS.Modules.Features.Client;
 
 public class BL_Client
 {
@@ -15,9 +17,26 @@ public class BL_Client
         return response;
     }
 
+    public async Task<ClientListResponseModel> GetClients(int pageNo, int pageSize)
+    {
+        if (pageNo < 1 || pageSize < 1)
+        {
+            throw new Exception("PageNo or PageSize Cannot be less than 1");
+        }
+
+        var response = await _daClient.GetClients(pageNo, pageSize);
+        return response;
+    }
+
     public async Task<MessageResponseModel> CreateClientAsync(ClientRequestModel requestModel)
     {
         var response = await _daClient.CreateClientAsync(requestModel);
         return response;
+    }
+
+    public async Task<ClientResponseModel> GetClientById(int id)
+    {
+        var responseModel = await _daClient.GetClientById(id);
+        return responseModel;
     }
 }

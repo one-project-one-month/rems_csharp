@@ -27,6 +27,34 @@ public class ClientController : ControllerBase
         }
     }
 
+    [HttpGet("{pageNo}/{pageSize}")]
+    public async Task<IActionResult> GetClients(int pageNo, int pageSize)
+    {
+        try
+        {
+            var response = await _blClient.GetClients(pageNo, pageSize);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetClientById(int id)
+    {
+        try
+        {
+            var responseModel = await _blClient.GetClientById(id);
+            return Ok(responseModel);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpPost]
     public async Task<IActionResult> PostClient(ClientRequestModel requestModel)
     {
