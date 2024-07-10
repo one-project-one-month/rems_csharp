@@ -9,6 +9,12 @@ public class BL_Client
         _daClient = daClient;
     }
 
+    public async Task<ClientListResponseModel> GetClients()
+    {
+        var response = await _daClient.GetClients();
+        return response;
+    }
+
     public async Task<MessageResponseModel> CreateClientAsync(ClientRequestModel requestModel)
     {
         var response = await _daClient.CreateClientAsync(requestModel);

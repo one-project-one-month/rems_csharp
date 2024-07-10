@@ -1,4 +1,6 @@
-﻿namespace REMS.Modules.Features.Client;
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace REMS.Modules.Features.Client;
 
 public class DA_Client
 {
@@ -7,6 +9,29 @@ public class DA_Client
     public DA_Client(AppDbContext db)
     {
         _db = db;
+    }
+
+    public async Task<ClientListResponseModel> GetClients()
+    {
+        var responseModel = new ClientListResponseModel();
+        try
+        {
+            var clients = await _db
+                .Clients
+                .AsNoTracking()
+                .ToListAsync();
+            responseModel.DataLst = clients
+                .Select(x => x.Change())
+                .ToList();
+            responseModel.MessageResponse = new MessageResponseModel(true, EnumStatus.Success.ToString());
+        }
+        catch (Exception ex)
+        {
+            responseModel.DataLst = new List<ClientResponseModel>();
+            responseModel.MessageResponse = new MessageResponseModel(false, ex);
+        }
+
+        return responseModel;
     }
 
     public async Task<MessageResponseModel> CreateClientAsync(ClientRequestModel requestModel)

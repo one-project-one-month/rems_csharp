@@ -1,4 +1,6 @@
-﻿namespace REMS.BackendApi.Features.Client;
+﻿using Azure;
+
+namespace REMS.BackendApi.Features.Client;
 
 [Route("api/v1/clients")]
 [ApiController]
@@ -9,6 +11,20 @@ public class ClientController : ControllerBase
     public ClientController(BL_Client blClient)
     {
         _blClient = blClient;
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetClients()
+    {
+        try
+        {
+            var responseModel = await _blClient.GetClients();
+            return Ok(responseModel);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+        }
     }
 
     [HttpPost]
