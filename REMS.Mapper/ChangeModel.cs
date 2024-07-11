@@ -1,4 +1,6 @@
-﻿namespace REMS.Mapper;
+﻿using REMS.Models.Appointment;
+
+namespace REMS.Mapper;
 
 public static class ChangeModel
 {
@@ -159,6 +161,25 @@ public static class ChangeModel
         };
 
         return review;
+    }
+
+    #endregion
+
+    #region Appointment
+
+    public static Appointment Change(this AppointmentRequestModel requestModel)
+    {
+        Appointment appointment = new Appointment
+        {
+            AgentId = requestModel.AgentId,
+            ClientId = requestModel.ClientId,
+            PropertyId = requestModel.PropertyId,
+            AppointmentDate = requestModel.AppointmentDate,
+            AppointmentTime = requestModel.AppointmentTime,
+            Status = requestModel.Status,
+            Notes = requestModel.Notes
+        };
+        return appointment;
     }
 
     #endregion
