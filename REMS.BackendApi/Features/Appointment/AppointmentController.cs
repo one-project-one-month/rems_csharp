@@ -44,5 +44,21 @@
                 return StatusCode(StatusCodes.Status500InternalServerError,ex.ToString());
             }
         }
+
+        [HttpGet("{id}/{pageNo}/{pageSize}")]
+        public async Task<IActionResult> GetAppointmentByAgentId(int id,int pageNo,int pageSize)
+        {
+            try
+            {
+                var response = await _blAppointment.GetAppointmentByAgentIdAsync(id, pageNo, pageSize);
+                if (response.messageResponse!.IsError)
+                    return BadRequest(response);
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            }
+        }
     }
 }
