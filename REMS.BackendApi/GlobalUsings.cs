@@ -14,3 +14,5 @@ global using REMS.Modules.Features.Agent;
 global using REMS.Modules.Features.Client;
 global using REMS.Modules.Features.Property;
 global using REMS.Modules.Features.Review;
+global using REMS.Models.Appointment;
+global using REMS.Modules.Features.Appointment;
