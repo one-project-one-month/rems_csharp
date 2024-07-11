@@ -13,23 +13,18 @@ public class DA_Property
     {
         try
         {
-            var properties = await _db.Properties.AsNoTracking().ToListAsync();
+            var properties = await _db.Properties
+                                      .AsNoTracking()
+                                      .Include(x => x.PropertyImages)
+                                      .ToListAsync();
 
-            var propertyResponseModels = new List<PropertyResponseModel>();
-
-            foreach (var property in properties)
+            var response = properties.Select(property => new PropertyResponseModel
             {
-                var propertyImages = await GetPropertyImagesById(property.PropertyId);
-                var responseModel = new PropertyResponseModel
-                {
-                    Property = property.Change(),
-                    Images = propertyImages.Select(x => x.Change()).ToList()
-                };
+                Property = property.Change(),
+                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+            }).ToList();
 
-                propertyResponseModels.Add(responseModel);
-            }
-
-            return propertyResponseModels;
+            return response;
         }
         catch (Exception ex)
         {
@@ -43,24 +38,17 @@ public class DA_Property
         try
         {
             var properties = await _db.Properties
-                .AsNoTracking()
-                .Skip((pageNo - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+                                      .AsNoTracking()
+                                      .Include(x=>x.PropertyImages)
+                                      .Skip((pageNo - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToListAsync();
 
-            var propertyResponseModels = new List<PropertyResponseModel>();
-
-            foreach (var property in properties)
+            var propertyResponseModels = properties.Select(property => new PropertyResponseModel
             {
-                var propertyImages = await GetPropertyImagesById(property.PropertyId);
-                var responseModel = new PropertyResponseModel
-                {
-                    Property = property.Change(),
-                    Images = propertyImages.Select(x => x.Change()).ToList()
-                };
-
-                propertyResponseModels.Add(responseModel);
-            }
+                Property = property.Change(),
+                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+            }).ToList();
 
             var totalCount = await _db.Properties.CountAsync();
             var pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
@@ -80,22 +68,20 @@ public class DA_Property
         }
     }
 
-
     public async Task<PropertyResponseModel> GetPropertyById(int propertyId)
     {
         try
         {
             var property = await _db.Properties
-                               .AsNoTracking()
-                               .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
-                           ?? throw new Exception("Property Not Found");
-
-            var propertyImages = await GetPropertyImagesById(property.PropertyId);
+                                    .AsNoTracking()
+                                    .Include(x=>x.PropertyImages)
+                                    .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
+                                    ?? throw new Exception("Property Not Found");
 
             var responseModel = new PropertyResponseModel
             {
                 Property = property.Change(),
-                Images = propertyImages.Select(x => x.Change()).ToList()
+                Images = property.PropertyImages.Select(x => x.Change()).ToList()
             };
 
             return responseModel;
@@ -105,13 +91,5 @@ public class DA_Property
             Console.WriteLine(ex);
             return null;
         }
-    }
-
-    private async Task<List<PropertyImage>> GetPropertyImagesById(int propertyId)
-    {
-        var propertyImages = await _db.PropertyImages
-            .AsNoTracking()
-            .Where(x => x.PropertyId == propertyId).ToListAsync();
-        return propertyImages;
     }
 }
