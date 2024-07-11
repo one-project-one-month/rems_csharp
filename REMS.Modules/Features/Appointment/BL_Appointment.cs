@@ -26,19 +26,30 @@ namespace REMS.Modules.Features.Appointment
             return await _daAppointment.CreateAppointmentAsync(requestModel);
         }
 
+        public async Task<MessageResponseModel> DeleteAppointmentAsync(int id)
+        {
+            var response=await _daAppointment.DeleteAppointmentAsync(id);
+            return response;
+        }
+
         private MessageResponseModel CheckAppointmentValue(AppointmentRequestModel requestModel)
         {
+            TimeSpan time;
             if (requestModel is null)
             {
-                return new MessageResponseModel(false, "Model is null");
+                return new MessageResponseModel(false, "Model is null.");
             }
             if(requestModel.Status is null)
             {
-                return new MessageResponseModel(false, "Please Add Status");
+                return new MessageResponseModel(false, "Please Add Status.");
             }
             if (requestModel.AppointmentTime is null)
             {
-                return new MessageResponseModel(false, "Please Add Appointment Time");
+                return new MessageResponseModel(false, "Please Add Appointment Time.");
+            }
+            if(!TimeSpan.TryParse(requestModel.AppointmentTime,out time))
+            {
+                return new MessageResponseModel(false, "Invalid Appointment Time.");
             }
             return default;
         }

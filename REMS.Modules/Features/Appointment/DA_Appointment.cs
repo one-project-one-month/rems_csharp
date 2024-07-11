@@ -50,5 +50,28 @@ namespace REMS.Modules.Features.Appointment
                 return new MessageResponseModel(false, ex);
             }
         }
+
+        public async Task<MessageResponseModel> DeleteAppointmentAsync(int id)
+        {
+            try
+            {
+                var appointment = await _db.Appointments
+                                         .AsNoTracking()
+                                         .FirstOrDefaultAsync(x => x.AppointmentId == id);
+                if (appointment is null)
+                    return new MessageResponseModel(false, "Appointment Not Found.");
+                _db.Appointments.Remove(appointment);
+                _db.Entry(appointment).State = EntityState.Deleted;
+                int result = await _db.SaveChangesAsync();
+                var response = result > 0
+                    ? new MessageResponseModel(true, "Successfully Delete")
+                    : new MessageResponseModel(false, "Deleting Fail");
+                return response;
+            }
+            catch (Exception ex)
+            {
+                return new MessageResponseModel(false, ex);
+            }
+        }
     }
 }

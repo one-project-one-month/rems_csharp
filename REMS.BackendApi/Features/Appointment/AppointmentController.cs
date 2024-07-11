@@ -8,7 +8,7 @@
 
         public AppointmentController(BL_Appointment blAppointment)
         {
-            _blAppointment=blAppointment;
+            _blAppointment = blAppointment;
         }
 
         [HttpPost]
@@ -16,7 +16,7 @@
         {
             try
             {
-                var response=await _blAppointment.CreateAppointmentAsync(requestModel);
+                var response = await _blAppointment.CreateAppointmentAsync(requestModel);
                 if (response.IsError)
                 {
                     return BadRequest(response);
@@ -26,6 +26,22 @@
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            }
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAppointment(int id)
+        {
+            try
+            {
+                var response=await _blAppointment.DeleteAppointmentAsync(id);
+                if (response.IsError)
+                    return BadRequest(response);
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,ex.ToString());
             }
         }
     }
