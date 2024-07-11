@@ -1,4 +1,5 @@
 ﻿using REMS.Models.Appointment;
+using REMS.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,6 +73,48 @@ namespace REMS.Modules.Features.Appointment
             {
                 return new MessageResponseModel(false, ex);
             }
+        }
+
+        public async Task<AppointmentListResponseModel> GetAppointmentByAgentIdAsync(int id, int pageNo, int pageSize)
+        {
+            AppointmentListResponseModel response = new AppointmentListResponseModel();
+            try
+            {
+                var query = _db.Appointments
+                                .AsNoTracking()
+                                .Where(x => x.AgentId == id)
+                                .Select(n=>new AppointmentModel
+                                {
+                                    AppointmentId = n.AppointmentId,
+                                    AgentId=n.AgentId,
+                                    ClientId=n.ClientId,
+                                    PropertyId=n.PropertyId,
+                                    AppointmentDate = n.AppointmentDate,
+                                    AppointmentTime=n.AppointmentTime.ToString(),
+                                    Status=n.Status,
+                                    Notes=n.Notes
+                                });
+                var appointmentList = await query.Pagination(pageNo, pageSize).ToListAsync();
+                if(appointmentList is null || appointmentList.Count == 0)
+                {
+                    response.messageResponse = new MessageResponseModel(false, "No Data Found.");
+                    return response;
+                }
+                int totalCount = await query.CountAsync();
+                int pageCount = totalCount / pageSize;
+                if (totalCount % pageSize != 0)
+                {
+                    pageCount++;
+                }
+                response.messageResponse = new MessageResponseModel(true, "Success");
+                response.pageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount);
+                response.lstAppointment = appointmentList;
+            }
+            catch (Exception ex)
+            {
+                response.messageResponse=new MessageResponseModel(false, ex);
+            }
+            return response;
         }
     }
 }
