@@ -10,5 +10,9 @@ public class AgentListResponseModel
 {
     public bool IsSuccess { get; set; } = false;
     public string Status { get; set; } = string.Empty;
+    public int PageSize { get; set; }
+    public int PageNumber { get; set; }
+    public int PageCount { get; set; }
+    public bool IsEndOfPages => PageNumber >= PageCount;
     public List<AgentDto> AgentList { get; set; } = new List<AgentDto>();
 }

@@ -81,10 +81,10 @@ public class AgentController : ControllerBase
         return Ok(agentList);
     }
 
-    [HttpGet("SearchUserByName/{name}", Name = "SearchUserByName")]
-    public async Task<IActionResult> SearchUserByName(string name)
+    [HttpGet("SearchUserByName/{name}/{pageNumber}/{pageSize}", Name = "SearchUserByName")]
+    public async Task<IActionResult> SearchUserByName(string name,int pageNumber,int pageSize)
     {
-        AgentListResponseModel agentList = await _blAgent.SearchAgentByNameAsync(name);
+        AgentListResponseModel agentList = await _blAgent.SearchAgentByNameAsync(name, pageNumber, pageSize);
 
         return Ok(agentList);
     }

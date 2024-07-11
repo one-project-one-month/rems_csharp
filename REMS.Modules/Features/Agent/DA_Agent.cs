@@ -205,7 +205,7 @@ public class DA_Agent
         }
     }
 
-    public async Task<AgentListResponseModel> SearchAgentByNameAsync(string? name)
+    public async Task<AgentListResponseModel> SearchAgentByNameAsync(string? name, int pageNumber, int pageSize)
     {
         AgentListResponseModel model = new AgentListResponseModel();
         try
@@ -213,6 +213,8 @@ public class DA_Agent
             List<AgentDto> agents = await _db.Agents
                 .Where(ag => string.IsNullOrEmpty(name) || ag.AgencyName.Contains(name))
                 .OrderBy(ag => ag.AgencyName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(ag => new AgentDto
                 {
                     AgentId = ag.AgentId,
@@ -224,9 +226,16 @@ public class DA_Agent
                     Address = ag.Address
                 })
                 .ToListAsync();
+            int rowCount = _db.Agents.Count();
+            int pageCount = rowCount / pageSize;
+            if (pageCount % pageSize > 0)
+                pageCount++;
             model.IsSuccess = true;
             model.Status = "Success";
             model.AgentList = agents;
+            model.PageCount = pageCount;
+            model.PageNumber = pageNumber;
+            model.PageSize = pageSize;
             return model;
         }
         catch (Exception ex)
@@ -236,7 +245,7 @@ public class DA_Agent
         }
     }
 
-    public async Task<AgentListResponseModel> SearchAgentByNameAndLocationAsync(string name, string location)
+    public async Task<AgentListResponseModel> SearchAgentByNameAndLocationAsync(string name, string location, int pageNumber, int pageSize)
     {
         AgentListResponseModel model = new AgentListResponseModel();
         try
@@ -244,6 +253,8 @@ public class DA_Agent
             List<AgentDto> agents = await _db.Agents
                 .Where(ag => ag.AgencyName.Contains(name) && ag.Address != null && ag.Address.Contains(location))
                 .OrderBy(ag => ag.AgencyName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
                 .Select(ag => new AgentDto
                 {
                     AgentId = ag.AgentId,
@@ -255,9 +266,16 @@ public class DA_Agent
                     Address = ag.Address
                 })
                 .ToListAsync();
+            int rowCount = _db.Agents.Count();
+            int pageCount = rowCount / pageSize;
+            if (pageCount % pageSize > 0)
+                pageCount++;
             model.IsSuccess = true;
             model.Status = "Success";
             model.AgentList = agents;
+            model.PageCount = pageCount;
+            model.PageNumber = pageNumber;
+            model.PageSize = pageSize;
             return model;
         }
         catch (Exception ex)
