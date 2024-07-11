@@ -20,7 +20,7 @@ public static class ChangeModel
         return user;
     }
 
-    public static Agent Change(this AgentRequestModel requestModel)
+    public static Agent ChangeAgent(this AgentRequestModel requestModel)
     {
         Agent agent = new Agent
         {
@@ -167,7 +167,7 @@ public static class ChangeModel
 
     #region Appointment
 
-    public static Appointment Change(this AppointmentRequestModel requestModel)
+    public static Appointment ChangeAppointment(this AppointmentRequestModel requestModel)
     {
         Appointment appointment = new Appointment
         {
@@ -175,7 +175,7 @@ public static class ChangeModel
             ClientId = requestModel.ClientId,
             PropertyId = requestModel.PropertyId,
             AppointmentDate = requestModel.AppointmentDate,
-            AppointmentTime = requestModel.AppointmentTime,
+            AppointmentTime = TimeSpan.Parse(requestModel.AppointmentTime!),
             Status = requestModel.Status,
             Notes = requestModel.Notes
         };
@@ -183,4 +183,6 @@ public static class ChangeModel
     }
 
     #endregion
+
+
 }

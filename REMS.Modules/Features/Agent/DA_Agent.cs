@@ -25,7 +25,7 @@ public class DA_Agent
                 .AsNoTracking()
                 .FirstAsync();
             requestModel.UserId = user.UserId;
-            await _db.Agents.AddAsync(requestModel.Change());
+            await _db.Agents.AddAsync(requestModel.ChangeAgent());
             int addAgent = await _db.SaveChangesAsync();
             var response = addAgent > 0
                 ? new MessageResponseModel(true, "Successfully Save")

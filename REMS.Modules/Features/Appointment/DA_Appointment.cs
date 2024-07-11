@@ -38,7 +38,7 @@ namespace REMS.Modules.Features.Appointment
                 {
                     return new MessageResponseModel(false, "Property Not Found");
                 }
-                await _db.Appointments.AddAsync(requestModel.Change());
+                await _db.Appointments.AddAsync(requestModel.ChangeAppointment());
                 int result = await _db.SaveChangesAsync();
                 var response = result > 0
                     ? new MessageResponseModel(true, "Appoinment Create Successfully.")

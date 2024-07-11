@@ -13,3 +13,4 @@ global using REMS.Models.Client;
 global using REMS.Models.Custom;
 global using REMS.Models.Property;
 global using REMS.Models.Review;
+global using REMS.Models.Appointment;

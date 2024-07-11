@@ -36,6 +36,10 @@ namespace REMS.Modules.Features.Appointment
             {
                 return new MessageResponseModel(false, "Please Add Status");
             }
+            if (requestModel.AppointmentTime is null)
+            {
+                return new MessageResponseModel(false, "Please Add Appointment Time");
+            }
             return default;
         }
     }

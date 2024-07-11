@@ -16,7 +16,7 @@ namespace REMS.Models.Appointment
 
         public DateTime AppointmentDate { get; set; }
 
-        public TimeSpan AppointmentTime { get; set; }
+        public string? AppointmentTime { get; set; }
 
         public string Status { get; set; } = null!;
 
