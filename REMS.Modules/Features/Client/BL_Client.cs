@@ -28,15 +28,22 @@ public class BL_Client
         return response;
     }
 
+    public async Task<ClientResponseModel> GetClientById(int id)
+    {
+        var responseModel = await _daClient.GetClientById(id);
+        return responseModel;
+    }
+
     public async Task<MessageResponseModel> CreateClientAsync(ClientRequestModel requestModel)
     {
         var response = await _daClient.CreateClientAsync(requestModel);
         return response;
     }
 
-    public async Task<ClientResponseModel> GetClientById(int id)
+    public async Task<MessageResponseModel> UpdateClientAsync(int id, ClientRequestModel requestModel)
     {
-        var responseModel = await _daClient.GetClientById(id);
-        return responseModel;
+        if (id <= 0) throw new Exception("id is null");
+        var response = await _daClient.UpdateClientAsync(id, requestModel);
+        return response;
     }
 }
