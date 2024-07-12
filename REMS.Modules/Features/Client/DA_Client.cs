@@ -114,4 +114,73 @@ public class DA_Client
             return new MessageResponseModel(false, ex);
         }
     }
+
+    public async Task<MessageResponseModel> UpdateClientAsync(int id, ClientRequestModel requestModel)
+    {
+        try
+        {
+            //User user = new User();
+            var client = await _db.Clients
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.ClientId == id);
+
+            if (client is null)
+            {
+                return new MessageResponseModel(false, "Client Not Found");
+            }
+
+            var user = await _db.Users
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(x => x.UserId == client.UserId);
+
+            if (user is null)
+            {
+                return new MessageResponseModel(false, "User Not Found");
+            }
+
+            if (!string.IsNullOrWhiteSpace(requestModel.FirstName) || !string.IsNullOrWhiteSpace(requestModel.LastName))
+            {
+                string firstName = requestModel.FirstName ?? string.Empty;
+                string lastName = requestModel.LastName ?? string.Empty;
+                string Name = string.Concat(firstName, (!string.IsNullOrEmpty(firstName) ? " " : string.Empty), lastName);
+                user.Name = Name;
+                client.FirstName = requestModel.FirstName ?? client.FirstName;
+                client.LastName = requestModel.LastName ?? client.LastName;
+            }
+
+            if (!string.IsNullOrWhiteSpace(requestModel.Phone))
+            {
+                user.Phone = requestModel.Phone;
+                client.Phone = requestModel.Phone;
+            }
+
+            if (!string.IsNullOrWhiteSpace(requestModel.Email))
+            {
+                user.Email = requestModel.Email;
+                client.Email = requestModel.Email;
+            }
+
+            if (!string.IsNullOrWhiteSpace(requestModel.Password))
+            {
+                user.Password = requestModel.Password;
+            }
+
+            if (!string.IsNullOrWhiteSpace(requestModel.Address))
+            {
+                client.Address = requestModel.Address;
+            }
+
+            _db.Entry(user).State = EntityState.Modified;
+            _db.Entry(client).State = EntityState.Modified;
+            int result = await _db.SaveChangesAsync();
+            var response = result > 0
+                ? new MessageResponseModel(true, "Successfully Update")
+                : new MessageResponseModel(false, "Updating Fail");
+            return response;
+        }
+        catch (Exception ex)
+        {
+            return new MessageResponseModel(false, ex);
+        }
+    }
 }

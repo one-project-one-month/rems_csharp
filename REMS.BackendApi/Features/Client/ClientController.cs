@@ -72,4 +72,22 @@ public class ClientController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateClient(int id, ClientRequestModel requestModel)
+    {
+        try
+        {
+            var response = await _blClient.UpdateClientAsync(id, requestModel);
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+        }
+    }
 }
