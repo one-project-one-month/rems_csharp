@@ -1,4 +1,6 @@
 ﻿using Azure;
+using REMS.Database.AppDbContextModels;
+using REMS.Modules.Features.Agent;
 
 namespace REMS.BackendApi.Features.Client;
 
@@ -79,6 +81,24 @@ public class ClientController : ControllerBase
         try
         {
             var response = await _blClient.UpdateClientAsync(id, requestModel);
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+        }
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteClient(int id)
+    {
+        try
+        {
+            var response = await _blClient.DeleteClientAsync(id);
             if (response.IsError)
             {
                 return BadRequest(response);
