@@ -1,4 +1,5 @@
-﻿using REMS.Modules.Features.Review;
+﻿using REMS.Modules.Features.Agent;
+using REMS.Modules.Features.Review;
 
 namespace REMS.Modules.Features.Client;
 
@@ -44,6 +45,13 @@ public class BL_Client
     {
         if (id <= 0) throw new Exception("id is null");
         var response = await _daClient.UpdateClientAsync(id, requestModel);
+        return response;
+    }
+
+    public async Task<MessageResponseModel> DeleteClientAsync(int id)
+    {
+        if (id <= 0) throw new Exception("id is null");
+        var response = await _daClient.DeleteClientAsync(id);
         return response;
     }
 }

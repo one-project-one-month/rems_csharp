@@ -183,4 +183,42 @@ public class DA_Client
             return new MessageResponseModel(false, ex);
         }
     }
+
+    public async Task<MessageResponseModel> DeleteClientAsync(int id)
+    {
+        try
+        {
+            var client = await _db.Clients
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.ClientId == id);
+
+            if (client is null)
+            {
+                return new MessageResponseModel(false, "Client Not Found");
+            }
+
+            var user = await _db.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UserId == client.UserId);
+            
+            if (user is null || client is null)
+            {
+                return new MessageResponseModel(false, "User Not Found.");
+            }
+
+            _db.Users.Remove(user);
+            _db.Entry(user).State = EntityState.Deleted;
+            _db.Clients.Remove(client);
+            _db.Entry(client).State = EntityState.Deleted;
+            int result = await _db.SaveChangesAsync();
+            var response = result > 0
+                ? new MessageResponseModel(true, "Successfully Deleted.")
+                : new MessageResponseModel(false, "Deleting Failed.");
+            return response;
+        }
+        catch (Exception ex)
+        {
+            return new MessageResponseModel(false, ex);
+        }
+    }
 }
