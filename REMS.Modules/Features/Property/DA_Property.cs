@@ -97,7 +97,17 @@ public class DA_Property
     {
         try
         {
+            if (requestModel == null)
+            {
+                throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
+            }
+
             var property = requestModel.Change();
+            if (property == null)
+            {
+                throw new Exception("Failed to convert request model to property entity");
+            }
+
             await _db.Properties.AddAsync(property);
             await _db.SaveChangesAsync();
 
@@ -112,9 +122,10 @@ public class DA_Property
         catch (Exception ex)
         {
             Console.WriteLine(ex);
-            return null;
+            throw;
         }
     }
+
 
     public async Task<PropertyResponseModel> UpdateProperty(int propertyId, PropertyRequestModel requestModel)
     {
