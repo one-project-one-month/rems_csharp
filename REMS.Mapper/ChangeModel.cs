@@ -111,6 +111,62 @@ public static class ChangeModel
         return propertyModel;
     }
 
+    public static Property Change(this PropertyRequestModel requestModel)
+    {
+        Property property = new Property
+        {
+            PropertyId = requestModel.PropertyId ?? 0,
+            Address = requestModel.Address,
+            City = requestModel.City,
+            State = requestModel.State,
+            ZipCode = requestModel.ZipCode,
+            PropertyType = requestModel.PropertyType,
+            Price = requestModel.Price,
+            Size = requestModel.Size,
+            NumberOfBedrooms = requestModel.NumberOfBedrooms,
+            NumberOfBathrooms = requestModel.NumberOfBathrooms,
+            YearBuilt = requestModel.YearBuilt,
+            Description = requestModel.Description,
+            Status = requestModel.Status,
+            DateListed = requestModel.DateListed
+        };
+        return property;
+    }
+
+    //public static PropertyResponseModel ChangeToResponseModel(this Property dataModel, List<PropertyImage> images)
+    //{
+    //    var propertyResponseModel = new PropertyResponseModel
+    //    {
+    //        Property = new PropertyModel
+    //        {
+    //            PropertyId = dataModel.PropertyId,
+    //            Address = dataModel.Address,
+    //            City = dataModel.City,
+    //            State = dataModel.State,
+    //            ZipCode = dataModel.ZipCode,
+    //            PropertyType = dataModel.PropertyType,
+    //            Price = dataModel.Price,
+    //            Size = dataModel.Size,
+    //            NumberOfBedrooms = dataModel.NumberOfBedrooms,
+    //            NumberOfBathrooms = dataModel.NumberOfBathrooms,
+    //            YearBuilt = dataModel.YearBuilt,
+    //            Description = dataModel.Description,
+    //            Status = dataModel.Status,
+    //            DateListed = dataModel.DateListed
+    //        },
+    //        Images = images.Select(img => new PropertyImageModel
+    //        {
+    //            ImageId = img.ImageId,
+    //            PropertyId = img.PropertyId,
+    //            ImageUrl = img.ImageUrl,
+    //            Description = img.Description,
+    //            DateUploaded = img.DateUploaded
+    //        }).ToList()
+    //    };
+
+    //    return propertyResponseModel;
+    //}
+
     #endregion
 
     #region Property Image
