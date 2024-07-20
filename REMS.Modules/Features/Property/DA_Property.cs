@@ -39,7 +39,7 @@ public class DA_Property
         {
             var properties = await _db.Properties
                                       .AsNoTracking()
-                                      .Include(x=>x.PropertyImages)
+                                      .Include(x => x.PropertyImages)
                                       .Skip((pageNo - 1) * pageSize)
                                       .Take(pageSize)
                                       .ToListAsync();
@@ -74,7 +74,7 @@ public class DA_Property
         {
             var property = await _db.Properties
                                     .AsNoTracking()
-                                    .Include(x=>x.PropertyImages)
+                                    .Include(x => x.PropertyImages)
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
 
@@ -90,6 +90,102 @@ public class DA_Property
         {
             Console.WriteLine(ex);
             return null;
+        }
+    }
+
+    public async Task<PropertyResponseModel> CreateProperty(PropertyRequestModel requestModel)
+    {
+        try
+        {
+            if (requestModel == null)
+            {
+                throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
+            }
+
+            var property = requestModel.Change();
+            if (property == null)
+            {
+                throw new Exception("Failed to convert request model to property entity");
+            }
+
+            await _db.Properties.AddAsync(property);
+            await _db.SaveChangesAsync();
+
+            var responseModel = new PropertyResponseModel
+            {
+                Property = property.Change(),
+                Images = new List<PropertyImageModel>()
+            };
+
+            return responseModel;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            throw;
+        }
+    }
+
+
+    public async Task<PropertyResponseModel> UpdateProperty(int propertyId, PropertyRequestModel requestModel)
+    {
+        try
+        {
+            var property = await _db.Properties
+                                    .Include(x => x.PropertyImages)
+                                    .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
+                                    ?? throw new Exception("Property Not Found");
+
+            property.Address = requestModel.Address;
+            property.City = requestModel.City;
+            property.State = requestModel.State;
+            property.ZipCode = requestModel.ZipCode;
+            property.PropertyType = requestModel.PropertyType;
+            property.Price = requestModel.Price;
+            property.Size = requestModel.Size;
+            property.NumberOfBedrooms = requestModel.NumberOfBedrooms;
+            property.NumberOfBathrooms = requestModel.NumberOfBathrooms;
+            property.YearBuilt = requestModel.YearBuilt;
+            property.Description = requestModel.Description;
+            property.Status = requestModel.Status;
+            property.DateListed = requestModel.DateListed;
+
+            _db.Properties.Update(property);
+            await _db.SaveChangesAsync();
+
+            var responseModel = new PropertyResponseModel
+            {
+                Property = property.Change(),
+                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+            };
+
+            return responseModel;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return null;
+        }
+    }
+
+    public async Task<bool> DeleteProperty(int propertyId)
+    {
+        try
+        {
+            var property = await _db.Properties
+                                    .Include(x => x.PropertyImages)
+                                    .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
+                                    ?? throw new Exception("Property Not Found");
+
+            _db.Properties.Remove(property);
+            await _db.SaveChangesAsync();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex);
+            return false;
         }
     }
 }

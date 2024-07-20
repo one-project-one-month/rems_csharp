@@ -36,4 +36,56 @@ public class BL_Property
         var response = await _daProperty.GetPropertyById(propertyId);
         return response;
     }
+
+    public async Task<PropertyResponseModel> CreateProperty(PropertyRequestModel requestModel)
+    {
+        if (requestModel == null)
+        {
+            throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
+        }
+
+        try
+        {
+            var response = await _daProperty.CreateProperty(requestModel);
+            if (response == null)
+            {
+                throw new Exception("Failed to create property in data access layer");
+            }
+
+            return response;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"An error occurred while creating the property: {ex.Message}");
+        }
+    }
+
+
+    public async Task<PropertyResponseModel> UpdateProperty(int propertyId, PropertyRequestModel requestModel)
+    {
+        if (propertyId < 1)
+        {
+            throw new Exception("Invalid Property Id");
+        }
+
+        if (requestModel == null)
+        {
+            throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
+        }
+
+        var response = await _daProperty.UpdateProperty(propertyId, requestModel);
+        return response;
+    }
+
+    public async Task<bool> DeleteProperty(int propertyId)
+    {
+        if (propertyId < 1)
+        {
+            throw new Exception("Invalid Property Id");
+        }
+
+        var result = await _daProperty.DeleteProperty(propertyId);
+        return result;
+    }
+
 }
