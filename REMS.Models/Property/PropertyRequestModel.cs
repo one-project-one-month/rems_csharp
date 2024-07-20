@@ -30,5 +30,13 @@ public class PropertyRequestModel
     public string Status { get; set; }
 
     public DateTime? DateListed { get; set; }
+
+    public List<PropertyImageRequestModel> Images { get; set; }
+}
+
+public class PropertyImageRequestModel
+{
+    public string? ImgBase64 { get; set; }
+    public string? Description { get; set; }
 }
 

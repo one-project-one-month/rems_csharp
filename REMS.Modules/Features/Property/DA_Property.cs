@@ -1,12 +1,16 @@
-﻿namespace REMS.Modules.Features.Property;
+﻿using Microsoft.Extensions.Configuration;
+
+namespace REMS.Modules.Features.Property;
 
 public class DA_Property
 {
     private readonly AppDbContext _db;
+    private readonly IConfiguration _configuration;
 
-    public DA_Property(AppDbContext db)
+    public DA_Property(AppDbContext db, IConfiguration configuration)
     {
         _db = db;
+        _configuration = configuration;
     }
 
     public async Task<List<PropertyResponseModel>> GetProperties()
@@ -111,7 +115,30 @@ public class DA_Property
             await _db.Properties.AddAsync(property);
             await _db.SaveChangesAsync();
 
-            var responseModel = new PropertyResponseModel
+            string folderPath = _configuration.GetSection("ImageFolderPath").Value!;
+            foreach (var item in requestModel.Images)
+            {
+                string fileName = Guid.NewGuid().ToString() + ".png";
+                string base64Str = item.ImgBase64!;
+                byte[] bytes = Convert.FromBase64String(base64Str!);
+
+                string filePath = Path.Combine(folderPath, fileName);
+                await File.WriteAllBytesAsync(filePath, bytes);
+
+                // Save File in Folder
+                // Save Path in Db
+
+                await _db.PropertyImages.AddAsync(new PropertyImage
+                {
+                    DateUploaded = DateTime.Now,
+                    Description = item.Description,
+                    ImageUrl = filePath,
+                    PropertyId = property.Id
+                });
+                await _db.SaveChangesAsync();
+            }
+
+             var responseModel = new PropertyResponseModel
             {
                 Property = property.Change(),
                 Images = new List<PropertyImageModel>()
