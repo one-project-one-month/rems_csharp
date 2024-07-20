@@ -153,7 +153,6 @@ public class DA_Property
         }
     }
 
-
     public async Task<PropertyResponseModel> UpdateProperty(int propertyId, PropertyRequestModel requestModel)
     {
         try
