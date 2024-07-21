@@ -114,7 +114,7 @@ public class DA_Agent
             {
                 return new MessageResponseModel(false, "User Not Found.");
             }
-            
+
             _db.Users.Remove(user);
             _db.Entry(user).State = EntityState.Deleted;
             _db.Agents.Remove(agent);
@@ -162,7 +162,7 @@ public class DA_Agent
             model = new MessageResponseModel(true, ex.ToString());
         }
 
-        result:
+    result:
         return model;
     }
 
@@ -243,6 +243,48 @@ public class DA_Agent
             model.Status = ex.ToString();
             return model;
         }
+    }
+
+    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAsyncV2(string? name, int pageNumber, int pageSize)
+    {
+        Result<AgentListResponseModel> model = null;
+        try
+        {
+            List<AgentDto> agents = await _db.Agents
+                .Where(ag => string.IsNullOrEmpty(name) || ag.AgencyName.Contains(name))
+                .OrderBy(ag => ag.AgencyName)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(ag => new AgentDto
+                {
+                    AgentId = ag.AgentId,
+                    UserId = ag.UserId,
+                    AgencyName = ag.AgencyName,
+                    LicenseNumber = ag.LicenseNumber,
+                    Phone = ag.Phone,
+                    Email = ag.Email,
+                    Address = ag.Address
+                })
+                .ToListAsync();
+            int rowCount = await _db.Agents.CountAsync();
+            int pageCount = rowCount / pageSize;
+            if (pageCount % pageSize > 0)
+                pageCount++;
+            var data = new AgentListResponseModel
+            {
+                AgentList = agents,
+                PageCount = pageCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+
+            model = Result<AgentListResponseModel>.Success(data);
+        }
+        catch (Exception ex)
+        {
+            model = Result<AgentListResponseModel>.Error(ex);
+        }
+        return model;
     }
 
     public async Task<AgentListResponseModel> SearchAgentByNameAndLocationAsync(string name, string location, int pageNumber, int pageSize)

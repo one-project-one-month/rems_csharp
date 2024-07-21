@@ -133,7 +133,7 @@ public class DA_Property
                     DateUploaded = DateTime.Now,
                     Description = item.Description,
                     ImageUrl = filePath,
-                    PropertyId = property.Id
+                    PropertyId = property.PropertyId
                 });
                 await _db.SaveChangesAsync();
             }
