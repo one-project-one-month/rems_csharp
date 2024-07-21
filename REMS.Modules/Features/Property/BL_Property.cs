@@ -9,13 +9,13 @@ public class BL_Property
         _daProperty = daProperty;
     }
 
-    public async Task<List<PropertyResponseModel>> GetProperties()
+    public async Task<Result<List<PropertyResponseModel>>> GetProperties()
     {
         var response = await _daProperty.GetProperties();
         return response;
     }
 
-    public async Task<PropertyListResponseModel> GetProperties(int pageNo, int pageSize)
+    public async Task<Result<PropertyListResponseModel>> GetProperties(int pageNo, int pageSize)
     {
         if (pageNo < 1 || pageSize < 1)
         {
@@ -26,7 +26,7 @@ public class BL_Property
         return response;
     }
 
-    public async Task<PropertyResponseModel> GetPropertyById(int propertyId)
+    public async Task<Result<PropertyResponseModel>> GetPropertyById(int propertyId)
     {
         if (propertyId < 1)
         {
