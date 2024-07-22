@@ -1,4 +1,5 @@
-﻿namespace REMS.Modules.Features.Agent;
+﻿
+namespace REMS.Modules.Features.Agent;
 
 public class DA_Agent
 {
@@ -131,44 +132,35 @@ public class DA_Agent
         }
     }
 
-    public async Task<MessageResponseModel> LoginAgentAsync(AgentLoginRequestModel agentLoginInfo)
+    public async Task<Result<string>> LoginAgentAsync(AgentLoginRequestModel agentLoginInfo)
     {
-        var model = new MessageResponseModel();
+        Result<string> model = null;
         try
         {
             User? user = await _db.Users
                 .Where(us => us.Name == agentLoginInfo.UserName && us.Password == agentLoginInfo.Password)
                 .FirstOrDefaultAsync();
 
-            // if (user != null)
-            // {
-            //     return new MessageResponseModel(true, "Login Success");
-            // }
-            // else
-            // {
-            //     return new MessageResponseModel(false, "Login Fail");
-            // }
-
             if (user is null)
             {
-                model = new MessageResponseModel(false, "Login Fail");
+                model = Result<string>.Error("Login Fail");
                 goto result;
             }
 
-            model = new MessageResponseModel(true, "Login Success");
+            model = model = Result<string>.Error("Login Success");
         }
         catch (Exception ex)
         {
-            model = new MessageResponseModel(true, ex.ToString());
+            model = Result<string>.Error(ex);
         }
 
     result:
         return model;
     }
 
-    public async Task<AgentResponseModel> SearchAgentAsync(int id)
+    public async Task<Result<AgentDto>> SearchAgentAsync(int id)
     {
-        AgentResponseModel model = new AgentResponseModel();
+        Result<AgentDto> model = null;
         try
         {
             AgentDto? agent = await _db.Agents
@@ -184,30 +176,24 @@ public class DA_Agent
                     Address = ag.Address
                 })
                 .FirstOrDefaultAsync();
-
-            if (agent is null)
+            if(agent is null)
             {
-                model.Status = "User Not Found";
+                model = Result<AgentDto>.Error("User Not Found");
+                goto result;
             }
-            else
-            {
-                model.IsSuccess = true;
-                model.Status = "Success";
-            }
-
-            model.Agent = agent;
-            return model;
+            model = Result<AgentDto>.Success(agent);
         }
         catch (Exception ex)
         {
-            model.Status = ex.ToString();
-            return model;
+            model = Result<AgentDto>.Error(ex);
         }
+        result: 
+        return model;
     }
 
-    public async Task<AgentListResponseModel> SearchAgentByNameAsync(string? name, int pageNumber, int pageSize)
+    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAsync(string? name, int pageNumber, int pageSize)
     {
-        AgentListResponseModel model = new AgentListResponseModel();
+        Result<AgentListResponseModel> model = null;
         try
         {
             List<AgentDto> agents = await _db.Agents
@@ -230,19 +216,22 @@ public class DA_Agent
             int pageCount = rowCount / pageSize;
             if (pageCount % pageSize > 0)
                 pageCount++;
-            model.IsSuccess = true;
-            model.Status = "Success";
-            model.AgentList = agents;
-            model.PageCount = pageCount;
-            model.PageNumber = pageNumber;
-            model.PageSize = pageSize;
+            var data = new AgentListResponseModel
+            {
+                AgentList = agents,
+                PageCount = pageCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+
+            model = Result<AgentListResponseModel>.Success(data);
             return model;
         }
         catch (Exception ex)
         {
-            model.Status = ex.ToString();
-            return model;
+            model = Result<AgentListResponseModel>.Error(ex);
         }
+        return model;
     }
 
     public async Task<Result<AgentListResponseModel>> SearchAgentByNameAsyncV2(string? name, int pageNumber, int pageSize)
@@ -287,9 +276,9 @@ public class DA_Agent
         return model;
     }
 
-    public async Task<AgentListResponseModel> SearchAgentByNameAndLocationAsync(string name, string location, int pageNumber, int pageSize)
+    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAndLocationAsync(string name, string location, int pageNumber, int pageSize)
     {
-        AgentListResponseModel model = new AgentListResponseModel();
+        Result<AgentListResponseModel> model = null;
         try
         {
             List<AgentDto> agents = await _db.Agents
@@ -312,18 +301,21 @@ public class DA_Agent
             int pageCount = rowCount / pageSize;
             if (pageCount % pageSize > 0)
                 pageCount++;
-            model.IsSuccess = true;
-            model.Status = "Success";
-            model.AgentList = agents;
-            model.PageCount = pageCount;
-            model.PageNumber = pageNumber;
-            model.PageSize = pageSize;
-            return model;
+
+            AgentListResponseModel data = new AgentListResponseModel
+            {
+                PageCount = pageCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                AgentList = agents
+            };
+            model = Result<AgentListResponseModel>.Success(data);
         }
         catch (Exception ex)
         {
-            model.Status = ex.ToString();
-            return model;
+            model = Result<AgentListResponseModel>.Error(ex);
         }
+        return model;
+
     }
 }

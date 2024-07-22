@@ -27,45 +27,41 @@ public class BL_Agent
         return response;
     }
 
-    public async Task<AgentResponseModel> SearchAgentAsync(int id)
+    public async Task<Result<AgentDto>> SearchAgentAsync(int id)
     {
         return await _daAgent.SearchAgentAsync(id);
     }
 
-    public async Task<MessageResponseModel> LoginAgentAsync(AgentLoginRequestModel agentLoginInfo)
+    public async Task<Result<string>> LoginAgentAsync(AgentLoginRequestModel agentLoginInfo)
     {
         return await _daAgent.LoginAgentAsync(agentLoginInfo);
     }
 
-    public async Task<AgentListResponseModel> SearchAgentByNameAsync(string name,int pageNumber,int pageSize)
+    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAsync(string name,int pageNumber,int pageSize)
     {
         if (pageNumber<1 || pageSize < 1)
         {
-            AgentListResponseModel model = new AgentListResponseModel();
-            model.Status = "Page Number or Page Size Can't be less than 1";
-            return model;
+            return Result<AgentListResponseModel>.Error("Page Number or Page Size Can't be less than 1");
         }
         return await _daAgent.SearchAgentByNameAsync(name, pageNumber, pageSize);
     }
 
-    public async Task<AgentListResponseModel> SearchAgentByNameAndLocationAsync(SearchAgentRequestModel _searchAgent)
+    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAndLocationAsync(SearchAgentRequestModel _searchAgent)
     {
-        AgentListResponseModel _agentList = new AgentListResponseModel();
+        Result<AgentListResponseModel> model = null;
         if (_searchAgent.PageNumber < 1 || _searchAgent.PageSize < 1)
         {
-            _agentList.Status = "Page Number or Page Size Can't be less than 1";
-            return _agentList;
+            model= Result<AgentListResponseModel>.Error("Page Number or Page Size Can't be less than 1");
         }
         if (!string.IsNullOrEmpty(_searchAgent.Address))
         {
-            _agentList =
+            model =
                 await _daAgent.SearchAgentByNameAndLocationAsync(_searchAgent.AgentName ?? "", _searchAgent.Address,_searchAgent.PageNumber,_searchAgent.PageSize);
         }
         else
         {
-            _agentList = await _daAgent.SearchAgentByNameAsync(_searchAgent.AgentName ?? "", _searchAgent.PageNumber, _searchAgent.PageSize);
+            model = await _daAgent.SearchAgentByNameAsync(_searchAgent.AgentName ?? "", _searchAgent.PageNumber, _searchAgent.PageSize);
         }
-
-        return _agentList;
+        return model;
     }
 }
