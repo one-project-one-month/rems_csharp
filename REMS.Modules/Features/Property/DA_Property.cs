@@ -160,8 +160,12 @@ public class DA_Property
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
 
-            _db.PropertyImages.RemoveRange(property.PropertyImages);
+            foreach(var propertyImage in property.PropertyImages)
+            {
+                RemovePhotoFromFolder(propertyImage.ImageUrl);
+            }
 
+            _db.PropertyImages.RemoveRange(property.PropertyImages);
 
             property.Address = requestModel.Address;
             property.City = requestModel.City;
@@ -218,6 +222,11 @@ public class DA_Property
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
 
+            foreach (var propertyImage in property.PropertyImages)
+            {
+                RemovePhotoFromFolder(propertyImage.ImageUrl);
+            }
+
             _db.Properties.Remove(property);
             _db.PropertyImages.RemoveRange(property.PropertyImages);
 
@@ -266,4 +275,11 @@ public class DA_Property
         await _db.SaveChangesAsync();
     }
 
+    private static void RemovePhotoFromFolder(string photoPath)
+    {
+        if (File.Exists(photoPath))
+        {
+            File.Delete(photoPath);
+        }
+    }
 }
