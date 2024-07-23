@@ -66,7 +66,7 @@ public class BL_Property
     }
 
 
-    public async Task<PropertyResponseModel> UpdateProperty(int propertyId, PropertyRequestModel requestModel)
+    public async Task<Result<PropertyResponseModel>> UpdateProperty(int propertyId, PropertyRequestModel requestModel)
     {
         if (propertyId < 1)
         {

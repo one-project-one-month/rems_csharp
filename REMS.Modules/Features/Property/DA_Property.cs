@@ -108,6 +108,7 @@ public class DA_Property
 
     public async Task<Result<PropertyResponseModel>> CreateProperty(PropertyRequestModel requestModel)
     {
+        Result<PropertyResponseModel> model = null;
         try
         {
             if (requestModel == null)
@@ -169,22 +170,28 @@ public class DA_Property
             //    Images = createProperty.PropertyImages.Select(x => x.Change()).ToList()
             //};
 
-            return Result<PropertyResponseModel>.Success(propertyResponse);
+            model = Result<PropertyResponseModel>.Success(propertyResponse);
+            return model;
         }
         catch (Exception ex)
         {
-            return Result<PropertyResponseModel>.Error(ex);
+            model = Result<PropertyResponseModel>.Error(ex);
+            return model;
         }
     }
 
-    public async Task<PropertyResponseModel> UpdateProperty(int propertyId, PropertyRequestModel requestModel)
+    public async Task<Result<PropertyResponseModel>> UpdateProperty(int propertyId, PropertyRequestModel requestModel)
     {
+        Result<PropertyResponseModel> model = null;
         try
         {
             var property = await _db.Properties
                                     .Include(x => x.PropertyImages)
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
+
+            _db.PropertyImages.RemoveRange(property.PropertyImages);
+
 
             property.Address = requestModel.Address;
             property.City = requestModel.City;
@@ -200,21 +207,34 @@ public class DA_Property
             property.Status = requestModel.Status;
             property.DateListed = requestModel.DateListed;
 
+            foreach (var item in requestModel.Images)
+            {
+                var photoPath = await SavePhotoInFolder(item.ImgBase64!);
+                await SavePhotoPathToDb(property.PropertyId, item.Description, photoPath);
+            }
+
             _db.Properties.Update(property);
             await _db.SaveChangesAsync();
 
+            var updatedProperty = await _db.Properties
+                                    .AsNoTracking()
+                                    .Include(x => x.PropertyImages)
+                                    .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
+                                    ?? throw new Exception("Property Not Found");
+
             var responseModel = new PropertyResponseModel
             {
-                Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+                Property = updatedProperty.Change(),
+                Images = updatedProperty.PropertyImages.Select(x => x.Change()).ToList()
             };
-
-            return responseModel;
+            model = Result<PropertyResponseModel>.Success(responseModel);
+            return model;
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
-            return null;
+            model = Result<PropertyResponseModel>.Error(ex);
+            return model;
         }
     }
 
