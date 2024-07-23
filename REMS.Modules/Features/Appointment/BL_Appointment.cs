@@ -17,66 +17,64 @@ namespace REMS.Modules.Features.Appointment
             _daAppointment = daAppointment;
         }
 
-        public async Task<MessageResponseModel> CreateAppointmentAsync(AppointmentRequestModel requestModel)
+        public async Task<Result<string>> CreateAppointmentAsync(AppointmentRequestModel requestModel)
         {
-            var response = CheckAppointmentValue(requestModel);
-            if (response is not null)
+            var checkAppointment = CheckAppointmentValue(requestModel);
+            if (checkAppointment is not null)
             {
-                return response;
+                return checkAppointment;
             }
             return await _daAppointment.CreateAppointmentAsync(requestModel);
         }
 
-        public async Task<MessageResponseModel> DeleteAppointmentAsync(int id)
+        public async Task<Result<string>> DeleteAppointmentAsync(int id)
         {
             var response = await _daAppointment.DeleteAppointmentAsync(id);
             return response;
         }
 
-        public async Task<AppointmentListResponseModel> GetAppointmentByAgentIdAsync(int id, int pageNo, int pageSize)
+        public async Task<Result<AppointmentListResponseModel>> GetAppointmentByAgentIdAsync(int id, int pageNo, int pageSize)
         {
-            var response=CheckPageNoandPageSize(pageNo, pageSize);
-            if(response is not null)
+            var checkpageSetting=CheckPageNoandPageSize(pageNo, pageSize);
+            if(checkpageSetting is not null)
             {
-                return response;
+                return checkpageSetting;
             }
             return await _daAppointment.GetAppointmentByAgentIdAsync(id, pageNo, pageSize);
         }
 
-        private MessageResponseModel CheckAppointmentValue(AppointmentRequestModel requestModel)
+        private Result<string> CheckAppointmentValue(AppointmentRequestModel requestModel)
         {
             TimeSpan time;
             if (requestModel is null)
             {
-                return new MessageResponseModel(false, "Model is null.");
+                return Result<string>.Error("Model is null");
             }
             if (requestModel.Status is null)
             {
-                return new MessageResponseModel(false, "Please Add Status.");
+                Result<string>.Error( "Please Add Status.");
             }
             if (requestModel.AppointmentTime is null)
             {
-                return new MessageResponseModel(false, "Please Add Appointment Time.");
+                Result<string>.Error( "Please Add Appointment Time.");
             }
             if (!TimeSpan.TryParse(requestModel.AppointmentTime, out time))
             {
-                return new MessageResponseModel(false, "Invalid Appointment Time.");
+                Result<string>.Error( "Invalid Appointment Time.");
             }
             return default;
         }
 
-        private AppointmentListResponseModel CheckPageNoandPageSize(int pageNo, int pageSize)
+        private Result<AppointmentListResponseModel> CheckPageNoandPageSize(int pageNo, int pageSize)
         {
             AppointmentListResponseModel response = new AppointmentListResponseModel();
             if (pageNo <= 0)
             {
-                response.messageResponse = new MessageResponseModel(false, "PageNo must be positive number");
-                return response;
+                return Result<AppointmentListResponseModel>.Error("PageNo must be greater than 0");
             }
             if (pageSize <= 0)
             {
-                response.messageResponse = new MessageResponseModel(false, "pageSize must be positive number");
-                return response;
+                return Result<AppointmentListResponseModel>.Error("PageSize must be greater than 0");
             }
             return default;
         }
