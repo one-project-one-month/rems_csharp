@@ -44,11 +44,6 @@ public class BL_Property
             throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
         }
 
-        if (requestModel.PropertyId != 0)
-        {
-            throw new Exception("Cannot insert Property Id");
-        }
-
         try
         {
             var response = await _daProperty.CreateProperty(requestModel);

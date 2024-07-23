@@ -116,40 +116,16 @@ public class DA_Property
                 throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
             }
 
-            if (requestModel.PropertyId != 0)
-            {
-                throw new Exception("Cannot insert Property Id");
-            }
-
             var property = requestModel.Change()
                            ?? throw new Exception("Failed to convert request model to property entity");
 
             await _db.Properties.AddAsync(property);
             await _db.SaveChangesAsync();
 
-            string folderPath = _configuration.GetSection("ImageFolderPath").Value!;
-            foreach (var item in requestModel.Images)
+            foreach (var propertyImage in requestModel.Images)
             {
-                var photoPath = await SavePhotoInFolder(item.ImgBase64!);
-                await SavePhotoPathToDb(property.PropertyId, item.Description, photoPath);
-                //string fileName = Guid.NewGuid().ToString() + ".png";
-                //string base64Str = item.ImgBase64!;
-                //byte[] bytes = Convert.FromBase64String(base64Str!);
-
-                //string filePath = Path.Combine(folderPath, fileName);
-                //await File.WriteAllBytesAsync(filePath, bytes);
-
-                //// Save File in Folder
-
-                //// Save Path in Db
-                //await _db.PropertyImages.AddAsync(new PropertyImage
-                //{
-                //    DateUploaded = DateTime.Now,
-                //    Description = item.Description,
-                //    ImageUrl = filePath,
-                //    PropertyId = property.PropertyId
-                //});
-                //await _db.SaveChangesAsync();
+                var photoPath = await SavePhotoInFolder(propertyImage.ImgBase64!);
+                await SavePhotoPathToDb(property.PropertyId, propertyImage.Description, photoPath);
             }
 
             var createdProperty = await _db.Properties
@@ -163,12 +139,6 @@ public class DA_Property
                 Property = createdProperty.Change(),
                 Images = createdProperty.PropertyImages.Select(x => x.Change()).ToList()
             };
-
-            //var propertyResponse = new PropertyResponseModel
-            //{
-            //    Property = property.Change(),
-            //    Images = createProperty.PropertyImages.Select(x => x.Change()).ToList()
-            //};
 
             model = Result<PropertyResponseModel>.Success(propertyResponse);
             return model;
@@ -207,10 +177,10 @@ public class DA_Property
             property.Status = requestModel.Status;
             property.DateListed = requestModel.DateListed;
 
-            foreach (var item in requestModel.Images)
+            foreach (var propertyImage in requestModel.Images)
             {
-                var photoPath = await SavePhotoInFolder(item.ImgBase64!);
-                await SavePhotoPathToDb(property.PropertyId, item.Description, photoPath);
+                var photoPath = await SavePhotoInFolder(propertyImage.ImgBase64!);
+                await SavePhotoPathToDb(property.PropertyId, propertyImage.Description, photoPath);
             }
 
             _db.Properties.Update(property);
@@ -262,8 +232,6 @@ public class DA_Property
             return model;
         }
     }
-
-    //private 
 
     //private async Task<Property> GetPropertyById(int propertyId)
     //{
