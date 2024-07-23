@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using REMS.Models;
+using System.Data;
 
 namespace REMS.Modules.Features.Client;
 
@@ -11,8 +13,9 @@ public class DA_Client
         _db = db;
     }
 
-    public async Task<ClientListResponseModel> GetClients()
+    public async Task<Result<ClientListResponseModel>> GetClients()
     {
+        Result<ClientListResponseModel> model = null;
         var responseModel = new ClientListResponseModel();
         try
         {
@@ -20,22 +23,31 @@ public class DA_Client
                 .Clients
                 .AsNoTracking()
                 .ToListAsync();
-            responseModel.DataLst = clients
-                .Select(x => x.Change())
-                .ToList();
-            responseModel.MessageResponse = new MessageResponseModel(true, EnumStatus.Success.ToString());
+
+            var clientResponseModel = clients.Select(client => new ClientResponseModel
+            {
+                Client = client.Change()
+            }).ToList();
+
+            var clientListResponse = new ClientListResponseModel
+            {
+                DataLst = clientResponseModel,
+            };
+
+            model = Result<ClientListResponseModel>.Success(clientListResponse);
         }
         catch (Exception ex)
         {
-            responseModel.DataLst = new List<ClientResponseModel>();
-            responseModel.MessageResponse = new MessageResponseModel(false, ex);
+            model = Result<ClientListResponseModel>.Error(ex);
+            return model;
         }
 
-        return responseModel;
+        return model;
     }
 
-    public async Task<ClientListResponseModel> GetClients(int pageNo = 1, int pageSize = 10)
+    public async Task<Result<ClientListResponseModel>> GetClients(int pageNo = 1, int pageSize = 10)
     {
+        Result<ClientListResponseModel> model = null;
         var responseModel = new ClientListResponseModel();
         try
         {
@@ -48,85 +60,113 @@ public class DA_Client
                 .Take(pageSize)
                 .ToListAsync();
 
-            responseModel.DataLst = clients
-                .Select(x => x.Change())
-                .ToList();
-            responseModel.MessageResponse = new MessageResponseModel(true, EnumStatus.Success.ToString());
-            responseModel.PageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount);
+            var clientResponseModel = clients.Select(client => new ClientResponseModel
+            {
+                Client = client.Change()
+            }).ToList();
+
+            var clientListResponse = new ClientListResponseModel
+            {
+                DataLst = clientResponseModel,
+                PageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount)
+            };
+
+            model = Result<ClientListResponseModel>.Success(clientListResponse);
         }
         catch (Exception ex)
         {
-            responseModel.DataLst = new List<ClientResponseModel>();
-            responseModel.MessageResponse = new MessageResponseModel(false, ex);
+            model = Result<ClientListResponseModel>.Error(ex);
+            return model;
         }
 
-        return responseModel;
+        return model;
     }
 
-    public async Task<ClientResponseModel> GetClientById(int id)
+    public async Task<Result<ClientResponseModel>> GetClientById(int id)
     {
-        var responseModel = new ClientResponseModel();
+        Result<ClientResponseModel> model = null;
         try
         {
             var client = await _db
                 .Clients
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ClientId == id);
-            if(client is null)
+            if (client is null)
             {
                 throw new Exception("Client Not Found");
             }
-            
-            responseModel = client.Change();
+
+            var responseModel = new ClientResponseModel
+            {
+                Client = client.Change()
+            };
+
+            model = Result<ClientResponseModel>.Success(responseModel);
         }
         catch (Exception ex)
         {
-            responseModel = new ClientResponseModel();
+            model = Result<ClientResponseModel>.Error(ex);
         }
-        return responseModel;
+        return model;
     }
 
-    public async Task<MessageResponseModel> CreateClientAsync(ClientRequestModel requestModel)
+    public async Task<Result<ClientResponseModel>> CreateClient(ClientRequestModel requestModel)
     {
+        Result<ClientResponseModel> model = null;
         try
         {
+            if (requestModel == null)
+            {
+                throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
+            }
+
             await _db.Users.AddAsync(requestModel.ChangeUser());
             int result = await _db.SaveChangesAsync();
             if (result < 0)
             {
-                return new MessageResponseModel(false, "Registration Fail");
+                model = Result<ClientResponseModel>.Error("Client create failed.");
             }
 
+            //To get UserId for client create
             var user = await _db.Users
                 .OrderByDescending(x => x.UserId)
                 .AsNoTracking()
                 .FirstAsync();
+
             requestModel.UserId = user.UserId;
-            await _db.Clients.AddAsync(requestModel.Change());
+
+            var client = requestModel.Change();
+            await _db.Clients.AddAsync(client);
             int addClient = await _db.SaveChangesAsync();
-            var response = addClient > 0
-                ? new MessageResponseModel(true, "Successfully Saved.")
-                : new MessageResponseModel(false, "Client Registration Failed.");
-            return response;
+
+            var responseModel = new ClientResponseModel
+            {
+                Client = client.Change(),
+            };
+
+            model = addClient > 0
+                ? Result<ClientResponseModel>.Success(responseModel)
+                : Result<ClientResponseModel>.Error("Client create failed.");
         }
         catch (Exception ex)
         {
-            return new MessageResponseModel(false, ex);
+            model = Result<ClientResponseModel>.Error(ex);
         }
+        return model;
     }
 
-    public async Task<MessageResponseModel> UpdateClientAsync(int id, ClientRequestModel requestModel)
+    public async Task<Result<ClientResponseModel>> UpdateClient(int id, ClientRequestModel requestModel)
     {
+        Result<ClientResponseModel> model = null;
         try
         {
-            //User user = new User();
             var client = await _db.Clients
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ClientId == id);
 
             if (client is null)
             {
-                return new MessageResponseModel(false, "Client Not Found");
+                return model = Result<ClientResponseModel>.Error("Client Not Found");
             }
 
             var user = await _db.Users
@@ -135,7 +175,7 @@ public class DA_Client
 
             if (user is null)
             {
-                return new MessageResponseModel(false, "User Not Found");
+                return model = Result<ClientResponseModel>.Error("User Not Found");
             }
 
             if (!string.IsNullOrWhiteSpace(requestModel.FirstName) || !string.IsNullOrWhiteSpace(requestModel.LastName))
@@ -173,19 +213,24 @@ public class DA_Client
             _db.Entry(user).State = EntityState.Modified;
             _db.Entry(client).State = EntityState.Modified;
             int result = await _db.SaveChangesAsync();
-            var response = result > 0
-                ? new MessageResponseModel(true, "Successfully Update")
-                : new MessageResponseModel(false, "Updating Fail");
-            return response;
+
+            var clientResponseModel = new ClientResponseModel
+            {
+                Client = client.Change()
+            };
+
+            model = Result<ClientResponseModel>.Success(clientResponseModel);
         }
         catch (Exception ex)
         {
-            return new MessageResponseModel(false, ex);
+            model = Result<ClientResponseModel>.Error(ex);
         }
+        return model;
     }
 
-    public async Task<MessageResponseModel> DeleteClientAsync(int id)
+    public async Task<Result<object>> DeleteClient(int id)
     {
+        Result<object> model = null;
         try
         {
             var client = await _db.Clients
@@ -194,16 +239,16 @@ public class DA_Client
 
             if (client is null)
             {
-                return new MessageResponseModel(false, "Client Not Found");
+                return model = Result<object>.Error("Client Not Found");
             }
 
             var user = await _db.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.UserId == client.UserId);
-            
+
             if (user is null || client is null)
             {
-                return new MessageResponseModel(false, "User Not Found.");
+                return model = Result<object>.Error("User Not Found");
             }
 
             _db.Users.Remove(user);
@@ -211,14 +256,15 @@ public class DA_Client
             _db.Clients.Remove(client);
             _db.Entry(client).State = EntityState.Deleted;
             int result = await _db.SaveChangesAsync();
-            var response = result > 0
-                ? new MessageResponseModel(true, "Successfully Deleted.")
-                : new MessageResponseModel(false, "Deleting Failed.");
-            return response;
+
+            model = result > 0
+                ? Result<object>.Success(null)
+                : Result<object>.Error("Delete failed.");
         }
         catch (Exception ex)
         {
-            return new MessageResponseModel(false, ex);
+            return model = Result<object>.Error(ex);
         }
+        return model;
     }
 }
