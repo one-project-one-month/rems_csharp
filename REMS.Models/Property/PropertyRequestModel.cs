@@ -3,8 +3,6 @@ namespace REMS.Models.Property;
 
 public class PropertyRequestModel
 {
-    public int? PropertyId { get; set; }
-
     public string Address { get; set; }
 
     public string City { get; set; }

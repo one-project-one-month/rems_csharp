@@ -115,7 +115,6 @@ public static class ChangeModel
     {
         Property property = new Property
         {
-            PropertyId = requestModel.PropertyId ?? 0,
             Address = requestModel.Address,
             City = requestModel.City,
             State = requestModel.State,
