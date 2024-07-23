@@ -9,8 +9,6 @@ namespace REMS.Models.Appointment
 {
     public class AppointmentListResponseModel
     {
-        public MessageResponseModel? messageResponse { get; set; }
-
         public PageSettingModel? pageSetting { get; set; }
 
         public List<AppointmentModel>? lstAppointment { get; set; }
