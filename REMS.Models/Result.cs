@@ -23,6 +23,15 @@ public class Result<T>
         };
     }
 
+    public static Result<T> Success(string message)
+    {
+        return new Result<T>()
+        {
+            Message = message,
+            IsSuccess=true
+        };
+    }
+
     public static Result<T> Error(string message = "Internal server error.")
     {
         return new Result<T>()
