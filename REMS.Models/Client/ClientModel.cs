@@ -6,8 +6,6 @@ public class ClientModel
 
     public int? UserId { get; set; }
 
-    public int? AgentId { get; set; }
-
     public string FirstName { get; set; } = null!;
 
     public string LastName { get; set; } = null!;

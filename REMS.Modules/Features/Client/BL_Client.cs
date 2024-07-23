@@ -12,13 +12,13 @@ public class BL_Client
         _daClient = daClient;
     }
 
-    public async Task<ClientListResponseModel> GetClients()
+    public async Task<Result<ClientListResponseModel>> GetClients()
     {
         var response = await _daClient.GetClients();
         return response;
     }
 
-    public async Task<ClientListResponseModel> GetClients(int pageNo, int pageSize)
+    public async Task<Result<ClientListResponseModel>> GetClients(int pageNo, int pageSize)
     {
         if (pageNo < 1 || pageSize < 1)
         {
@@ -29,29 +29,29 @@ public class BL_Client
         return response;
     }
 
-    public async Task<ClientResponseModel> GetClientById(int id)
+    public async Task<Result<ClientResponseModel>> GetClientById(int id)
     {
         var responseModel = await _daClient.GetClientById(id);
         return responseModel;
     }
 
-    public async Task<MessageResponseModel> CreateClientAsync(ClientRequestModel requestModel)
+    public async Task<Result<ClientResponseModel>> CreateClient(ClientRequestModel requestModel)
     {
-        var response = await _daClient.CreateClientAsync(requestModel);
+        var response = await _daClient.CreateClient(requestModel);
         return response;
     }
 
-    public async Task<MessageResponseModel> UpdateClientAsync(int id, ClientRequestModel requestModel)
+    public async Task<Result<ClientResponseModel>> UpdateClient(int id, ClientRequestModel requestModel)
     {
         if (id <= 0) throw new Exception("id is null");
-        var response = await _daClient.UpdateClientAsync(id, requestModel);
+        var response = await _daClient.UpdateClient(id, requestModel);
         return response;
     }
 
-    public async Task<MessageResponseModel> DeleteClientAsync(int id)
+    public async Task<Result<object>> DeleteClient(int id)
     {
         if (id <= 0) throw new Exception("id is null");
-        var response = await _daClient.DeleteClientAsync(id);
+        var response = await _daClient.DeleteClient(id);
         return response;
     }
 }

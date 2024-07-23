@@ -59,7 +59,6 @@ public static class ChangeModel
         Client client = new Client
         {
             UserId = requestModel.UserId,
-            AgentId = requestModel.AgentId,
             FirstName = requestModel.FirstName,
             LastName = requestModel.LastName,
             Phone = requestModel.Phone,
@@ -69,13 +68,12 @@ public static class ChangeModel
         return client;
     }
 
-    public static ClientResponseModel Change(this Client dataModel)
+    public static ClientModel Change(this Client dataModel)
     {
-        var clientResponseModel = new ClientResponseModel
+        var clientResponseModel = new ClientModel
         {
             ClientId = dataModel.ClientId,
             UserId = dataModel.UserId,
-            AgentId = dataModel.AgentId,
             FirstName = dataModel.FirstName,
             LastName = dataModel.LastName,
             Phone = dataModel.Phone,
