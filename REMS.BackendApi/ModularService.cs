@@ -25,6 +25,7 @@ public static class ModularService
         builder.Services.AddScoped<DA_Client>();
         builder.Services.AddScoped<DA_Property>();
         builder.Services.AddScoped<DA_Review>();
+        builder.Services.AddScoped<DA_Transaction>();
         return builder;
     }
 
@@ -35,6 +36,7 @@ public static class ModularService
         builder.Services.AddScoped<BL_Client>();
         builder.Services.AddScoped<BL_Property>();
         builder.Services.AddScoped<BL_Review>();
+        builder.Services.AddScoped<BL_Transaction>();
         return builder;
     }
 }

@@ -66,8 +66,7 @@ public class PropertyController : ControllerBase
         try
         {
             var response = await _blProperties.CreateProperty(requestModel);
-           // return CreatedAtAction(nameof(GetPropertyById), new { propertyId = response.Property.PropertyId }, response);
-            return Ok(response);
+            return CreatedAtAction(nameof(GetPropertyById), new { propertyId = response.Property.PropertyId }, response);
         }
         catch (Exception ex)
         {
@@ -110,15 +109,14 @@ public class PropertyController : ControllerBase
         try
         {
             var result = await _blProperties.DeleteProperty(propertyId);
-            return Ok(result);
-            //if (result)
-            //{
-            //    return NoContent();
-            //}
-            //else
-            //{
-            //    return NotFound("Property not found");
-            //}
+            if (result)
+            {
+                return NoContent();
+            }
+            else
+            {
+                return NotFound("Property not found");
+            }
         }
         catch (Exception ex)
         {

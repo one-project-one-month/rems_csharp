@@ -10,16 +10,15 @@ public class DA_Agent
         _db = db;
     }
 
-    public async Task<Result<string>> CreateAgentAsync(AgentRequestModel requestModel)
+    public async Task<MessageResponseModel> CreateAgentAsync(AgentRequestModel requestModel)
     {
-        Result<string> response = null;
         try
         {
             await _db.Users.AddAsync(requestModel.ChangeUser());
             int result = await _db.SaveChangesAsync();
             if (result < 0)
             {
-                return Result<string>.Error("Registration Fail");
+                return new MessageResponseModel(false, "Registration Fail");
             }
 
             var user = await _db.Users
@@ -29,20 +28,19 @@ public class DA_Agent
             requestModel.UserId = user.UserId;
             await _db.Agents.AddAsync(requestModel.ChangeAgent());
             int addAgent = await _db.SaveChangesAsync();
-            response = addAgent > 0
-               ? Result<string>.Success("Successfully Register")
-               : Result<string>.Error("Registration Fail");
+            var response = addAgent > 0
+                ? new MessageResponseModel(true, "Successfully Save")
+                : new MessageResponseModel(false, "Agent Register Fail");
+            return response;
         }
         catch (Exception ex)
         {
-            response = Result<string>.Error(ex);
+            return new MessageResponseModel(false, ex);
         }
-        return response;
     }
 
-    public async Task<Result<string>> UpdateAgentAsync(int id, AgentRequestModel requestModel)
+    public async Task<MessageResponseModel> UpdateAgentAsync(int id, AgentRequestModel requestModel)
     {
-        Result<string> respose = null;
         try
         {
             var user = await _db.Users
@@ -53,7 +51,7 @@ public class DA_Agent
                 .FirstOrDefaultAsync(x => x.UserId == id);
             if (user is null || agent is null)
             {
-                return Result<string>.Error("User Not found");
+                return new MessageResponseModel(false, "User Not Found");
             }
 
             if (!string.IsNullOrWhiteSpace(requestModel.AgentName))
@@ -92,20 +90,19 @@ public class DA_Agent
             _db.Entry(user).State = EntityState.Modified;
             _db.Entry(agent).State = EntityState.Modified;
             int result = await _db.SaveChangesAsync();
-            respose = result > 0
-                ? Result<string>.Success("Successfully Update Data")
-                : Result<string>.Error("Updating Fail");
+            var response = result > 0
+                ? new MessageResponseModel(true, "Successfully Update")
+                : new MessageResponseModel(false, "Updating Fail");
+            return response;
         }
         catch (Exception ex)
         {
-            respose = Result<string>.Error(ex);
+            return new MessageResponseModel(false, ex);
         }
-        return respose!;
     }
 
-    public async Task<Result<string>> DeleteAgentAsync(int userId)
+    public async Task<MessageResponseModel> DeleteAgentAsync(int userId)
     {
-        Result<string> response = null;
         try
         {
             var user = await _db.Users
@@ -116,7 +113,7 @@ public class DA_Agent
                 .FirstOrDefaultAsync(x => x.UserId == userId);
             if (user is null || agent is null)
             {
-                return Result<string>.Error("User Not Found.");
+                return new MessageResponseModel(false, "User Not Found.");
             }
 
             _db.Users.Remove(user);
@@ -124,15 +121,15 @@ public class DA_Agent
             _db.Agents.Remove(agent);
             _db.Entry(agent).State = EntityState.Deleted;
             int result = await _db.SaveChangesAsync();
-            response = result > 0
-               ? Result<string>.Success("Successfully Deleted.")
-                : Result<string>.Error("Deleting Fail");
+            var response = result > 0
+                ? new MessageResponseModel(true, "Successfully Deleted.")
+                : new MessageResponseModel(false, "Deleting Failed.");
+            return response;
         }
         catch (Exception ex)
         {
-            response = Result<string>.Error(ex);
+            return new MessageResponseModel(false, ex);
         }
-        return response;
     }
 
     public async Task<Result<string>> LoginAgentAsync(AgentLoginRequestModel agentLoginInfo)
@@ -179,7 +176,7 @@ public class DA_Agent
                     Address = ag.Address
                 })
                 .FirstOrDefaultAsync();
-            if (agent is null)
+            if(agent is null)
             {
                 model = Result<AgentDto>.Error("User Not Found");
                 goto result;
@@ -190,7 +187,7 @@ public class DA_Agent
         {
             model = Result<AgentDto>.Error(ex);
         }
-    result:
+        result: 
         return model;
     }
 
