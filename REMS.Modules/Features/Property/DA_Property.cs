@@ -95,7 +95,7 @@ public class DA_Property
                 Property = property.Change(),
                 Images = property.PropertyImages.Select(x => x.Change()).ToList()
             };
-            
+
             model = Result<PropertyResponseModel>.Success(propertyResponse);
             return model;
         }
@@ -119,6 +119,7 @@ public class DA_Property
             {
                 throw new Exception("Cannot insert Property Id");
             }
+
             var property = requestModel.Change()
                            ?? throw new Exception("Failed to convert request model to property entity");
 
@@ -128,24 +129,26 @@ public class DA_Property
             string folderPath = _configuration.GetSection("ImageFolderPath").Value!;
             foreach (var item in requestModel.Images)
             {
-                string fileName = Guid.NewGuid().ToString() + ".png";
-                string base64Str = item.ImgBase64!;
-                byte[] bytes = Convert.FromBase64String(base64Str!);
+                var photoPath = await SavePhotoInFolder(item.ImgBase64!);
+                await SavePhotoPathToDb(property.PropertyId, item.Description, photoPath);
+                //string fileName = Guid.NewGuid().ToString() + ".png";
+                //string base64Str = item.ImgBase64!;
+                //byte[] bytes = Convert.FromBase64String(base64Str!);
 
-                string filePath = Path.Combine(folderPath, fileName);
-                await File.WriteAllBytesAsync(filePath, bytes);
+                //string filePath = Path.Combine(folderPath, fileName);
+                //await File.WriteAllBytesAsync(filePath, bytes);
 
-                // Save File in Folder
+                //// Save File in Folder
 
-                // Save Path in Db
-                await _db.PropertyImages.AddAsync(new PropertyImage
-                {
-                    DateUploaded = DateTime.Now,
-                    Description = item.Description,
-                    ImageUrl = filePath,
-                    PropertyId = property.PropertyId
-                });
-                await _db.SaveChangesAsync();
+                //// Save Path in Db
+                //await _db.PropertyImages.AddAsync(new PropertyImage
+                //{
+                //    DateUploaded = DateTime.Now,
+                //    Description = item.Description,
+                //    ImageUrl = filePath,
+                //    PropertyId = property.PropertyId
+                //});
+                //await _db.SaveChangesAsync();
             }
 
             var createdProperty = await _db.Properties
@@ -159,6 +162,12 @@ public class DA_Property
                 Property = createdProperty.Change(),
                 Images = createdProperty.PropertyImages.Select(x => x.Change()).ToList()
             };
+
+            //var propertyResponse = new PropertyResponseModel
+            //{
+            //    Property = property.Change(),
+            //    Images = createProperty.PropertyImages.Select(x => x.Change()).ToList()
+            //};
 
             return Result<PropertyResponseModel>.Success(propertyResponse);
         }
@@ -244,4 +253,29 @@ public class DA_Property
     //                            .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
     //                            ?? throw new Exception("Property Not Found");
     //}
+
+    private async Task<string> SavePhotoInFolder(string base64Str)
+    {
+        string folderPath = _configuration.GetSection("ImageFolderPath").Value!;
+        string fileName = Guid.NewGuid().ToString() + ".png";
+        byte[] bytes = Convert.FromBase64String(base64Str);
+
+        string filePath = Path.Combine(folderPath, fileName);
+        await File.WriteAllBytesAsync(filePath, bytes);
+
+        return filePath;
+    }
+
+    private async Task SavePhotoPathToDb(int propertyId, string photoDescription, string photoPath)
+    {
+        await _db.PropertyImages.AddAsync(new PropertyImage
+        {
+            DateUploaded = DateTime.Now,
+            Description = photoDescription,
+            ImageUrl = photoPath,
+            PropertyId = propertyId
+        });
+        await _db.SaveChangesAsync();
+    }
+
 }
