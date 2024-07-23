@@ -51,7 +51,7 @@
             try
             {
                 var response = await _blAppointment.GetAppointmentByAgentIdAsync(id, pageNo, pageSize);
-                if (response.IsError)
+                if (response.messageResponse!.IsError)
                     return BadRequest(response);
                 return Ok(response);
             }

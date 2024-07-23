@@ -14,9 +14,8 @@ namespace REMS.Modules.Features.Appointment
 
         public DA_Appointment(AppDbContext db) => _db = db;
 
-        public async Task<Result<string>> CreateAppointmentAsync(AppointmentRequestModel requestModel)
+        public async Task<MessageResponseModel> CreateAppointmentAsync(AppointmentRequestModel requestModel)
         {
-            Result<string> response = null;
             try
             {
                 var agent = await _db.Agents
@@ -24,83 +23,82 @@ namespace REMS.Modules.Features.Appointment
                                      .FirstOrDefaultAsync(x => x.AgentId == requestModel.AgentId);
                 if (agent is null)
                 {
-                    return Result<string>.Error("Agent Not Found");
+                    return new MessageResponseModel(false, "Agent Not Found");
                 }
                 var client = await _db.Clients
                                       .AsNoTracking()
                                       .FirstOrDefaultAsync(x => x.ClientId == requestModel.ClientId);
                 if (client is null)
                 {
-                    return Result<string>.Error("Client Not Found");
+                    return new MessageResponseModel(false, "Client Not Found");
                 }
                 var property = await _db.Properties
                                       .AsNoTracking()
                                       .FirstOrDefaultAsync(x => x.PropertyId == requestModel.PropertyId);
                 if (property is null)
                 {
-                    return Result<string>.Error("Property not found.");
+                    return new MessageResponseModel(false, "Property Not Found");
                 }
                 await _db.Appointments.AddAsync(requestModel.ChangeAppointment());
                 int result = await _db.SaveChangesAsync();
-                response = result > 0
-                    ? Result<string>.Success("Successfully Save")
-                    : Result<string>.Error("Saving Fail");
+                var response = result > 0
+                    ? new MessageResponseModel(true, "Appoinment Create Successfully.")
+                    : new MessageResponseModel(false, "Invalid.");
+                return response;
             }
             catch (Exception ex)
             {
-                response = Result<string>.Error(ex);
+                return new MessageResponseModel(false, ex);
             }
-            return response;
         }
 
-        public async Task<Result<string>> DeleteAppointmentAsync(int id)
+        public async Task<MessageResponseModel> DeleteAppointmentAsync(int id)
         {
-            Result<string> response = null;
             try
             {
                 var appointment = await _db.Appointments
                                          .AsNoTracking()
                                          .FirstOrDefaultAsync(x => x.AppointmentId == id);
                 if (appointment is null)
-                   return Result<string>.Error("Appointment Not Found.");
+                    return new MessageResponseModel(false, "Appointment Not Found.");
                 _db.Appointments.Remove(appointment);
                 _db.Entry(appointment).State = EntityState.Deleted;
                 int result = await _db.SaveChangesAsync();
-                response = result > 0
-                    ? Result<string>.Success("Successfully Delete")
-                    : Result<string>.Error("Deleting Fail");
+                var response = result > 0
+                    ? new MessageResponseModel(true, "Successfully Delete")
+                    : new MessageResponseModel(false, "Deleting Fail");
+                return response;
             }
             catch (Exception ex)
             {
-               response= Result<string>.Error(ex);
+                return new MessageResponseModel(false, ex);
             }
-            return response;
         }
 
-        public async Task<Result<AppointmentListResponseModel>> GetAppointmentByAgentIdAsync(int id, int pageNo, int pageSize)
+        public async Task<AppointmentListResponseModel> GetAppointmentByAgentIdAsync(int id, int pageNo, int pageSize)
         {
-            Result<AppointmentListResponseModel> response = null;
-            AppointmentListResponseModel appointment = new AppointmentListResponseModel();
+            AppointmentListResponseModel response = new AppointmentListResponseModel();
             try
             {
                 var query = _db.Appointments
                                 .AsNoTracking()
                                 .Where(x => x.AgentId == id)
-                                .Select(n => new AppointmentModel
+                                .Select(n=>new AppointmentModel
                                 {
                                     AppointmentId = n.AppointmentId,
-                                    AgentId = n.AgentId,
-                                    ClientId = n.ClientId,
-                                    PropertyId = n.PropertyId,
+                                    AgentId=n.AgentId,
+                                    ClientId=n.ClientId,
+                                    PropertyId=n.PropertyId,
                                     AppointmentDate = n.AppointmentDate,
-                                    AppointmentTime = n.AppointmentTime.ToString(),
-                                    Status = n.Status,
-                                    Notes = n.Notes
+                                    AppointmentTime=n.AppointmentTime.ToString(),
+                                    Status=n.Status,
+                                    Notes=n.Notes
                                 });
                 var appointmentList = await query.Pagination(pageNo, pageSize).ToListAsync();
-                if (appointmentList is null || appointmentList.Count == 0)
+                if(appointmentList is null || appointmentList.Count == 0)
                 {
-                    return Result<AppointmentListResponseModel>.Error("No Data Found");
+                    response.messageResponse = new MessageResponseModel(false, "No Data Found.");
+                    return response;
                 }
                 int totalCount = await query.CountAsync();
                 int pageCount = totalCount / pageSize;
@@ -108,13 +106,13 @@ namespace REMS.Modules.Features.Appointment
                 {
                     pageCount++;
                 }
-                appointment.pageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount);
-                appointment.lstAppointment = appointmentList;
-                response=Result<AppointmentListResponseModel>.Success(appointment);
+                response.messageResponse = new MessageResponseModel(true, "Success");
+                response.pageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount);
+                response.lstAppointment = appointmentList;
             }
             catch (Exception ex)
             {
-                response = Result<AppointmentListResponseModel>.Error(ex);
+                response.messageResponse=new MessageResponseModel(false, ex);
             }
             return response;
         }

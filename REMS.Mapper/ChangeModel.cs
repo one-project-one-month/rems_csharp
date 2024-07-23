@@ -1,4 +1,5 @@
 ﻿using REMS.Models.Appointment;
+using REMS.Models.Transaction;
 
 namespace REMS.Mapper;
 
@@ -115,6 +116,7 @@ public static class ChangeModel
     {
         Property property = new Property
         {
+            PropertyId = requestModel.PropertyId ?? 0,
             Address = requestModel.Address,
             City = requestModel.City,
             State = requestModel.State,
@@ -237,6 +239,25 @@ public static class ChangeModel
         return appointment;
     }
 
+    #endregion
+
+    #region Transaction
+    public static Transaction ChangeTransaction(this TransactionRequestModel requestModel)
+    {
+        Transaction transaction = new Transaction
+        {
+            
+            PropertyId = requestModel.PropertyId,
+            BuyerId = requestModel.BuyerId,
+            SellerId = requestModel.SellerId,
+            AgentId = requestModel.AgentId,
+            TransactionDate = requestModel.TransactionDate,
+            SalePrice = requestModel.SalePrice,
+            Commission = requestModel.Commission,
+            Status = requestModel.Status
+        };
+        return transaction;
+    }
     #endregion
 
 
