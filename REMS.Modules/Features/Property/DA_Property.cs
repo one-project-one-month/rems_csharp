@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Configuration;
+using REMS.Models;
 
 namespace REMS.Modules.Features.Property;
 
@@ -94,7 +95,7 @@ public class DA_Property
                 Property = property.Change(),
                 Images = property.PropertyImages.Select(x => x.Change()).ToList()
             };
-
+            
             model = Result<PropertyResponseModel>.Success(propertyResponse);
             return model;
         }
@@ -105,7 +106,7 @@ public class DA_Property
         }
     }
 
-    public async Task<PropertyResponseModel> CreateProperty(PropertyRequestModel requestModel)
+    public async Task<Result<PropertyResponseModel>> CreateProperty(PropertyRequestModel requestModel)
     {
         try
         {
@@ -114,11 +115,12 @@ public class DA_Property
                 throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
             }
 
-            var property = requestModel.Change();
-            if (property == null)
+            if (requestModel.PropertyId != 0)
             {
-                throw new Exception("Failed to convert request model to property entity");
+                throw new Exception("Cannot insert Property Id");
             }
+            var property = requestModel.Change()
+                           ?? throw new Exception("Failed to convert request model to property entity");
 
             await _db.Properties.AddAsync(property);
             await _db.SaveChangesAsync();
@@ -134,8 +136,8 @@ public class DA_Property
                 await File.WriteAllBytesAsync(filePath, bytes);
 
                 // Save File in Folder
-                // Save Path in Db
 
+                // Save Path in Db
                 await _db.PropertyImages.AddAsync(new PropertyImage
                 {
                     DateUploaded = DateTime.Now,
@@ -146,18 +148,23 @@ public class DA_Property
                 await _db.SaveChangesAsync();
             }
 
-             var responseModel = new PropertyResponseModel
+            var createdProperty = await _db.Properties
+                                    .AsNoTracking()
+                                    .Include(x => x.PropertyImages)
+                                    .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
+                                    ?? throw new Exception("Property Not Found");
+
+            var propertyResponse = new PropertyResponseModel
             {
-                Property = property.Change(),
-                Images = new List<PropertyImageModel>()
+                Property = createdProperty.Change(),
+                Images = createdProperty.PropertyImages.Select(x => x.Change()).ToList()
             };
 
-            return responseModel;
+            return Result<PropertyResponseModel>.Success(propertyResponse);
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            throw;
+            return Result<PropertyResponseModel>.Error(ex);
         }
     }
 
@@ -202,8 +209,9 @@ public class DA_Property
         }
     }
 
-    public async Task<bool> DeleteProperty(int propertyId)
+    public async Task<Result<object>> DeleteProperty(int propertyId)
     {
+        Result<object> model = null;
         try
         {
             var property = await _db.Properties
@@ -212,14 +220,28 @@ public class DA_Property
                                     ?? throw new Exception("Property Not Found");
 
             _db.Properties.Remove(property);
+            _db.PropertyImages.RemoveRange(property.PropertyImages);
+
             await _db.SaveChangesAsync();
 
-            return true;
+            model = Result<object>.Success(null);
+            return model;
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            return false;
+            model = Result<object>.Error(ex);
+            return model;
         }
     }
+
+    //private 
+
+    //private async Task<Property> GetPropertyById(int propertyId)
+    //{
+    //    var property = await _db.Properties
+    //                            .AsNoTracking()
+    //                            .Include(x => x.PropertyImages)
+    //                            .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
+    //                            ?? throw new Exception("Property Not Found");
+    //}
 }

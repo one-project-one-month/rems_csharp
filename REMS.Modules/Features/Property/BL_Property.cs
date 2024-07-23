@@ -37,11 +37,16 @@ public class BL_Property
         return response;
     }
 
-    public async Task<PropertyResponseModel> CreateProperty(PropertyRequestModel requestModel)
+    public async Task<Result<PropertyResponseModel>> CreateProperty(PropertyRequestModel requestModel)
     {
         if (requestModel == null)
         {
             throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
+        }
+
+        if (requestModel.PropertyId != 0)
+        {
+            throw new Exception("Cannot insert Property Id");
         }
 
         try
@@ -77,7 +82,7 @@ public class BL_Property
         return response;
     }
 
-    public async Task<bool> DeleteProperty(int propertyId)
+    public async Task<Result<object>> DeleteProperty(int propertyId)
     {
         if (propertyId < 1)
         {
