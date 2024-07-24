@@ -1,4 +1,6 @@
-﻿namespace REMS.Models.Review;
+﻿using REMS.Models.Client;
+
+namespace REMS.Models.Review;
 
 public class ReviewResponseModel
 {

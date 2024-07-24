@@ -196,23 +196,20 @@ public static class ChangeModel
             UserId = dataModel.UserId,
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
-            Comments = dataModel.Comments,
-            DateCreated = dataModel.DateCreated
+            Comments = dataModel.Comments
         };
 
         return reviewModel;
     }
 
-    public static Review Change(this ReviewModel dataModel)
+    public static Review Change(this ReviewRequestModel dataModel)
     {
         var review = new Review()
         {
-            ReviewId = dataModel.ReviewId,
             UserId = dataModel.UserId,
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
-            Comments = dataModel.Comments,
-            DateCreated = dataModel.DateCreated
+            Comments = dataModel.Comments
         };
 
         return review;
