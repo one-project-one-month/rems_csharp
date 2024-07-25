@@ -26,6 +26,27 @@ namespace REMS.Modules.Features.Appointment
             }
             return await _daAppointment.CreateAppointmentAsync(requestModel);
         }
+        public async Task<Result<string>> UpdateAppointment(int id, AppointmentRequestModel requestModel)
+        {
+            TimeSpan time;
+            if (requestModel is null)
+            {
+                return Result<string>.Error("Model is null.");
+            }
+            if (requestModel.Status is null)
+            {
+                return Result<string>.Error("Please Add Status.");
+            }
+            if (requestModel.AppointmentTime is null)
+            {
+                return Result<string>.Error("Please Add Appointment Time.");
+            }
+            if (!TimeSpan.TryParse(requestModel.AppointmentTime, out time))
+            {
+                return Result<string>.Error("Invalid Appointment Time.");
+            }
+            return await _daAppointment.UpdateAppointment(id,requestModel);
+        }
 
         public async Task<MessageResponseModel> DeleteAppointmentAsync(int id)
         {
@@ -41,6 +62,11 @@ namespace REMS.Modules.Features.Appointment
                 return response;
             }
             return await _daAppointment.GetAppointmentByAgentIdAsync(id, pageNo, pageSize);
+        }
+
+        public async Task<Result<AppointmentDetail>> GetAppointDetails(int id)
+        {
+            return await _daAppointment.GetAppointDetails(id);
         }
 
         private MessageResponseModel CheckAppointmentValue(AppointmentRequestModel requestModel)

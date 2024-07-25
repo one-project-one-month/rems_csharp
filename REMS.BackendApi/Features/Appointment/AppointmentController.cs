@@ -29,6 +29,25 @@
             }
         }
 
+        [HttpPut("UpdateAppointment/{id}",Name = "UpdateAppointment")]
+        public async Task<IActionResult> UpdateAppointment(int id, AppointmentRequestModel requestModel)
+        {
+            try
+            {
+                var response = await _blAppointment.UpdateAppointment(id,requestModel);
+                if (response.IsError)
+                {
+                    return BadRequest(response);
+                }
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            }
+
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteAppointment(int id)
         {
@@ -56,6 +75,22 @@
                 return Ok(response);
             }
             catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+            }
+        }
+
+        [HttpGet("GetAppointDetails/{id}",Name = "GetAppointDetails")]
+        public async Task<IActionResult> GetAppointDetails(int id)
+        {
+            try
+            {
+                var response = await _blAppointment.GetAppointDetails(id);
+                if (response.IsError)
+                    return BadRequest(response);
+                return Ok(response);
+            }
+            catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
             }
