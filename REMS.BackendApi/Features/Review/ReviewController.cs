@@ -1,4 +1,6 @@
-﻿namespace REMS.BackendApi.Features.Review;
+﻿using Azure;
+
+namespace REMS.BackendApi.Features.Review;
 
 [Route("api/v1/reviews")]
 [ApiController]
@@ -21,7 +23,7 @@ public class ReviewController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
 
@@ -49,17 +51,21 @@ public class ReviewController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateReview(ReviewModel requestModel)
+    public async Task<IActionResult> CreateReview(ReviewRequestModel requestModel)
     {
         try
         {
-            var customer = await _blReview.CreateReview(requestModel);
-            return Ok(customer);
+            var response = await _blReview.CreateReview(requestModel);
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
         }
         catch (Exception ex)
         {
@@ -68,16 +74,20 @@ public class ReviewController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> Update(int id, ReviewModel requestModel)
+    public async Task<IActionResult> Update(int id, ReviewRequestModel requestModel)
     {
         try
         {
-            var review = await _blReview.UpdateReview(id, requestModel);
-            return Ok(review);
+            var response = await _blReview.UpdateReview(id, requestModel);
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
 
@@ -86,12 +96,16 @@ public class ReviewController : ControllerBase
     {
         try
         {
-            var review = await _blReview.DeleteReview(id);
-            return Ok(review);
+            var response = await _blReview.DeleteReview(id);
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
 }

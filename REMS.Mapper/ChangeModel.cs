@@ -1,4 +1,5 @@
 ﻿using REMS.Models.Appointment;
+using REMS.Models.Transaction;
 
 namespace REMS.Mapper;
 
@@ -59,7 +60,6 @@ public static class ChangeModel
         Client client = new Client
         {
             UserId = requestModel.UserId,
-            AgentId = requestModel.AgentId,
             FirstName = requestModel.FirstName,
             LastName = requestModel.LastName,
             Phone = requestModel.Phone,
@@ -69,13 +69,12 @@ public static class ChangeModel
         return client;
     }
 
-    public static ClientResponseModel Change(this Client dataModel)
+    public static ClientModel Change(this Client dataModel)
     {
-        var clientResponseModel = new ClientResponseModel
+        var clientResponseModel = new ClientModel
         {
             ClientId = dataModel.ClientId,
             UserId = dataModel.UserId,
-            AgentId = dataModel.AgentId,
             FirstName = dataModel.FirstName,
             LastName = dataModel.LastName,
             Phone = dataModel.Phone,
@@ -197,23 +196,20 @@ public static class ChangeModel
             UserId = dataModel.UserId,
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
-            Comments = dataModel.Comments,
-            DateCreated = dataModel.DateCreated
+            Comments = dataModel.Comments
         };
 
         return reviewModel;
     }
 
-    public static Review Change(this ReviewModel dataModel)
+    public static Review Change(this ReviewRequestModel dataModel)
     {
         var review = new Review()
         {
-            ReviewId = dataModel.ReviewId,
             UserId = dataModel.UserId,
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
-            Comments = dataModel.Comments,
-            DateCreated = dataModel.DateCreated
+            Comments = dataModel.Comments
         };
 
         return review;
@@ -238,6 +234,25 @@ public static class ChangeModel
         return appointment;
     }
 
+    #endregion
+
+    #region Transaction
+    public static Transaction ChangeTransaction(this TransactionRequestModel requestModel)
+    {
+        Transaction transaction = new Transaction
+        {
+            
+            PropertyId = requestModel.PropertyId,
+            BuyerId = requestModel.BuyerId,
+            SellerId = requestModel.SellerId,
+            AgentId = requestModel.AgentId,
+            TransactionDate = requestModel.TransactionDate,
+            SalePrice = requestModel.SalePrice,
+            Commission = requestModel.Commission,
+            Status = requestModel.Status
+        };
+        return transaction;
+    }
     #endregion
 
 

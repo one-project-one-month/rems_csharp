@@ -11,6 +11,5 @@ namespace REMS.Models.Client;
 public class ClientListResponseModel
 {
     public List<ClientResponseModel> DataLst { get; set; }
-    public MessageResponseModel MessageResponse { get; set; }
     public PageSettingModel PageSetting { get; set; }
 }
