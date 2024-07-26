@@ -11,7 +11,7 @@ public static class ChangeModel
     {
         User user = new User
         {
-            Name = requestModel.AgentName!,
+            Name = requestModel.UserName!,
             Email = requestModel.Email!,
             Password = requestModel.Password!,
             Phone = requestModel.Phone,
@@ -26,7 +26,7 @@ public static class ChangeModel
         Agent agent = new Agent
         {
             UserId = requestModel.UserId,
-            AgencyName = requestModel.AgentName!,
+            AgencyName = $"{requestModel.FirstName} {requestModel.LastName}",
             LicenseNumber = requestModel.LicenseNumber!,
             Phone = requestModel.Phone!,
             Email = requestModel.Email!,
