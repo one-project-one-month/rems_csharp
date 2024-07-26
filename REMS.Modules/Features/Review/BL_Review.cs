@@ -35,7 +35,7 @@ public class BL_Review
         return response;
     }
 
-    public async Task<Result<ReviewResponseModel>> CreateReview(ReviewModel requestModel)
+    public async Task<Result<ReviewResponseModel>> CreateReview(ReviewRequestModel requestModel)
     {
         var response = await _daReview.CreateReview(requestModel);
         return response;

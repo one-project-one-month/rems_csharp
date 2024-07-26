@@ -9,19 +9,19 @@ public class BL_Agent
         _daAgent = daAgent;
     }
 
-    public async Task<MessageResponseModel> CreateAgentAsync(AgentRequestModel requestModel)
+    public async Task<Result<string>> CreateAgentAsync(AgentRequestModel requestModel)
     {
         var response = await _daAgent.CreateAgentAsync(requestModel);
         return response;
     }
 
-    public async Task<MessageResponseModel> UpdateAgentAsync(int id, AgentRequestModel requestModel)
+    public async Task<Result<string>> UpdateAgentAsync(int id, AgentRequestModel requestModel)
     {
         var response = await _daAgent.UpdateAgentAsync(id, requestModel);
         return response;
     }
 
-    public async Task<MessageResponseModel> DeleteAgentAsync(int id)
+    public async Task<Result<string>> DeleteAgentAsync(int id)
     {
         var response = await _daAgent.DeleteAgentAsync(id);
         return response;
