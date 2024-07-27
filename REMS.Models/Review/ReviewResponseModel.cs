@@ -1,6 +1,4 @@
-﻿using REMS.Models.Client;
-
-namespace REMS.Models.Review;
+﻿namespace REMS.Models.Review;
 
 public class ReviewResponseModel
 {

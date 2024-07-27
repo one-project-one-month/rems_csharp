@@ -10,11 +10,7 @@ public class AgentRequestModel
 {
     public int UserId { get;set; }
 
-    public string? FirstName { get; set; }
-
-    public string? LastName { get; set; }
-
-    public string? UserName { get; set; }
+    public string? AgentName { get; set; }
 
     public string? LicenseNumber { get; set; }
 

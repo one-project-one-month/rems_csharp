@@ -11,7 +11,7 @@ public static class ChangeModel
     {
         User user = new User
         {
-            Name = requestModel.UserName!,
+            Name = requestModel.AgentName!,
             Email = requestModel.Email!,
             Password = requestModel.Password!,
             Phone = requestModel.Phone,
@@ -26,7 +26,7 @@ public static class ChangeModel
         Agent agent = new Agent
         {
             UserId = requestModel.UserId,
-            AgencyName = $"{requestModel.FirstName} {requestModel.LastName}",
+            AgencyName = requestModel.AgentName!,
             LicenseNumber = requestModel.LicenseNumber!,
             Phone = requestModel.Phone!,
             Email = requestModel.Email!,
@@ -196,20 +196,23 @@ public static class ChangeModel
             UserId = dataModel.UserId,
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
-            Comments = dataModel.Comments
+            Comments = dataModel.Comments,
+            DateCreated = dataModel.DateCreated
         };
 
         return reviewModel;
     }
 
-    public static Review Change(this ReviewRequestModel dataModel)
+    public static Review Change(this ReviewModel dataModel)
     {
         var review = new Review()
         {
+            ReviewId = dataModel.ReviewId,
             UserId = dataModel.UserId,
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
-            Comments = dataModel.Comments
+            Comments = dataModel.Comments,
+            DateCreated = dataModel.DateCreated
         };
 
         return review;
@@ -237,11 +240,45 @@ public static class ChangeModel
     #endregion
 
     #region Transaction
-    public static Transaction ChangeTransaction(this TransactionRequestModel requestModel)
+    public static Transaction Change(this TransactionRequestModel requestModel)
     {
         Transaction transaction = new Transaction
         {
             
+            PropertyId = requestModel.PropertyId,
+            BuyerId = requestModel.BuyerId,
+            SellerId = requestModel.SellerId,
+            AgentId = requestModel.AgentId,
+            TransactionDate = requestModel.TransactionDate,
+            SalePrice = requestModel.SalePrice,
+            Commission = requestModel.Commission,
+            Status = requestModel.Status
+        };
+        return transaction;
+    }
+
+    public static Transaction Change(this TransactionModel requestModel)
+    {
+        Transaction transaction = new Transaction
+        {
+
+            PropertyId = requestModel.PropertyId,
+            BuyerId = requestModel.BuyerId,
+            SellerId = requestModel.SellerId,
+            AgentId = requestModel.AgentId,
+            TransactionDate = requestModel.TransactionDate,
+            SalePrice = requestModel.SalePrice,
+            Commission = requestModel.Commission,
+            Status = requestModel.Status
+        };
+        return transaction;
+    }
+
+    public static TransactionModel Change(this Transaction requestModel)
+    {
+        TransactionModel transaction = new TransactionModel
+        {
+
             PropertyId = requestModel.PropertyId,
             BuyerId = requestModel.BuyerId,
             SellerId = requestModel.SellerId,
