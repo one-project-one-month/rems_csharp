@@ -19,6 +19,16 @@ namespace REMS.Modules.Features.Transaction
             Result<string> model = null;
             try
             {
+                var property = await _db.Properties
+                    .Where(x => x.PropertyId == transactionRequestModel.PropertyId)
+                    .FirstOrDefaultAsync();
+
+                if (property is null)
+                {
+                    model = Result<string>.Error("Property Not Found!");
+                    goto result;
+                }
+
                 var buyerClient = await _db.Clients
                     .Where(x => x.ClientId == transactionRequestModel.BuyerId)
                     .FirstOrDefaultAsync();
@@ -67,14 +77,14 @@ namespace REMS.Modules.Features.Transaction
             try
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList= _db.Transactions.AsNoTracking();
+                var transactionList = _db.Transactions.AsNoTracking();
                 var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
 
                 int rowCount = _db.Transactions.Count();
                 int pageCount = rowCount / pageSize;
                 if (pageCount % pageSize > 0)
                     pageCount++;
-                
+
                 transactionListResponse.pageSetting = new PageSettingModel(pageNumber, pageSize, pageCount, rowCount);
                 transactionListResponse.lstTransaction = transaction;
                 model = Result<TransactionListResponseModel>.Success(transactionListResponse);
@@ -185,7 +195,5 @@ namespace REMS.Modules.Features.Transaction
                 return model = Result<TransactionListResponseModel>.Error(ex);
             }
         }
-
-        
     }
 }
