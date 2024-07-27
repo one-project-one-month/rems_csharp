@@ -242,11 +242,45 @@ public static class ChangeModel
     #endregion
 
     #region Transaction
-    public static Transaction ChangeTransaction(this TransactionRequestModel requestModel)
+    public static Transaction Change(this TransactionRequestModel requestModel)
     {
         Transaction transaction = new Transaction
         {
             
+            PropertyId = requestModel.PropertyId,
+            BuyerId = requestModel.BuyerId,
+            SellerId = requestModel.SellerId,
+            AgentId = requestModel.AgentId,
+            TransactionDate = requestModel.TransactionDate,
+            SalePrice = requestModel.SalePrice,
+            Commission = requestModel.Commission,
+            Status = requestModel.Status
+        };
+        return transaction;
+    }
+
+    public static Transaction Change(this TransactionModel requestModel)
+    {
+        Transaction transaction = new Transaction
+        {
+
+            PropertyId = requestModel.PropertyId,
+            BuyerId = requestModel.BuyerId,
+            SellerId = requestModel.SellerId,
+            AgentId = requestModel.AgentId,
+            TransactionDate = requestModel.TransactionDate,
+            SalePrice = requestModel.SalePrice,
+            Commission = requestModel.Commission,
+            Status = requestModel.Status
+        };
+        return transaction;
+    }
+
+    public static TransactionModel Change(this Transaction requestModel)
+    {
+        TransactionModel transaction = new TransactionModel
+        {
+
             PropertyId = requestModel.PropertyId,
             BuyerId = requestModel.BuyerId,
             SellerId = requestModel.SellerId,
