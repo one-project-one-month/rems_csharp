@@ -53,7 +53,7 @@ public class ClientController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
 
@@ -62,7 +62,7 @@ public class ClientController : ControllerBase
     {
         try
         {
-            var response = await _blClient.CreateClientAsync(requestModel);
+            var response = await _blClient.CreateClient(requestModel);
             if (response.IsError)
             {
                 return BadRequest(response);
@@ -80,7 +80,7 @@ public class ClientController : ControllerBase
     {
         try
         {
-            var response = await _blClient.UpdateClientAsync(id, requestModel);
+            var response = await _blClient.UpdateClient(id, requestModel);
             if (response.IsError)
             {
                 return BadRequest(response);
@@ -98,7 +98,7 @@ public class ClientController : ControllerBase
     {
         try
         {
-            var response = await _blClient.DeleteClientAsync(id);
+            var response = await _blClient.DeleteClient(id);
             if (response.IsError)
             {
                 return BadRequest(response);
