@@ -12,6 +12,8 @@ public class AgentRequestModel
 
     public string? AgentName { get; set; }
 
+    public string? UserName { get; set; }
+
     public string? LicenseNumber { get; set; }
 
     public string? Email { get; set; }

@@ -11,7 +11,7 @@ public static class ChangeModel
     {
         User user = new User
         {
-            Name = requestModel.AgentName!,
+            Name = requestModel.UserName!,
             Email = requestModel.Email!,
             Password = requestModel.Password!,
             Phone = requestModel.Phone,
@@ -33,6 +33,20 @@ public static class ChangeModel
             Address = requestModel.Address!
         };
         return agent;
+    }
+
+    public static AgentDto ChangeAgent(this Agent agent)
+    {
+        return new AgentDto
+        {
+            AgentId=agent.AgentId,
+            UserId=agent.UserId,
+            AgencyName=agent.AgencyName,
+            LicenseNumber=agent.LicenseNumber,
+            Phone = agent.Phone,
+            Email = agent.Email,
+            Address= agent.Address
+        };
     }
 
     #endregion

@@ -16,7 +16,7 @@ public class AgentController : ControllerBase
     {
         try
         {
-            var response = await _blAgent.CreateAgentAsync(requestModel);
+            Result<AgentResponseModel> response = await _blAgent.CreateAgentAsync(requestModel);
             if (response.IsError)
             {
                 return BadRequest(response);
@@ -34,7 +34,7 @@ public class AgentController : ControllerBase
     {
         try
         {
-            var response = await _blAgent.DeleteAgentAsync(userId);
+            Result<object> response = await _blAgent.DeleteAgentAsync(userId);
             if (response.IsError)
             {
                 return BadRequest(response);
@@ -47,12 +47,12 @@ public class AgentController : ControllerBase
         }
     }
 
-    [HttpPatch("{id}")]
-    public async Task<IActionResult> UpdateAgent(int id, AgentRequestModel requestModel)
+    [HttpPatch("{userId}")]
+    public async Task<IActionResult> UpdateAgent(int userId, AgentRequestModel requestModel)
     {
         try
         {
-            var response = await _blAgent.UpdateAgentAsync(id, requestModel);
+            Result<AgentResponseModel> response = await _blAgent.UpdateAgentAsync(userId, requestModel);
             if (response.IsError)
             {
                 return BadRequest(response);
