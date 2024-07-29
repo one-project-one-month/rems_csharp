@@ -251,6 +251,21 @@ public static class ChangeModel
         return appointment;
     }
 
+    public static AppointmentModel Change(this Appointment appointment)
+    {
+        return new AppointmentModel
+        {
+            AppointmentId = appointment.AppointmentId,
+            AgentId = appointment.AgentId,
+            ClientId = appointment.ClientId,
+            PropertyId = appointment.PropertyId,
+            AppointmentDate = appointment.AppointmentDate,
+            AppointmentTime = appointment.AppointmentTime.ToString(),
+            Status = appointment.Status,
+            Notes = appointment.Notes
+        };
+    }
+
     #endregion
 
     #region Transaction

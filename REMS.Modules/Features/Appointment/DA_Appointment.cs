@@ -1,4 +1,5 @@
-﻿using REMS.Models.Appointment;
+﻿using Azure;
+using REMS.Models.Appointment;
 using REMS.Shared;
 using System;
 using System.Collections.Generic;
@@ -14,8 +15,9 @@ namespace REMS.Modules.Features.Appointment
 
         public DA_Appointment(AppDbContext db) => _db = db;
 
-        public async Task<MessageResponseModel> CreateAppointmentAsync(AppointmentRequestModel requestModel)
+        public async Task<Result<AppointmentResponseModel>> CreateAppointmentAsync(AppointmentRequestModel requestModel)
         {
+            Result<AppointmentResponseModel> response;
             try
             {
                 var agent = await _db.Agents
@@ -23,61 +25,70 @@ namespace REMS.Modules.Features.Appointment
                                      .FirstOrDefaultAsync(x => x.AgentId == requestModel.AgentId);
                 if (agent is null)
                 {
-                    return new MessageResponseModel(false, "Agent Not Found");
+                    return Result<AppointmentResponseModel>.Error("Agent Not Found");
                 }
+
                 var client = await _db.Clients
                                       .AsNoTracking()
                                       .FirstOrDefaultAsync(x => x.ClientId == requestModel.ClientId);
                 if (client is null)
                 {
-                    return new MessageResponseModel(false, "Client Not Found");
+                    return Result<AppointmentResponseModel>.Error("Client Not Found");
                 }
                 var property = await _db.Properties
                                       .AsNoTracking()
                                       .FirstOrDefaultAsync(x => x.PropertyId == requestModel.PropertyId);
                 if (property is null)
                 {
-                    return new MessageResponseModel(false, "Property Not Found");
+                    return Result<AppointmentResponseModel>.Error("Property Not Found");
                 }
-                await _db.Appointments.AddAsync(requestModel.ChangeAppointment());
+                var appointment = requestModel.ChangeAppointment();
+                await _db.Appointments.AddAsync(appointment);
                 int result = await _db.SaveChangesAsync();
-                var response = result > 0
-                    ? new MessageResponseModel(true, "Appoinment Create Successfully.")
-                    : new MessageResponseModel(false, "Invalid.");
-                return response;
+                if (result < 0)
+                {
+                    return Result<AppointmentResponseModel>.Error("Invalid");
+                }
+                var appointmentResponse = new AppointmentResponseModel
+                {
+                    Appointment = appointment.Change()
+                };
+                response = Result<AppointmentResponseModel>.Success(appointmentResponse);
             }
             catch (Exception ex)
             {
-                return new MessageResponseModel(false, ex);
+                response= Result<AppointmentResponseModel>.Error(ex);
             }
+            return response;
         }
 
-        public async Task<MessageResponseModel> DeleteAppointmentAsync(int id)
+        public async Task<Result<object>> DeleteAppointmentAsync(int id)
         {
+            Result<object> response = null;
             try
             {
                 var appointment = await _db.Appointments
                                          .AsNoTracking()
                                          .FirstOrDefaultAsync(x => x.AppointmentId == id);
                 if (appointment is null)
-                    return new MessageResponseModel(false, "Appointment Not Found.");
+                    return  Result<object>.Error( "Appointment Not Found.");
                 _db.Appointments.Remove(appointment);
                 _db.Entry(appointment).State = EntityState.Deleted;
                 int result = await _db.SaveChangesAsync();
-                var response = result > 0
-                    ? new MessageResponseModel(true, "Successfully Delete")
-                    : new MessageResponseModel(false, "Deleting Fail");
-                return response;
+                response = result > 0
+                    ? Result<object>.Success(null, "Successfully Delete")
+                    : Result<object>.Error("Deleting Fail");
             }
             catch (Exception ex)
             {
-                return new MessageResponseModel(false, ex);
+                response= Result<object>.Error( ex);
             }
+            return response;
         }
 
-        public async Task<AppointmentListResponseModel> GetAppointmentByAgentIdAsync(int id, int pageNo, int pageSize)
+        public async Task<Result<AppointmentListResponseModel>> GetAppointmentByAgentIdAsync(int id, int pageNo, int pageSize)
         {
-            AppointmentListResponseModel response = new AppointmentListResponseModel();
+            Result<AppointmentListResponseModel> response = null;
             try
             {
                 var query = _db.Appointments
@@ -97,8 +108,7 @@ namespace REMS.Modules.Features.Appointment
                 var appointmentList = await query.Pagination(pageNo, pageSize).ToListAsync();
                 if(appointmentList is null || appointmentList.Count == 0)
                 {
-                    response.messageResponse = new MessageResponseModel(false, "No Data Found.");
-                    return response;
+                    return Result<AppointmentListResponseModel>.Error("No Data Found.");
                 }
                 int totalCount = await query.CountAsync();
                 int pageCount = totalCount / pageSize;
@@ -106,13 +116,16 @@ namespace REMS.Modules.Features.Appointment
                 {
                     pageCount++;
                 }
-                response.messageResponse = new MessageResponseModel(true, "Success");
-                response.pageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount);
-                response.lstAppointment = appointmentList;
+                var appointmentResponse = new AppointmentListResponseModel
+                {
+                    pageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount),
+                    lstAppointment = appointmentList
+                };
+                response = Result<AppointmentListResponseModel>.Success(appointmentResponse);
             }
             catch (Exception ex)
             {
-                response.messageResponse=new MessageResponseModel(false, ex);
+                response = Result<AppointmentListResponseModel>.Error(ex);
             }
             return response;
         }
