@@ -8,7 +8,6 @@ namespace REMS.Models.Appointment
 {
     public class AppointmentRequestModel
     {
-        public int? AgentId { get; set; }
 
         public int? ClientId { get; set; }
 

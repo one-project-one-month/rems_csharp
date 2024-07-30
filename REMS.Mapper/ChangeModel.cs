@@ -117,8 +117,7 @@ public static class ChangeModel
             NumberOfBathrooms = dataModel.NumberOfBathrooms,
             YearBuilt = dataModel.YearBuilt,
             Description = dataModel.Description,
-            Status = dataModel.Status,
-            DateListed = dataModel.DateListed
+            Status = dataModel.Status
         };
 
         return propertyModel;
@@ -140,8 +139,7 @@ public static class ChangeModel
             NumberOfBathrooms = requestModel.NumberOfBathrooms,
             YearBuilt = requestModel.YearBuilt,
             Description = requestModel.Description,
-            Status = requestModel.Status,
-            DateListed = requestModel.DateListed
+            Status = requestModel.Status
         };
         return property;
     }
@@ -240,7 +238,6 @@ public static class ChangeModel
     {
         Appointment appointment = new Appointment
         {
-            AgentId = requestModel.AgentId,
             ClientId = requestModel.ClientId,
             PropertyId = requestModel.PropertyId,
             AppointmentDate = requestModel.AppointmentDate,
@@ -256,7 +253,6 @@ public static class ChangeModel
         return new AppointmentModel
         {
             AppointmentId = appointment.AppointmentId,
-            AgentId = appointment.AgentId,
             ClientId = appointment.ClientId,
             PropertyId = appointment.PropertyId,
             AppointmentDate = appointment.AppointmentDate,
@@ -269,56 +265,56 @@ public static class ChangeModel
     #endregion
 
     #region Transaction
-    public static Transaction Change(this TransactionRequestModel requestModel)
-    {
-        Transaction transaction = new Transaction
-        {
+    //public static Transaction Change(this TransactionRequestModel requestModel)
+    //{
+    //    Transaction transaction = new Transaction
+    //    {
             
-            PropertyId = requestModel.PropertyId,
-            BuyerId = requestModel.BuyerId,
-            SellerId = requestModel.SellerId,
-            AgentId = requestModel.AgentId,
-            TransactionDate = requestModel.TransactionDate,
-            SalePrice = requestModel.SalePrice,
-            Commission = requestModel.Commission,
-            Status = requestModel.Status
-        };
-        return transaction;
-    }
+    //        PropertyId = requestModel.PropertyId,
+    //        BuyerId = requestModel.BuyerId,
+    //        SellerId = requestModel.SellerId,
+    //        AgentId = requestModel.AgentId,
+    //        TransactionDate = requestModel.TransactionDate,
+    //        SalePrice = requestModel.SalePrice,
+    //        Commission = requestModel.Commission,
+    //        Status = requestModel.Status
+    //    };
+    //    return transaction;
+    //}
 
-    public static Transaction Change(this TransactionModel requestModel)
-    {
-        Transaction transaction = new Transaction
-        {
+    //public static Transaction Change(this TransactionModel requestModel)
+    //{
+    //    Transaction transaction = new Transaction
+    //    {
 
-            PropertyId = requestModel.PropertyId,
-            BuyerId = requestModel.BuyerId,
-            SellerId = requestModel.SellerId,
-            AgentId = requestModel.AgentId,
-            TransactionDate = requestModel.TransactionDate,
-            SalePrice = requestModel.SalePrice,
-            Commission = requestModel.Commission,
-            Status = requestModel.Status
-        };
-        return transaction;
-    }
+    //        PropertyId = requestModel.PropertyId,
+    //        BuyerId = requestModel.BuyerId,
+    //        SellerId = requestModel.SellerId,
+    //        AgentId = requestModel.AgentId,
+    //        TransactionDate = requestModel.TransactionDate,
+    //        SalePrice = requestModel.SalePrice,
+    //        Commission = requestModel.Commission,
+    //        Status = requestModel.Status
+    //    };
+    //    return transaction;
+    //}
 
-    public static TransactionModel Change(this Transaction requestModel)
-    {
-        TransactionModel transaction = new TransactionModel
-        {
+    //public static TransactionModel Change(this Transaction requestModel)
+    //{
+    //    TransactionModel transaction = new TransactionModel
+    //    {
 
-            PropertyId = requestModel.PropertyId,
-            BuyerId = requestModel.BuyerId,
-            SellerId = requestModel.SellerId,
-            AgentId = requestModel.AgentId,
-            TransactionDate = requestModel.TransactionDate,
-            SalePrice = requestModel.SalePrice,
-            Commission = requestModel.Commission,
-            Status = requestModel.Status
-        };
-        return transaction;
-    }
+    //        PropertyId = requestModel.PropertyId,
+    //        BuyerId = requestModel.BuyerId,
+    //        SellerId = requestModel.SellerId,
+    //        AgentId = requestModel.AgentId,
+    //        TransactionDate = requestModel.TransactionDate,
+    //        SalePrice = requestModel.SalePrice,
+    //        Commission = requestModel.Commission,
+    //        Status = requestModel.Status
+    //    };
+    //    return transaction;
+    //}
     #endregion
 
 

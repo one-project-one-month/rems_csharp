@@ -19,13 +19,7 @@ public partial class Agent
 
     public string? Address { get; set; }
 
-    public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
-
-    public virtual ICollection<Client> Clients { get; set; } = new List<Client>();
-
-    public virtual ICollection<Listing> Listings { get; set; } = new List<Listing>();
-
-    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
+    public virtual ICollection<Property> Properties { get; set; } = new List<Property>();
 
     public virtual User? User { get; set; }
 }
