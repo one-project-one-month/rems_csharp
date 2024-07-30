@@ -40,7 +40,7 @@ namespace REMS.Modules.Features.Appointment
             {
                 return response;
             }
-            return await _daAppointment.GetAppointmentByAgentIdAsync(id, pageNo, pageSize);
+            return await _daAppointment.GetAppointmentByClientIdAsync(id, pageNo, pageSize);
         }
 
         private Result<AppointmentResponseModel> CheckAppointmentValue(AppointmentRequestModel requestModel)

@@ -20,14 +20,6 @@ namespace REMS.Modules.Features.Appointment
             Result<AppointmentResponseModel> response;
             try
             {
-                var agent = await _db.Agents
-                                     .AsNoTracking()
-                                     .FirstOrDefaultAsync(x => x.AgentId == requestModel.AgentId);
-                if (agent is null)
-                {
-                    return Result<AppointmentResponseModel>.Error("Agent Not Found");
-                }
-
                 var client = await _db.Clients
                                       .AsNoTracking()
                                       .FirstOrDefaultAsync(x => x.ClientId == requestModel.ClientId);
@@ -86,18 +78,17 @@ namespace REMS.Modules.Features.Appointment
             return response;
         }
 
-        public async Task<Result<AppointmentListResponseModel>> GetAppointmentByAgentIdAsync(int id, int pageNo, int pageSize)
+        public async Task<Result<AppointmentListResponseModel>> GetAppointmentByClientIdAsync(int id, int pageNo, int pageSize)
         {
             Result<AppointmentListResponseModel> response = null;
             try
             {
                 var query = _db.Appointments
                                 .AsNoTracking()
-                                .Where(x => x.AgentId == id)
+                                .Where(x => x.ClientId == id)
                                 .Select(n=>new AppointmentModel
                                 {
                                     AppointmentId = n.AppointmentId,
-                                    AgentId=n.AgentId,
                                     ClientId=n.ClientId,
                                     PropertyId=n.PropertyId,
                                     AppointmentDate = n.AppointmentDate,

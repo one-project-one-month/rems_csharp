@@ -21,8 +21,6 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Client> Clients { get; set; }
 
-    public virtual DbSet<Listing> Listings { get; set; }
-
     public virtual DbSet<Property> Properties { get; set; }
 
     public virtual DbSet<PropertyImage> PropertyImages { get; set; }
@@ -32,12 +30,16 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<Transaction> Transactions { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-    
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=LAPTOP-TTIU8JF8;Database=REMS;User ID=sa; Password=Minkhantthu3367;Integrated Security=True;Trusted_Connection=true;TrustServerCertificate=True;");
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Agent>(entity =>
         {
-            entity.HasKey(e => e.AgentId).HasName("PK__Agents__2C05379E98D2C6C2");
+            entity.HasKey(e => e.AgentId).HasName("PK__Agents__2C05379E66DBC67A");
 
             entity.Property(e => e.AgentId).HasColumnName("agent_id");
             entity.Property(e => e.Address)
@@ -59,15 +61,14 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.Agents)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Agents__user_id__3E52440B");
+                .HasConstraintName("FK__Agents__user_id__4D94879B");
         });
 
         modelBuilder.Entity<Appointment>(entity =>
         {
-            entity.HasKey(e => e.AppointmentId).HasName("PK__Appointm__A50828FCD37D2255");
+            entity.HasKey(e => e.AppointmentId).HasName("PK__Appointm__A50828FCCD4118B0");
 
             entity.Property(e => e.AppointmentId).HasColumnName("appointment_id");
-            entity.Property(e => e.AgentId).HasColumnName("agent_id");
             entity.Property(e => e.AppointmentDate)
                 .HasColumnType("date")
                 .HasColumnName("appointment_date");
@@ -79,28 +80,23 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("status");
 
-            entity.HasOne(d => d.Agent).WithMany(p => p.Appointments)
-                .HasForeignKey(d => d.AgentId)
-                .HasConstraintName("FK__Appointme__agent__5070F446");
-
             entity.HasOne(d => d.Client).WithMany(p => p.Appointments)
                 .HasForeignKey(d => d.ClientId)
-                .HasConstraintName("FK__Appointme__clien__5165187F");
+                .HasConstraintName("FK__Appointme__clien__7C4F7684");
 
             entity.HasOne(d => d.Property).WithMany(p => p.Appointments)
                 .HasForeignKey(d => d.PropertyId)
-                .HasConstraintName("FK__Appointme__prope__52593CB8");
+                .HasConstraintName("FK__Appointme__prope__7D439ABD");
         });
 
         modelBuilder.Entity<Client>(entity =>
         {
-            entity.HasKey(e => e.ClientId).HasName("PK__Clients__BF21A42448228EC3");
+            entity.HasKey(e => e.ClientId).HasName("PK__Clients__BF21A4246E345D57");
 
             entity.Property(e => e.ClientId).HasColumnName("client_id");
             entity.Property(e => e.Address)
                 .HasMaxLength(200)
                 .HasColumnName("address");
-            entity.Property(e => e.AgentId).HasColumnName("agent_id");
             entity.Property(e => e.Email)
                 .HasMaxLength(100)
                 .HasColumnName("email");
@@ -115,59 +111,39 @@ public partial class AppDbContext : DbContext
                 .HasColumnName("phone");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
-            entity.HasOne(d => d.Agent).WithMany(p => p.Clients)
-                .HasForeignKey(d => d.AgentId)
-                .HasConstraintName("FK__Clients__agent_i__4222D4EF");
-
             entity.HasOne(d => d.User).WithMany(p => p.Clients)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Clients__user_id__412EB0B6");
-        });
-
-        modelBuilder.Entity<Listing>(entity =>
-        {
-            entity.HasKey(e => e.ListingId).HasName("PK__Listings__89D81774CBA09D57");
-
-            entity.Property(e => e.ListingId).HasColumnName("listing_id");
-            entity.Property(e => e.AgentId).HasColumnName("agent_id");
-            entity.Property(e => e.DateListed)
-                .HasDefaultValueSql("(getdate())")
-                .HasColumnType("datetime")
-                .HasColumnName("date_listed");
-            entity.Property(e => e.Description).HasColumnName("description");
-            entity.Property(e => e.ListingPrice)
-                .HasColumnType("decimal(18, 2)")
-                .HasColumnName("listing_price");
-            entity.Property(e => e.PropertyId).HasColumnName("property_id");
-            entity.Property(e => e.Status)
-                .HasMaxLength(50)
-                .HasColumnName("status");
-
-            entity.HasOne(d => d.Agent).WithMany(p => p.Listings)
-                .HasForeignKey(d => d.AgentId)
-                .HasConstraintName("FK__Listings__agent___45F365D3");
-
-            entity.HasOne(d => d.Property).WithMany(p => p.Listings)
-                .HasForeignKey(d => d.PropertyId)
-                .HasConstraintName("FK__Listings__proper__44FF419A");
+                .HasConstraintName("FK__Clients__user_id__74AE54BC");
         });
 
         modelBuilder.Entity<Property>(entity =>
         {
-            entity.HasKey(e => e.PropertyId).HasName("PK__Properti__735BA463B88813D0");
+            entity.HasKey(e => e.PropertyId).HasName("PK__Properti__735BA463F89FE27C");
 
             entity.Property(e => e.PropertyId).HasColumnName("property_id");
+            entity.Property(e => e.Adddate)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime")
+                .HasColumnName("adddate");
             entity.Property(e => e.Address)
                 .HasMaxLength(200)
                 .HasColumnName("address");
+            entity.Property(e => e.AgentId).HasColumnName("agent_id");
+            entity.Property(e => e.Approvedby)
+                .HasMaxLength(50)
+                .HasColumnName("approvedby");
+            entity.Property(e => e.AvailiablityType)
+                .HasMaxLength(50)
+                .HasColumnName("availiablity_type");
             entity.Property(e => e.City)
                 .HasMaxLength(100)
                 .HasColumnName("city");
-            entity.Property(e => e.DateListed)
+            entity.Property(e => e.Description).HasColumnName("description");
+            entity.Property(e => e.Editdate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime")
-                .HasColumnName("date_listed");
-            entity.Property(e => e.Description).HasColumnName("description");
+                .HasColumnName("editdate");
+            entity.Property(e => e.MinrentalPeriod).HasColumnName("minrental_period");
             entity.Property(e => e.NumberOfBathrooms).HasColumnName("number_of_bathrooms");
             entity.Property(e => e.NumberOfBedrooms).HasColumnName("number_of_bedrooms");
             entity.Property(e => e.Price)
@@ -189,11 +165,15 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.ZipCode)
                 .HasMaxLength(10)
                 .HasColumnName("zip_code");
+
+            entity.HasOne(d => d.Agent).WithMany(p => p.Properties)
+                .HasForeignKey(d => d.AgentId)
+                .HasConstraintName("FK__Propertie__agent__6FE99F9F");
         });
 
         modelBuilder.Entity<PropertyImage>(entity =>
         {
-            entity.HasKey(e => e.ImageId).HasName("PK__Property__DC9AC9551707A4DC");
+            entity.HasKey(e => e.ImageId).HasName("PK__Property__DC9AC955383A5D31");
 
             entity.Property(e => e.ImageId).HasColumnName("image_id");
             entity.Property(e => e.DateUploaded)
@@ -208,12 +188,12 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Property).WithMany(p => p.PropertyImages)
                 .HasForeignKey(d => d.PropertyId)
-                .HasConstraintName("FK__PropertyI__prope__5535A963");
+                .HasConstraintName("FK__PropertyI__prope__00200768");
         });
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.ReviewId).HasName("PK__Reviews__60883D9072575BD7");
+            entity.HasKey(e => e.ReviewId).HasName("PK__Reviews__60883D90A324AA3A");
 
             entity.Property(e => e.ReviewId).HasColumnName("review_id");
             entity.Property(e => e.Comments).HasColumnName("comments");
@@ -227,28 +207,27 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Property).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.PropertyId)
-                .HasConstraintName("FK__Reviews__propert__59FA5E80");
+                .HasConstraintName("FK__Reviews__propert__04E4BC85");
 
             entity.HasOne(d => d.User).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Reviews__user_id__59063A47");
+                .HasConstraintName("FK__Reviews__user_id__03F0984C");
         });
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__85C600AF8B6E7A59");
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__85C600AF570CC5C5");
 
             entity.Property(e => e.TransactionId).HasColumnName("transaction_id");
-            entity.Property(e => e.AgentId).HasColumnName("agent_id");
-            entity.Property(e => e.BuyerId).HasColumnName("buyer_id");
+            entity.Property(e => e.ClientId).HasColumnName("client_id");
             entity.Property(e => e.Commission)
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("commission");
             entity.Property(e => e.PropertyId).HasColumnName("property_id");
+            entity.Property(e => e.RentalPeriod).HasColumnName("rental_period");
             entity.Property(e => e.SalePrice)
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("sale_price");
-            entity.Property(e => e.SellerId).HasColumnName("seller_id");
             entity.Property(e => e.Status)
                 .HasMaxLength(50)
                 .HasColumnName("status");
@@ -257,28 +236,20 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("datetime")
                 .HasColumnName("transaction_date");
 
-            entity.HasOne(d => d.Agent).WithMany(p => p.Transactions)
-                .HasForeignKey(d => d.AgentId)
-                .HasConstraintName("FK__Transacti__agent__4CA06362");
-
-            entity.HasOne(d => d.Buyer).WithMany(p => p.TransactionBuyers)
-                .HasForeignKey(d => d.BuyerId)
-                .HasConstraintName("FK__Transacti__buyer__4AB81AF0");
+            entity.HasOne(d => d.Client).WithMany(p => p.Transactions)
+                .HasForeignKey(d => d.ClientId)
+                .HasConstraintName("FK__Transacti__clien__787EE5A0");
 
             entity.HasOne(d => d.Property).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.PropertyId)
-                .HasConstraintName("FK__Transacti__prope__49C3F6B7");
-
-            entity.HasOne(d => d.Seller).WithMany(p => p.TransactionSellers)
-                .HasForeignKey(d => d.SellerId)
-                .HasConstraintName("FK__Transacti__selle__4BAC3F29");
+                .HasConstraintName("FK__Transacti__prope__778AC167");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__B9BE370FF1E71EBE");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__B9BE370FFAC8D6C4");
 
-            entity.HasIndex(e => e.Email, "UQ__Users__AB6E6164A21008DA").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Users__AB6E6164FD7B4399").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.DateCreated)

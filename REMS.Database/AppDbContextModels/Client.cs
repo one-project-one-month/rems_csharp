@@ -9,8 +9,6 @@ public partial class Client
 
     public int? UserId { get; set; }
 
-    public int? AgentId { get; set; }
-
     public string FirstName { get; set; } = null!;
 
     public string LastName { get; set; } = null!;
@@ -21,13 +19,9 @@ public partial class Client
 
     public string? Address { get; set; }
 
-    public virtual Agent? Agent { get; set; }
-
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 
-    public virtual ICollection<Transaction> TransactionBuyers { get; set; } = new List<Transaction>();
-
-    public virtual ICollection<Transaction> TransactionSellers { get; set; } = new List<Transaction>();
+    public virtual ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();
 
     public virtual User? User { get; set; }
 }
