@@ -47,6 +47,8 @@ public partial class Property
 
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
 
+    public virtual ICollection<Message> Messages { get; set; } = new List<Message>();
+
     public virtual ICollection<PropertyImage> PropertyImages { get; set; } = new List<PropertyImage>();
 
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
