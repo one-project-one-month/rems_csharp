@@ -13,32 +13,36 @@ public class DA_Property
         _configuration = configuration;
     }
 
-    public async Task<List<PropertyResponseModel>> GetProperties()
+    public async Task<Result<List<PropertyResponseModel>>> GetProperties()
     {
+        Result<List<PropertyResponseModel>> model = null;
         try
         {
             var properties = await _db.Properties
-                                      .AsNoTracking()
-                                      .Include(x => x.PropertyImages)
-                                      .ToListAsync();
+                                            .AsNoTracking()
+                                            .Include(x => x.PropertyImages)
+                                            .ToListAsync();
 
-            var response = properties.Select(property => new PropertyResponseModel
+            var propertyResponseModels = properties.Select(property => new PropertyResponseModel
             {
                 Property = property.Change(),
                 Images = property.PropertyImages.Select(x => x.Change()).ToList()
             }).ToList();
 
-            return response;
+            model = Result<List<PropertyResponseModel>>.Success(propertyResponseModels);
+
+            return model;
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            return null;
+            model = Result<List<PropertyResponseModel>>.Error(ex);
+            return model;
         }
     }
 
-    public async Task<PropertyListResponseModel> GetProperties(int pageNo = 1, int pageSize = 10)
+    public async Task<Result<PropertyListResponseModel>> GetProperties(int pageNo = 1, int pageSize = 10)
     {
+        Result<PropertyListResponseModel> model = null;
         try
         {
             var properties = await _db.Properties
@@ -48,7 +52,7 @@ public class DA_Property
                                       .Take(pageSize)
                                       .ToListAsync();
 
-            var propertyResponseModels = properties.Select(property => new PropertyResponseModel
+            var propertyResponseModel = properties.Select(property => new PropertyResponseModel
             {
                 Property = property.Change(),
                 Images = property.PropertyImages.Select(x => x.Change()).ToList()
@@ -57,23 +61,26 @@ public class DA_Property
             var totalCount = await _db.Properties.CountAsync();
             var pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
 
-            var response = new PropertyListResponseModel
+            var propertyListResponse = new PropertyListResponseModel
             {
-                Properties = propertyResponseModels,
+                Properties = propertyResponseModel,
                 PageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount)
             };
 
-            return response;
+            model = Result<PropertyListResponseModel>.Success(propertyListResponse);
+
+            return model;
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            return null;
+            model = Result<PropertyListResponseModel>.Error(ex);
+            return model;
         }
     }
 
-    public async Task<PropertyResponseModel> GetPropertyById(int propertyId)
+    public async Task<Result<PropertyResponseModel>> GetPropertyById(int propertyId)
     {
+        Result<PropertyResponseModel> model = null;
         try
         {
             var property = await _db.Properties
@@ -82,23 +89,30 @@ public class DA_Property
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
 
-            var responseModel = new PropertyResponseModel
+            var propertyResponse = new PropertyResponseModel
             {
                 Property = property.Change(),
                 Images = property.PropertyImages.Select(x => x.Change()).ToList()
             };
 
-            return responseModel;
+            model = Result<PropertyResponseModel>.Success(propertyResponse);
+            return model;
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            return null;
+            model = Result<PropertyResponseModel>.Error(ex);
+            return model;
         }
     }
 
-    public async Task<PropertyResponseModel> CreateProperty(PropertyRequestModel requestModel)
+    //public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId)
+    //{
+
+    //}
+
+    public async Task<Result<PropertyResponseModel>> CreateProperty(PropertyRequestModel requestModel)
     {
+        Result<PropertyResponseModel> model = null;
         try
         {
             if (requestModel == null)
@@ -106,61 +120,56 @@ public class DA_Property
                 throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
             }
 
-            var property = requestModel.Change();
-            if (property == null)
-            {
-                throw new Exception("Failed to convert request model to property entity");
-            }
+            var property = requestModel.Change()
+                           ?? throw new Exception("Failed to convert request model to property entity");
 
             await _db.Properties.AddAsync(property);
             await _db.SaveChangesAsync();
 
-            string folderPath = _configuration.GetSection("ImageFolderPath").Value!;
-            foreach (var item in requestModel.Images)
+            foreach (var propertyImage in requestModel.Images)
             {
-                string fileName = Guid.NewGuid().ToString() + ".png";
-                string base64Str = item.ImgBase64!;
-                byte[] bytes = Convert.FromBase64String(base64Str!);
-
-                string filePath = Path.Combine(folderPath, fileName);
-                await File.WriteAllBytesAsync(filePath, bytes);
-
-                // Save File in Folder
-                // Save Path in Db
-
-                await _db.PropertyImages.AddAsync(new PropertyImage
-                {
-                    DateUploaded = DateTime.Now,
-                    Description = item.Description,
-                    ImageUrl = filePath,
-                    PropertyId = property.PropertyId
-                });
-                await _db.SaveChangesAsync();
+                var photoPath = await SavePhotoInFolder(propertyImage.ImgBase64!);
+                await SavePhotoPathToDb(property.PropertyId, propertyImage.Description, photoPath);
             }
 
-             var responseModel = new PropertyResponseModel
+            var createdProperty = await _db.Properties
+                                    .AsNoTracking()
+                                    .Include(x => x.PropertyImages)
+                                    .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
+                                    ?? throw new Exception("Property Not Found");
+
+            var propertyResponse = new PropertyResponseModel
             {
-                Property = property.Change(),
-                Images = new List<PropertyImageModel>()
+                Property = createdProperty.Change(),
+                Images = createdProperty.PropertyImages.Select(x => x.Change()).ToList()
             };
 
-            return responseModel;
+            model = Result<PropertyResponseModel>.Success(propertyResponse);
+            return model;
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            throw;
+            model = Result<PropertyResponseModel>.Error(ex);
+            return model;
         }
     }
 
-    public async Task<PropertyResponseModel> UpdateProperty(int propertyId, PropertyRequestModel requestModel)
+    public async Task<Result<PropertyResponseModel>> UpdateProperty(int propertyId, PropertyRequestModel requestModel)
     {
+        Result<PropertyResponseModel> model = null;
         try
         {
             var property = await _db.Properties
                                     .Include(x => x.PropertyImages)
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
+
+            foreach (var propertyImage in property.PropertyImages)
+            {
+                RemovePhotoFromFolder(propertyImage.ImageUrl);
+            }
+
+            _db.PropertyImages.RemoveRange(property.PropertyImages);
 
             property.Address = requestModel.Address;
             property.City = requestModel.City;
@@ -174,28 +183,42 @@ public class DA_Property
             property.YearBuilt = requestModel.YearBuilt;
             property.Description = requestModel.Description;
             property.Status = requestModel.Status;
-            property.DateListed = requestModel.DateListed;
+            //property.D = requestModel.DateListed;
+
+            foreach (var propertyImage in requestModel.Images)
+            {
+                var photoPath = await SavePhotoInFolder(propertyImage.ImgBase64!);
+                await SavePhotoPathToDb(property.PropertyId, propertyImage.Description, photoPath);
+            }
 
             _db.Properties.Update(property);
             await _db.SaveChangesAsync();
 
+            var updatedProperty = await _db.Properties
+                                    .AsNoTracking()
+                                    .Include(x => x.PropertyImages)
+                                    .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
+                                    ?? throw new Exception("Property Not Found");
+
             var responseModel = new PropertyResponseModel
             {
-                Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+                Property = updatedProperty.Change(),
+                Images = updatedProperty.PropertyImages.Select(x => x.Change()).ToList()
             };
-
-            return responseModel;
+            model = Result<PropertyResponseModel>.Success(responseModel);
+            return model;
         }
         catch (Exception ex)
         {
             Console.WriteLine(ex);
-            return null;
+            model = Result<PropertyResponseModel>.Error(ex);
+            return model;
         }
     }
 
-    public async Task<bool> DeleteProperty(int propertyId)
+    public async Task<Result<object>> DeleteProperty(int propertyId)
     {
+        Result<object> model = null;
         try
         {
             var property = await _db.Properties
@@ -203,15 +226,64 @@ public class DA_Property
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
 
+            foreach (var propertyImage in property.PropertyImages)
+            {
+                RemovePhotoFromFolder(propertyImage.ImageUrl);
+            }
+
             _db.Properties.Remove(property);
+            _db.PropertyImages.RemoveRange(property.PropertyImages);
+
             await _db.SaveChangesAsync();
 
-            return true;
+            model = Result<object>.Success(null);
+            return model;
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            return false;
+            model = Result<object>.Error(ex);
+            return model;
+        }
+    }
+
+    //private async Task<Property> GetPropertyById(int propertyId)
+    //{
+    //    var property = await _db.Properties
+    //                            .AsNoTracking()
+    //                            .Include(x => x.PropertyImages)
+    //                            .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
+    //                            ?? throw new Exception("Property Not Found");
+    //}
+
+    private async Task<string> SavePhotoInFolder(string base64Str)
+    {
+        string folderPath = _configuration.GetSection("ImageFolderPath").Value!;
+        string fileName = Guid.NewGuid().ToString() + ".png";
+        byte[] bytes = Convert.FromBase64String(base64Str);
+
+        string filePath = Path.Combine(folderPath, fileName);
+        await File.WriteAllBytesAsync(filePath, bytes);
+
+        return filePath;
+    }
+
+    private async Task SavePhotoPathToDb(int propertyId, string photoDescription, string photoPath)
+    {
+        await _db.PropertyImages.AddAsync(new PropertyImage
+        {
+            DateUploaded = DateTime.Now,
+            Description = photoDescription,
+            ImageUrl = photoPath,
+            PropertyId = propertyId
+        });
+        await _db.SaveChangesAsync();
+    }
+
+    private static void RemovePhotoFromFolder(string photoPath)
+    {
+        if (File.Exists(photoPath))
+        {
+            File.Delete(photoPath);
         }
     }
 }
