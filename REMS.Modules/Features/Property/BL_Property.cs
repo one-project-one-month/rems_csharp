@@ -9,13 +9,13 @@ public class BL_Property
         _daProperty = daProperty;
     }
 
-    public async Task<List<PropertyResponseModel>> GetProperties()
+    public async Task<Result<List<PropertyResponseModel>>> GetProperties()
     {
         var response = await _daProperty.GetProperties();
         return response;
     }
 
-    public async Task<PropertyListResponseModel> GetProperties(int pageNo, int pageSize)
+    public async Task<Result<PropertyListResponseModel>> GetProperties(int pageNo, int pageSize)
     {
         if (pageNo < 1 || pageSize < 1)
         {
@@ -26,7 +26,31 @@ public class BL_Property
         return response;
     }
 
-    public async Task<PropertyResponseModel> GetPropertyById(int propertyId)
+    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId)
+    {
+        if (agentId < 1)
+        {
+            throw new Exception("Invalid Agent Id");
+        }
+        var response = await _daProperty.GetPropertiesByAgentId(agentId);
+        return response;
+    }
+
+    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo, int pageSize)
+    {
+        if (agentId < 1)
+        {
+            throw new Exception("Invalid Agent Id");
+        }
+        if (pageNo < 1 || pageSize < 1)
+        {
+            throw new Exception("PageNo or PageSize Cannot be less than 1");
+        }
+        var response = await _daProperty.GetPropertiesByAgentId(agentId, pageNo, pageSize);
+        return response;
+    }
+
+    public async Task<Result<PropertyResponseModel>> GetPropertyById(int propertyId)
     {
         if (propertyId < 1)
         {
@@ -37,7 +61,7 @@ public class BL_Property
         return response;
     }
 
-    public async Task<PropertyResponseModel> CreateProperty(PropertyRequestModel requestModel)
+    public async Task<Result<PropertyResponseModel>> CreateProperty(PropertyRequestModel requestModel)
     {
         if (requestModel == null)
         {
@@ -61,7 +85,7 @@ public class BL_Property
     }
 
 
-    public async Task<PropertyResponseModel> UpdateProperty(int propertyId, PropertyRequestModel requestModel)
+    public async Task<Result<PropertyResponseModel>> UpdateProperty(int propertyId, PropertyRequestModel requestModel)
     {
         if (propertyId < 1)
         {
@@ -77,7 +101,7 @@ public class BL_Property
         return response;
     }
 
-    public async Task<bool> DeleteProperty(int propertyId)
+    public async Task<Result<object>> DeleteProperty(int propertyId)
     {
         if (propertyId < 1)
         {

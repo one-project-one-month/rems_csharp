@@ -41,6 +41,34 @@ public class PropertyController : ControllerBase
         }
     }
 
+    [HttpGet("agent/{agentId}")]
+    public async Task<IActionResult> GetPropertiesByAgentId(int agentId)
+    {
+        try
+        {
+            var response = await _blProperties.GetPropertiesByAgentId(agentId);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("agent/{agentId}/{pageNo}/{pageSize}")]
+    public async Task<IActionResult> GetPropertiesByAgentId(int agentId,int pageNo,int pageSize)
+    {
+        try
+        {
+            var response = await _blProperties.GetPropertiesByAgentId(agentId,pageNo, pageSize);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpGet("{propertyId}")]
     public async Task<IActionResult> GetPropertyById(int propertyId)
     {
@@ -66,7 +94,8 @@ public class PropertyController : ControllerBase
         try
         {
             var response = await _blProperties.CreateProperty(requestModel);
-            return CreatedAtAction(nameof(GetPropertyById), new { propertyId = response.Property.PropertyId }, response);
+            // return CreatedAtAction(nameof(GetPropertyById), new { propertyId = response.Property.PropertyId }, response);
+            return Ok(response);
         }
         catch (Exception ex)
         {
@@ -109,14 +138,15 @@ public class PropertyController : ControllerBase
         try
         {
             var result = await _blProperties.DeleteProperty(propertyId);
-            if (result)
-            {
-                return NoContent();
-            }
-            else
-            {
-                return NotFound("Property not found");
-            }
+            return Ok(result);
+            //if (result)
+            //{
+            //    return NoContent();
+            //}
+            //else
+            //{
+            //    return NotFound("Property not found");
+            //}
         }
         catch (Exception ex)
         {
