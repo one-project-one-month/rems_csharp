@@ -26,6 +26,30 @@ public class BL_Property
         return response;
     }
 
+    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId)
+    {
+        if (agentId < 1)
+        {
+            throw new Exception("Invalid Agent Id");
+        }
+        var response = await _daProperty.GetPropertiesByAgentId(agentId);
+        return response;
+    }
+
+    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo, int pageSize)
+    {
+        if (agentId < 1)
+        {
+            throw new Exception("Invalid Agent Id");
+        }
+        if (pageNo < 1 || pageSize < 1)
+        {
+            throw new Exception("PageNo or PageSize Cannot be less than 1");
+        }
+        var response = await _daProperty.GetPropertiesByAgentId(agentId, pageNo, pageSize);
+        return response;
+    }
+
     public async Task<Result<PropertyResponseModel>> GetPropertyById(int propertyId)
     {
         if (propertyId < 1)
