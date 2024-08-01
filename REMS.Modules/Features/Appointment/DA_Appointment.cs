@@ -49,7 +49,7 @@ namespace REMS.Modules.Features.Appointment
             }
             catch (Exception ex)
             {
-                response= Result<AppointmentResponseModel>.Error(ex);
+                response = Result<AppointmentResponseModel>.Error(ex);
             }
             return response;
         }
@@ -63,7 +63,7 @@ namespace REMS.Modules.Features.Appointment
                                          .AsNoTracking()
                                          .FirstOrDefaultAsync(x => x.AppointmentId == id);
                 if (appointment is null)
-                    return  Result<object>.Error( "Appointment Not Found.");
+                    return Result<object>.Error("Appointment Not Found.");
                 _db.Appointments.Remove(appointment);
                 _db.Entry(appointment).State = EntityState.Deleted;
                 int result = await _db.SaveChangesAsync();
@@ -73,7 +73,7 @@ namespace REMS.Modules.Features.Appointment
             }
             catch (Exception ex)
             {
-                response= Result<object>.Error( ex);
+                response = Result<object>.Error(ex);
             }
             return response;
         }
@@ -86,18 +86,18 @@ namespace REMS.Modules.Features.Appointment
                 var query = _db.Appointments
                                 .AsNoTracking()
                                 .Where(x => x.ClientId == id)
-                                .Select(n=>new AppointmentModel
+                                .Select(n => new AppointmentModel
                                 {
                                     AppointmentId = n.AppointmentId,
-                                    ClientId=n.ClientId,
-                                    PropertyId=n.PropertyId,
+                                    ClientId = n.ClientId,
+                                    PropertyId = n.PropertyId,
                                     AppointmentDate = n.AppointmentDate,
-                                    AppointmentTime=n.AppointmentTime.ToString(),
-                                    Status=n.Status,
-                                    Notes=n.Notes
+                                    AppointmentTime = n.AppointmentTime.ToString(),
+                                    Status = n.Status,
+                                    Notes = n.Notes
                                 });
                 var appointmentList = await query.Pagination(pageNo, pageSize).ToListAsync();
-                if(appointmentList is null || appointmentList.Count == 0)
+                if (appointmentList is null || appointmentList.Count == 0)
                 {
                     return Result<AppointmentListResponseModel>.Error("No Data Found.");
                 }
@@ -117,6 +117,55 @@ namespace REMS.Modules.Features.Appointment
             catch (Exception ex)
             {
                 response = Result<AppointmentListResponseModel>.Error(ex);
+            }
+            return response;
+        }
+
+        public async Task<Result<AppointmentResponseModel>> UpdateAppointmentAsync(int id, AppointmentRequestModel requestModel)
+        {
+            Result<AppointmentResponseModel> response = null;
+            try
+            {
+                if (requestModel is null)
+                    return Result<AppointmentResponseModel>.Error("Request Model is null");
+
+                var appointment = await _db.Appointments
+                                         .AsNoTracking()
+                                         .FirstOrDefaultAsync(x => x.PropertyId == id); ;
+                if (appointment is null)
+                    return Result<AppointmentResponseModel>.Error("appointment not found");
+
+                if (!string.IsNullOrWhiteSpace(requestModel.AppointmentDate.ToString()))
+                {
+                    appointment.AppointmentDate = requestModel.AppointmentDate;
+                }
+                if (!string.IsNullOrWhiteSpace(requestModel.AppointmentTime))
+                {
+                    appointment.AppointmentTime = TimeSpan.Parse(requestModel.AppointmentTime);
+                }
+                if (!string.IsNullOrWhiteSpace(requestModel.Status))
+                {
+                    appointment.Status = requestModel.Status;
+                }
+                if (!string.IsNullOrWhiteSpace(requestModel.Notes))
+                {
+                    appointment.Notes = requestModel.Notes;
+                }
+                _db.Entry(appointment).State= EntityState.Modified;
+                int result=await _db.SaveChangesAsync();
+                if (result < 0)
+                {
+                    return Result<AppointmentResponseModel>.Error("Fail to update appointment");
+                }
+                var appointmentResponse = new AppointmentResponseModel
+                {
+                    Appointment = appointment.Change()
+                };
+                response=Result<AppointmentResponseModel>.Success(appointmentResponse,"Appointment Update Successfully");
+            }
+            catch (Exception ex)
+            {
+                response = Result<AppointmentResponseModel>.Error(ex);
             }
             return response;
         }

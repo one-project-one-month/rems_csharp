@@ -60,5 +60,21 @@
                 return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
             }
         }
+
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdateAppointment(int id,AppointmentRequestModel requestModel)
+        {
+            try
+            {
+                var response = await _blAppointment.UpdateAppointmentAsync(id, requestModel);
+                if (response.IsError)
+                    return BadRequest(response);
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
     }
 }

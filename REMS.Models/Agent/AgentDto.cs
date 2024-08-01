@@ -16,9 +16,9 @@ public class AgentDto
 
     public string? LicenseNumber { get; set; } = null!;
 
-    public string? Phone { get; set; }
-
     public string? Email { get; set; }
+
+    public string? PhoneNumber { get; set; }
 
     public string? Address { get; set; }
 }

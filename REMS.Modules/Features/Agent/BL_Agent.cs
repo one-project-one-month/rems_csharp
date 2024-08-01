@@ -29,7 +29,7 @@ public class BL_Agent
 
     public async Task<Result<AgentDto>> SearchAgentAsync(int id)
     {
-        return await _daAgent.SearchAgentAsync(id);
+        return await _daAgent.SearchAgentByUserIdAsync(id);
     }
 
     public async Task<Result<string>> LoginAgentAsync(AgentLoginRequestModel agentLoginInfo)
