@@ -1,9 +1,8 @@
-﻿using System;
-namespace REMS.Models.Property;
+﻿namespace REMS.Models.Property;
 
 public class PropertyRequestModel
 {
-    public int? PropertyId { get; set; }
+    public int? AgentId { get; set; }
 
     public string Address { get; set; }
 
@@ -29,9 +28,13 @@ public class PropertyRequestModel
 
     public string Status { get; set; }
 
-    public DateTime? DateListed { get; set; }
+    public string AvailiablityType { get; set; }
 
-    public List<PropertyImageRequestModel> Images { get; set; }
+    public int? MinRentalPeriod { get; set; }
+
+    public string? ApprovedBy { get; set; }
+
+    public List<PropertyImageRequestModel> Images { get; set; } = new List<PropertyImageRequestModel>();
 }
 
 public class PropertyImageRequestModel
@@ -39,4 +42,3 @@ public class PropertyImageRequestModel
     public string? ImgBase64 { get; set; }
     public string? Description { get; set; }
 }
-
