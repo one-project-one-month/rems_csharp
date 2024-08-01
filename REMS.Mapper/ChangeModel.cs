@@ -33,7 +33,7 @@ public static class ChangeModel
         return agent;
     }
 
-    public static AgentDto ChangeAgent(this Agent agent)
+    public static AgentDto ChangeAgent(this Agent agent,User user)
     {
         return new AgentDto
         {
@@ -41,6 +41,8 @@ public static class ChangeModel
             UserId = agent.UserId,
             AgencyName = agent.AgencyName,
             LicenseNumber = agent.LicenseNumber,
+            Email=user.Email,
+            PhoneNumber=user.Phone,
             Address = agent.Address
         };
     }

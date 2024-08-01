@@ -1,4 +1,6 @@
-﻿namespace REMS.Modules.Features.Agent;
+﻿using REMS.Models.User;
+
+namespace REMS.Modules.Features.Agent;
 
 public class DA_Agent
 {
@@ -35,7 +37,7 @@ public class DA_Agent
             }
             var agentResponse = new AgentResponseModel
             {
-                Agent = agent.ChangeAgent()
+                Agent = agent.ChangeAgent(user)
             };
             response = Result<AgentResponseModel>.Success(agentResponse, "Agent Register Successfully");
         }
@@ -96,9 +98,9 @@ public class DA_Agent
             {
                 return Result<AgentResponseModel>.Error("Updating Fail");
             }
-            var agentResponse = new AgentResponseModel
+            AgentResponseModel agentResponse = new AgentResponseModel
             {
-                Agent = agent.ChangeAgent()
+                Agent = agent.ChangeAgent(user)
             };
             response = Result<AgentResponseModel>.Success(agentResponse, "Successfully Update");
         }
@@ -167,13 +169,13 @@ public class DA_Agent
         return model;
     }
 
-    public async Task<Result<AgentDto>> SearchAgentAsync(int id)
+    public async Task<Result<AgentDto>> SearchAgentByUserIdAsync(int id)
     {
         Result<AgentDto> model = null;
         try
         {
             AgentDto? agent = await _db.Agents
-                .Where(ag => ag.AgentId == id)
+                .Where(ag => ag.UserId == id)
                 .Select(ag => new AgentDto
                 {
                     AgentId = ag.AgentId,
@@ -183,11 +185,21 @@ public class DA_Agent
                     Address = ag.Address
                 })
                 .FirstOrDefaultAsync();
-            if (agent is null)
+            var user = await _db.Users
+                              .Where(x => x.UserId == id)
+                              .Select(n => new UserModel
+                              {
+                                  Phone = n.Phone,
+                                  Email = n.Email
+                              })
+                              .FirstOrDefaultAsync();
+            if (agent is null || user is null)
             {
                 model = Result<AgentDto>.Error("User Not Found");
                 goto result;
             }
+            agent.PhoneNumber=user.Phone;
+            agent.Email=user.Email;
             model = Result<AgentDto>.Success(agent);
         }
         catch (Exception ex)
