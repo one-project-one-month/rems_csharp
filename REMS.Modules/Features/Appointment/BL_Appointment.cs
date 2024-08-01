@@ -43,6 +43,11 @@ namespace REMS.Modules.Features.Appointment
             return await _daAppointment.GetAppointmentByClientIdAsync(id, pageNo, pageSize);
         }
 
+        public async Task<Result<AppointmentResponseModel>> UpdateAppointmentAsync(int id, AppointmentRequestModel requestModel)
+        {
+            return await _daAppointment.UpdateAppointmentAsync(id, requestModel);
+        }
+
         private Result<AppointmentResponseModel> CheckAppointmentValue(AppointmentRequestModel requestModel)
         {
             TimeSpan time;

@@ -33,7 +33,7 @@ public static class ChangeModel
         return agent;
     }
 
-    public static AgentDto ChangeAgent(this Agent agent)
+    public static AgentDto ChangeAgent(this Agent agent,User user)
     {
         return new AgentDto
         {
@@ -41,6 +41,8 @@ public static class ChangeModel
             UserId = agent.UserId,
             AgencyName = agent.AgencyName,
             LicenseNumber = agent.LicenseNumber,
+            Email=user.Email,
+            PhoneNumber=user.Phone,
             Address = agent.Address
         };
     }
@@ -98,6 +100,7 @@ public static class ChangeModel
         var propertyModel = new PropertyModel()
         {
             PropertyId = dataModel.PropertyId,
+            AgentId = dataModel.AgentId,
             Address = dataModel.Address,
             City = dataModel.City,
             State = dataModel.State,
@@ -109,7 +112,12 @@ public static class ChangeModel
             NumberOfBathrooms = dataModel.NumberOfBathrooms,
             YearBuilt = dataModel.YearBuilt,
             Description = dataModel.Description,
-            Status = dataModel.Status
+            Status = dataModel.Status,
+            AvailiablityType =dataModel.AvailiablityType,
+            MinrentalPeriod = dataModel.MinrentalPeriod,
+            Approvedby = dataModel.Approvedby,
+            Adddate  = dataModel.Adddate,
+            Editdate = dataModel.Editdate,
         };
 
         return propertyModel;
@@ -117,9 +125,9 @@ public static class ChangeModel
 
     public static Property Change(this PropertyRequestModel requestModel)
     {
-        Property property = new Property
+        Property property = new()
         {
-            PropertyId = requestModel.PropertyId ?? 0,
+            AgentId = requestModel.AgentId,
             Address = requestModel.Address,
             City = requestModel.City,
             State = requestModel.State,
@@ -131,8 +139,12 @@ public static class ChangeModel
             NumberOfBathrooms = requestModel.NumberOfBathrooms,
             YearBuilt = requestModel.YearBuilt,
             Description = requestModel.Description,
-            Status = requestModel.Status
+            Status = requestModel.Status,
+            AvailiablityType = requestModel.AvailiablityType,
+            MinrentalPeriod = requestModel.MinRentalPeriod,
+            Approvedby = requestModel.ApprovedBy,         
         };
+
         return property;
     }
 

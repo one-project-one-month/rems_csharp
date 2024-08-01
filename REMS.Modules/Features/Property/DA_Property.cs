@@ -183,6 +183,9 @@ public class DA_Property
             {
                 throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
             }
+            var isAgentExist = _db.Agents.AsNoTracking()
+                                         .FirstOrDefault(x => x.AgentId == requestModel.AgentId)
+                                         ?? throw new Exception("Agent Id does not exist");
 
             var property = requestModel.Change()
                            ?? throw new Exception("Failed to convert request model to property entity");
@@ -228,6 +231,10 @@ public class DA_Property
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
 
+            var isAgentExist = _db.Agents.AsNoTracking()
+                                         .FirstOrDefault(x => x.AgentId == requestModel.AgentId)
+                                         ?? throw new Exception("Agent Id does not exist");
+
             foreach (var propertyImage in property.PropertyImages)
             {
                 RemovePhotoFromFolder(propertyImage.ImageUrl);
@@ -247,7 +254,9 @@ public class DA_Property
             property.YearBuilt = requestModel.YearBuilt;
             property.Description = requestModel.Description;
             property.Status = requestModel.Status;
-            //property.D = requestModel.DateListed;
+            property.AvailiablityType = requestModel.AvailiablityType;
+            property.MinrentalPeriod = requestModel.MinRentalPeriod;
+            property.Editdate = DateTime.Now;
 
             foreach (var propertyImage in requestModel.Images)
             {
