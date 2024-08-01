@@ -4,15 +4,17 @@ public class PropertyModel
 {
     public int PropertyId { get; set; }
 
-    public string Address { get; set; }
+    public int? AgentId { get; set; }
 
-    public string City { get; set; }
+    public string Address { get; set; } = null!;
 
-    public string State { get; set; }
+    public string City { get; set; } = null!;
 
-    public string ZipCode { get; set; }
+    public string State { get; set; } = null!;
 
-    public string PropertyType { get; set; }
+    public string ZipCode { get; set; } = null!;
+
+    public string PropertyType { get; set; } = null!;
 
     public decimal Price { get; set; }
 
@@ -26,7 +28,15 @@ public class PropertyModel
 
     public string? Description { get; set; }
 
-    public string Status { get; set; }
+    public string Status { get; set; } = null!;
 
-    public DateTime? DateListed { get; set; }
+    public string AvailiablityType { get; set; } = null!;
+
+    public int? MinrentalPeriod { get; set; }
+
+    public string? Approvedby { get; set; }
+
+    public DateTime? Adddate { get; set; }
+
+    public DateTime? Editdate { get; set; }
 }
