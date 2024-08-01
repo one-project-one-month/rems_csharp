@@ -7,18 +7,18 @@ on:
       - dev
 
 env:
-    NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
+  NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
 jobs:
   build:
-    runs-on: windows-latest
     strategy:
       matrix:
         dotnet-version: ["8.0.x", "6.0.x"]
-
+        os: ["ubuntu-latest", "window-latest"]
+    runs-on: ${{matrix.os}}
     steps:
       - uses: actions/checkout@v4
-        name: Check out the code to runner
+        name: Checkout
         with:
           fetch-depth: 0
 
@@ -33,4 +33,4 @@ jobs:
         run: dotnet --version
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore --no-cache --disable-parallel --verbosity minimal
