@@ -13,10 +13,6 @@ public partial class Client
 
     public string LastName { get; set; } = null!;
 
-    public string? Phone { get; set; }
-
-    public string? Email { get; set; }
-
     public string? Address { get; set; }
 
     public virtual ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();

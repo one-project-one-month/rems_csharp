@@ -127,7 +127,7 @@ namespace REMS.Modules.Features.Transaction
             try
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId && x.AgentId == agentId);
+                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId);
                 var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
 
                 int rowCount = _db.Transactions.Count();
@@ -152,7 +152,7 @@ namespace REMS.Modules.Features.Transaction
             try
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId && x.BuyerId == buyerId);
+                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId);
                 var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
 
                 int rowCount = _db.Transactions.Count();
@@ -177,7 +177,7 @@ namespace REMS.Modules.Features.Transaction
             try
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId && x.SellerId == sellerId);
+                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId);
                 var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
 
                 int rowCount = _db.Transactions.Count();

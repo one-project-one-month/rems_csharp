@@ -13,10 +13,6 @@ public partial class Agent
 
     public string LicenseNumber { get; set; } = null!;
 
-    public string? Phone { get; set; }
-
-    public string? Email { get; set; }
-
     public string? Address { get; set; }
 
     public virtual ICollection<Property> Properties { get; set; } = new List<Property>();

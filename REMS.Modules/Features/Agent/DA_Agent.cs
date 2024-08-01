@@ -1,7 +1,4 @@
-﻿
-using Azure;
-
-namespace REMS.Modules.Features.Agent;
+﻿namespace REMS.Modules.Features.Agent;
 
 public class DA_Agent
 {
@@ -79,7 +76,6 @@ public class DA_Agent
             if (!string.IsNullOrWhiteSpace(requestModel.Email))
             {
                 user.Email = requestModel.Email;
-                agent.Email = requestModel.Email;
             }
             if (!string.IsNullOrWhiteSpace(requestModel.Password))
             {
@@ -88,7 +84,6 @@ public class DA_Agent
             if (!string.IsNullOrWhiteSpace(requestModel.Phone))
             {
                 user.Phone = requestModel.Phone;
-                agent.Phone = requestModel.Phone;
             }
             if (!string.IsNullOrWhiteSpace(requestModel.Address))
             {
@@ -185,8 +180,6 @@ public class DA_Agent
                     UserId = ag.UserId,
                     AgencyName = ag.AgencyName,
                     LicenseNumber = ag.LicenseNumber,
-                    Phone = ag.Phone,
-                    Email = ag.Email,
                     Address = ag.Address
                 })
                 .FirstOrDefaultAsync();
@@ -221,8 +214,6 @@ public class DA_Agent
                     UserId = ag.UserId,
                     AgencyName = ag.AgencyName,
                     LicenseNumber = ag.LicenseNumber,
-                    Phone = ag.Phone,
-                    Email = ag.Email,
                     Address = ag.Address
                 })
                 .ToListAsync();
@@ -264,8 +255,6 @@ public class DA_Agent
                     UserId = ag.UserId,
                     AgencyName = ag.AgencyName,
                     LicenseNumber = ag.LicenseNumber,
-                    Phone = ag.Phone,
-                    Email = ag.Email,
                     Address = ag.Address
                 })
                 .ToListAsync();
@@ -306,8 +295,6 @@ public class DA_Agent
                     UserId = ag.UserId,
                     AgencyName = ag.AgencyName,
                     LicenseNumber = ag.LicenseNumber,
-                    Phone = ag.Phone,
-                    Email = ag.Email,
                     Address = ag.Address
                 })
                 .ToListAsync();

@@ -174,7 +174,7 @@ public class DA_Property
             property.YearBuilt = requestModel.YearBuilt;
             property.Description = requestModel.Description;
             property.Status = requestModel.Status;
-            property.DateListed = requestModel.DateListed;
+            //property.DateListed = requestModel.DateListed;
 
             _db.Properties.Update(property);
             await _db.SaveChangesAsync();

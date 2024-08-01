@@ -191,13 +191,11 @@ public class DA_Client
             if (!string.IsNullOrWhiteSpace(requestModel.Phone))
             {
                 user.Phone = requestModel.Phone;
-                client.Phone = requestModel.Phone;
             }
 
             if (!string.IsNullOrWhiteSpace(requestModel.Email))
             {
                 user.Email = requestModel.Email;
-                client.Email = requestModel.Email;
             }
 
             if (!string.IsNullOrWhiteSpace(requestModel.Password))

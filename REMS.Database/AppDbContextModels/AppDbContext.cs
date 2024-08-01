@@ -33,15 +33,11 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Server=LAPTOP-TTIU8JF8;Database=REMS;User Id=sa;Password=Minkhantthu3367;TrustServerCertificate=True;");
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Agent>(entity =>
         {
-            entity.HasKey(e => e.AgentId).HasName("PK__Agents__2C05379E66DBC67A");
+            entity.HasKey(e => e.AgentId).HasName("PK__Agents__2C05379E031C7552");
 
             entity.Property(e => e.AgentId).HasColumnName("agent_id");
             entity.Property(e => e.Address)
@@ -50,25 +46,19 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.AgencyName)
                 .HasMaxLength(100)
                 .HasColumnName("agency_name");
-            entity.Property(e => e.Email)
-                .HasMaxLength(100)
-                .HasColumnName("email");
             entity.Property(e => e.LicenseNumber)
                 .HasMaxLength(50)
                 .HasColumnName("license_number");
-            entity.Property(e => e.Phone)
-                .HasMaxLength(15)
-                .HasColumnName("phone");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
             entity.HasOne(d => d.User).WithMany(p => p.Agents)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Agents__user_id__4D94879B");
+                .HasConstraintName("FK__Agents__user_id__4E88ABD4");
         });
 
         modelBuilder.Entity<Appointment>(entity =>
         {
-            entity.HasKey(e => e.AppointmentId).HasName("PK__Appointm__A50828FCCD4118B0");
+            entity.HasKey(e => e.AppointmentId).HasName("PK__Appointm__A50828FC11F5BF47");
 
             entity.Property(e => e.AppointmentId).HasColumnName("appointment_id");
             entity.Property(e => e.AppointmentDate)
@@ -84,43 +74,37 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Client).WithMany(p => p.Appointments)
                 .HasForeignKey(d => d.ClientId)
-                .HasConstraintName("FK__Appointme__clien__7C4F7684");
+                .HasConstraintName("FK__Appointme__clien__4F7CD00D");
 
             entity.HasOne(d => d.Property).WithMany(p => p.Appointments)
                 .HasForeignKey(d => d.PropertyId)
-                .HasConstraintName("FK__Appointme__prope__7D439ABD");
+                .HasConstraintName("FK__Appointme__prope__5070F446");
         });
 
         modelBuilder.Entity<Client>(entity =>
         {
-            entity.HasKey(e => e.ClientId).HasName("PK__Clients__BF21A4246E345D57");
+            entity.HasKey(e => e.ClientId).HasName("PK__Clients__BF21A424084C6F3F");
 
             entity.Property(e => e.ClientId).HasColumnName("client_id");
             entity.Property(e => e.Address)
                 .HasMaxLength(200)
                 .HasColumnName("address");
-            entity.Property(e => e.Email)
-                .HasMaxLength(100)
-                .HasColumnName("email");
             entity.Property(e => e.FirstName)
                 .HasMaxLength(100)
                 .HasColumnName("first_name");
             entity.Property(e => e.LastName)
                 .HasMaxLength(100)
                 .HasColumnName("last_name");
-            entity.Property(e => e.Phone)
-                .HasMaxLength(15)
-                .HasColumnName("phone");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
             entity.HasOne(d => d.User).WithMany(p => p.Clients)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Clients__user_id__74AE54BC");
+                .HasConstraintName("FK__Clients__user_id__5165187F");
         });
 
         modelBuilder.Entity<Message>(entity =>
         {
-            entity.HasKey(e => e.MessageId).HasName("PK__Messages__0BBF6EE6162035A2");
+            entity.HasKey(e => e.MessageId).HasName("PK__Messages__0BBF6EE6030CF454");
 
             entity.Property(e => e.MessageId).HasColumnName("message_id");
             entity.Property(e => e.DateSent)
@@ -137,20 +121,20 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Property).WithMany(p => p.Messages)
                 .HasForeignKey(d => d.PropertyId)
-                .HasConstraintName("FK__Messages__proper__114A936A");
+                .HasConstraintName("FK__Messages__proper__52593CB8");
 
             entity.HasOne(d => d.Receiver).WithMany(p => p.MessageReceivers)
                 .HasForeignKey(d => d.ReceiverId)
-                .HasConstraintName("FK__Messages__receiv__10566F31");
+                .HasConstraintName("FK__Messages__receiv__534D60F1");
 
             entity.HasOne(d => d.Sender).WithMany(p => p.MessageSenders)
                 .HasForeignKey(d => d.SenderId)
-                .HasConstraintName("FK__Messages__sender__0F624AF8");
+                .HasConstraintName("FK__Messages__sender__5441852A");
         });
 
         modelBuilder.Entity<Property>(entity =>
         {
-            entity.HasKey(e => e.PropertyId).HasName("PK__Properti__735BA463F89FE27C");
+            entity.HasKey(e => e.PropertyId).HasName("PK__Properti__735BA46382020C5F");
 
             entity.Property(e => e.PropertyId).HasColumnName("property_id");
             entity.Property(e => e.Adddate)
@@ -200,12 +184,12 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Agent).WithMany(p => p.Properties)
                 .HasForeignKey(d => d.AgentId)
-                .HasConstraintName("FK__Propertie__agent__6FE99F9F");
+                .HasConstraintName("FK__Propertie__agent__5535A963");
         });
 
         modelBuilder.Entity<PropertyImage>(entity =>
         {
-            entity.HasKey(e => e.ImageId).HasName("PK__Property__DC9AC955383A5D31");
+            entity.HasKey(e => e.ImageId).HasName("PK__Property__DC9AC9559298D349");
 
             entity.Property(e => e.ImageId).HasColumnName("image_id");
             entity.Property(e => e.DateUploaded)
@@ -220,12 +204,12 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Property).WithMany(p => p.PropertyImages)
                 .HasForeignKey(d => d.PropertyId)
-                .HasConstraintName("FK__PropertyI__prope__00200768");
+                .HasConstraintName("FK__PropertyI__prope__5629CD9C");
         });
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.ReviewId).HasName("PK__Reviews__60883D90A324AA3A");
+            entity.HasKey(e => e.ReviewId).HasName("PK__Reviews__60883D9094BA37F0");
 
             entity.Property(e => e.ReviewId).HasColumnName("review_id");
             entity.Property(e => e.Comments).HasColumnName("comments");
@@ -239,16 +223,16 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Property).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.PropertyId)
-                .HasConstraintName("FK__Reviews__propert__04E4BC85");
+                .HasConstraintName("FK__Reviews__propert__571DF1D5");
 
             entity.HasOne(d => d.User).WithMany(p => p.Reviews)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__Reviews__user_id__03F0984C");
+                .HasConstraintName("FK__Reviews__user_id__5812160E");
         });
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__85C600AF570CC5C5");
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__85C600AF52FA1EC6");
 
             entity.Property(e => e.TransactionId).HasColumnName("transaction_id");
             entity.Property(e => e.ClientId).HasColumnName("client_id");
@@ -270,18 +254,18 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Client).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.ClientId)
-                .HasConstraintName("FK__Transacti__clien__787EE5A0");
+                .HasConstraintName("FK__Transacti__clien__59063A47");
 
             entity.HasOne(d => d.Property).WithMany(p => p.Transactions)
                 .HasForeignKey(d => d.PropertyId)
-                .HasConstraintName("FK__Transacti__prope__778AC167");
+                .HasConstraintName("FK__Transacti__prope__59FA5E80");
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__B9BE370FFAC8D6C4");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__B9BE370F8DDB2A90");
 
-            entity.HasIndex(e => e.Email, "UQ__Users__AB6E6164FD7B4399").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Users__AB6E61643D1F7791").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.DateCreated)
