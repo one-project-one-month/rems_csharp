@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Azure;
+using Microsoft.Extensions.Configuration;
 
 namespace REMS.Modules.Features.Property;
 
@@ -78,6 +79,74 @@ public class DA_Property
         }
     }
 
+    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId)
+    {
+        Result<List<PropertyResponseModel>> model = null;
+        try
+        {
+            var properties = await _db.Properties
+                                       .AsNoTracking()
+                                       .Where(x => x.AgentId == agentId)
+                                       .Include(x => x.PropertyImages)
+                                       .ToListAsync();
+
+            var propertyResponseModels = properties.Select(property => new PropertyResponseModel
+            {
+                Property = property.Change(),
+                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+            }).ToList();
+
+            model = Result<List<PropertyResponseModel>>.Success(propertyResponseModels);
+
+            return model;
+        }
+        catch (Exception ex)
+        {
+            model = Result<List<PropertyResponseModel>>.Error(ex);
+            return model;
+        }
+    }
+
+    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo = 1, int pageSize = 10)
+    {
+        Result<PropertyListResponseModel> model = null;
+        try
+        {
+            var properties = await _db.Properties
+                                      .AsNoTracking()
+                                      .Where(x=>x.AgentId == agentId)
+                                      .Include(x => x.PropertyImages)
+                                      .Skip((pageNo - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToListAsync();
+
+            var propertyResponseModel = properties.Select(property => new PropertyResponseModel
+            {
+                Property = property.Change(),
+                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+            }).ToList();
+
+            var totalCount = await _db.Properties.Where(x => x.AgentId == agentId).CountAsync();
+            var pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
+
+            var propertyListResponse = new PropertyListResponseModel
+            {
+                Properties = propertyResponseModel,
+                PageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount)
+            };
+
+            model = Result<PropertyListResponseModel>.Success(propertyListResponse);
+
+            return model;
+        }
+        catch(Exception ex)
+        {
+            model = Result<PropertyListResponseModel>.Error(ex);
+            return model;
+        }
+    }
+
+
     public async Task<Result<PropertyResponseModel>> GetPropertyById(int propertyId)
     {
         Result<PropertyResponseModel> model = null;
@@ -104,11 +173,6 @@ public class DA_Property
             return model;
         }
     }
-
-    //public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId)
-    //{
-
-    //}
 
     public async Task<Result<PropertyResponseModel>> CreateProperty(PropertyRequestModel requestModel)
     {

@@ -41,6 +41,34 @@ public class PropertyController : ControllerBase
         }
     }
 
+    [HttpGet("agent/{agentId}")]
+    public async Task<IActionResult> GetPropertiesByAgentId(int agentId)
+    {
+        try
+        {
+            var response = await _blProperties.GetPropertiesByAgentId(agentId);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("agent/{agentId}/{pageNo}/{pageSize}")]
+    public async Task<IActionResult> GetPropertiesByAgentId(int agentId,int pageNo,int pageSize)
+    {
+        try
+        {
+            var response = await _blProperties.GetPropertiesByAgentId(agentId,pageNo, pageSize);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
     [HttpGet("{propertyId}")]
     public async Task<IActionResult> GetPropertyById(int propertyId)
     {
