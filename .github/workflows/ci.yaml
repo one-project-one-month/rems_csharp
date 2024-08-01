@@ -24,7 +24,7 @@ jobs:
         with:
           dotnet-version: ${{ matrix.dotnet-version }}
           cache: true
-          cache-dependency-path: "**/package-lock.json"
+          cache-dependency-path: "**/package.lock.json"
 
       - name: Display dotnet version
         run: dotnet --version
