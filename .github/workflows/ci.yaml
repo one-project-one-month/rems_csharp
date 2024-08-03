@@ -11,6 +11,10 @@ on:
       - dev
     types: [opened, edited, reopened, synchronize]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
