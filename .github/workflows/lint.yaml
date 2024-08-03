@@ -11,13 +11,15 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions:
+  actions: write
+  contents: write
 
 jobs:
   run-linters:
     name: Run linters
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v4
@@ -25,7 +27,7 @@ jobs:
       - name: Set up .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: "6.0.x"
+          dotnet-version: "8.0.x"
 
       - name: Run linters
         uses: wearerequired/lint-action@v2
