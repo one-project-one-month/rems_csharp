@@ -4,7 +4,8 @@ on:
   push:
   pull_request:
     branches:
-        - '**'
+        - main
+        - dev
     types: [opened, edited, reopened, synchronize]
 
 concurrency:
