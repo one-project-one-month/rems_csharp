@@ -5,12 +5,18 @@ on:
     branches:
       - main
       - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+    types: [opened, edited, reopened, synchronize]
 
 env:
   NUGET_PACKAGES: ${{ github.workspace }}/.nuget/packages
 
 jobs:
-  build:
+  build-and-test:
+    name: Build and Test
     strategy:
       matrix:
         dotnet-version: ["8.0.x", "6.0.x"]
@@ -29,8 +35,11 @@ jobs:
           cache: true
           cache-dependency-path: "**/packages.lock.json"
 
-      - name: Display dotnet version
-        run: dotnet --version
-
       - name: Restore dependencies
         run: dotnet restore --no-cache --disable-parallel --verbosity minimal
+
+      - name: Build
+        run: dotnet build
+
+      - name: Test
+        run: dotnet test
