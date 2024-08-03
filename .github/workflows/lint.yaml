@@ -1,0 +1,28 @@
+name: Lint
+
+on:
+  push:
+  pull_request:
+    branches:
+        - **
+    types: [opened, edited, reopened, synchronize]
+
+jobs:
+  run-linters:
+    name: Run linters
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: "6.0.x"
+
+      - name: Run linters
+        uses: wearerequired/lint-action@v2
+        with:
+          dotnet_format: true
+          auto_fix: true
