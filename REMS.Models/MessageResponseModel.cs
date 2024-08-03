@@ -4,7 +4,7 @@ public class MessageResponseModel
 {
     public MessageResponseModel()
     {
-        
+
     }
     public MessageResponseModel(bool isSuccess, string? message)
     {

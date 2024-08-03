@@ -198,8 +198,8 @@ public class DA_Agent
                 model = Result<AgentDto>.Error("User Not Found");
                 goto result;
             }
-            agent.PhoneNumber=user.Phone;
-            agent.Email=user.Email;
+            agent.PhoneNumber = user.Phone;
+            agent.Email = user.Email;
             model = Result<AgentDto>.Success(agent);
         }
         catch (Exception ex)
