@@ -8,7 +8,7 @@ namespace REMS.Models.Agent;
 
 public class AgentRequestModel
 {
-    public int UserId { get;set; }
+    public int UserId { get; set; }
 
     public string? AgentName { get; set; }
 
@@ -24,5 +24,5 @@ public class AgentRequestModel
 
     public string? Address { get; set; }
 
-    public DateTime DateCreate { get; set; }=DateTime.Now;
+    public DateTime DateCreate { get; set; } = DateTime.Now;
 }

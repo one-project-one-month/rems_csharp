@@ -33,7 +33,7 @@ public static class ChangeModel
         return agent;
     }
 
-    public static AgentDto ChangeAgent(this Agent agent,User user)
+    public static AgentDto ChangeAgent(this Agent agent, User user)
     {
         return new AgentDto
         {
@@ -41,8 +41,8 @@ public static class ChangeModel
             UserId = agent.UserId,
             AgencyName = agent.AgencyName,
             LicenseNumber = agent.LicenseNumber,
-            Email=user.Email,
-            PhoneNumber=user.Phone,
+            Email = user.Email,
+            PhoneNumber = user.Phone,
             Address = agent.Address
         };
     }
@@ -113,10 +113,10 @@ public static class ChangeModel
             YearBuilt = dataModel.YearBuilt,
             Description = dataModel.Description,
             Status = dataModel.Status,
-            AvailiablityType =dataModel.AvailiablityType,
+            AvailiablityType = dataModel.AvailiablityType,
             MinrentalPeriod = dataModel.MinrentalPeriod,
             Approvedby = dataModel.Approvedby,
-            Adddate  = dataModel.Adddate,
+            Adddate = dataModel.Adddate,
             Editdate = dataModel.Editdate,
         };
 
@@ -142,7 +142,7 @@ public static class ChangeModel
             Status = requestModel.Status,
             AvailiablityType = requestModel.AvailiablityType,
             MinrentalPeriod = requestModel.MinRentalPeriod,
-            Approvedby = requestModel.ApprovedBy,         
+            Approvedby = requestModel.ApprovedBy,
         };
 
         return property;

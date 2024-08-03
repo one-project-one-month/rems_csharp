@@ -35,8 +35,8 @@ namespace REMS.Modules.Features.Appointment
 
         public async Task<Result<AppointmentListResponseModel>> GetAppointmentByAgentIdAsync(int id, int pageNo, int pageSize)
         {
-            var response=CheckPageNoandPageSize(pageNo, pageSize);
-            if(response is not null)
+            var response = CheckPageNoandPageSize(pageNo, pageSize);
+            if (response is not null)
             {
                 return response;
             }
@@ -53,19 +53,19 @@ namespace REMS.Modules.Features.Appointment
             TimeSpan time;
             if (requestModel is null)
             {
-               return Result<AppointmentResponseModel>.Error( "Model is null.");
+                return Result<AppointmentResponseModel>.Error("Model is null.");
             }
             if (requestModel.Status is null)
             {
-               return Result<AppointmentResponseModel>.Error( "Please Add Status.");
+                return Result<AppointmentResponseModel>.Error("Please Add Status.");
             }
             if (requestModel.AppointmentTime is null)
             {
-               return Result<AppointmentResponseModel>.Error( "Please Add Appointment Time.");
+                return Result<AppointmentResponseModel>.Error("Please Add Appointment Time.");
             }
             if (!TimeSpan.TryParse(requestModel.AppointmentTime, out time))
             {
-               return Result<AppointmentResponseModel>.Error( "Invalid Appointment Time.");
+                return Result<AppointmentResponseModel>.Error("Invalid Appointment Time.");
             }
             return default;
         }
@@ -75,11 +75,11 @@ namespace REMS.Modules.Features.Appointment
             AppointmentListResponseModel response = new AppointmentListResponseModel();
             if (pageNo <= 0)
             {
-                return Result<AppointmentListResponseModel>.Error( "PageNo must be positive number");
+                return Result<AppointmentListResponseModel>.Error("PageNo must be positive number");
             }
             if (pageSize <= 0)
             {
-              return  Result<AppointmentListResponseModel>.Error( "pageSize must be positive number");
+                return Result<AppointmentListResponseModel>.Error("pageSize must be positive number");
             }
             return default;
         }
