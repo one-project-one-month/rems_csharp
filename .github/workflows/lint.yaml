@@ -13,8 +13,6 @@ concurrency:
 
 permissions:
   contents: write
-  packages: read
-  statuses: write
 
 jobs:
   run-linters:
