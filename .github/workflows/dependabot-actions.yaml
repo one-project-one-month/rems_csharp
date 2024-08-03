@@ -5,6 +5,10 @@ on:
       - main
     types: [opened, edited, reopened, synchronize]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   pull-requests: write
   issues: write
