@@ -19,14 +19,20 @@ public class DA_Client
         var responseModel = new ClientListResponseModel();
         try
         {
+            //var clients = await _db
+            //    .Clients
+            //    .AsNoTracking()
+            //    .ToListAsync();
+
             var clients = await _db
-                .Clients
-                .AsNoTracking()
-                .ToListAsync();
+            .Clients
+            .Include(c => c.User)
+            .AsNoTracking()
+            .ToListAsync();
 
             var clientResponseModel = clients.Select(client => new ClientResponseModel
             {
-                Client = client.Change()
+                Client = client.Change(client.User)
             }).ToList();
 
             var clientListResponse = new ClientListResponseModel
@@ -62,7 +68,7 @@ public class DA_Client
 
             var clientResponseModel = clients.Select(client => new ClientResponseModel
             {
-                Client = client.Change()
+                Client = client.Change(client.User!)
             }).ToList();
 
             var clientListResponse = new ClientListResponseModel
@@ -89,8 +95,10 @@ public class DA_Client
         {
             var client = await _db
                 .Clients
+                .Include(c => c.User) // Include the User entity
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ClientId == id);
+
             if (client is null)
             {
                 throw new Exception("Client Not Found");
@@ -98,7 +106,7 @@ public class DA_Client
 
             var responseModel = new ClientResponseModel
             {
-                Client = client.Change()
+                Client = client.Change(client.User)
             };
 
             model = Result<ClientResponseModel>.Success(responseModel);
@@ -141,7 +149,7 @@ public class DA_Client
 
             var responseModel = new ClientResponseModel
             {
-                Client = client.Change(),
+                Client = client.Change(user),
             };
 
             model = addClient > 0
@@ -214,7 +222,7 @@ public class DA_Client
 
             var clientResponseModel = new ClientResponseModel
             {
-                Client = client.Change()
+                Client = client.Change(user)
             };
 
             model = Result<ClientResponseModel>.Success(clientResponseModel);
