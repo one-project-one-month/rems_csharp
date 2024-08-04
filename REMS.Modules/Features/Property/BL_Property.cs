@@ -26,17 +26,17 @@ public class BL_Property
         return response;
     }
 
-    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId)
+    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId,string PropertyStatus)
     {
         if (agentId < 1)
         {
             throw new Exception("Invalid Agent Id");
         }
-        var response = await _daProperty.GetPropertiesByAgentId(agentId);
+        var response = await _daProperty.GetPropertiesByAgentId(agentId, PropertyStatus);
         return response;
     }
 
-    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo, int pageSize)
+    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo, int pageSize , string propertyStatus)
     {
         if (agentId < 1)
         {
@@ -46,7 +46,7 @@ public class BL_Property
         {
             throw new Exception("PageNo or PageSize Cannot be less than 1");
         }
-        var response = await _daProperty.GetPropertiesByAgentId(agentId, pageNo, pageSize);
+        var response = await _daProperty.GetPropertiesByAgentId(agentId, pageNo, pageSize, propertyStatus);
         return response;
     }
 
@@ -109,6 +109,16 @@ public class BL_Property
         }
 
         var result = await _daProperty.DeleteProperty(propertyId);
+        return result;
+    }
+
+    public async Task<Result<PropertyResponseModel>> ChangePropertyStatus(PropertyStatusChangeRequestModel requestModel)
+    {
+        if(requestModel.PropertyId < 1)
+        {
+            throw new Exception("Invalid Property Id");
+        }
+        var result = await _daProperty.ChangePropertyStatus(requestModel);
         return result;
     }
 

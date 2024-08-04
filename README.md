@@ -157,3 +157,7 @@ Alternatively, using the Package Manager Console:
 ```bash
 Scaffold-DbContext "Server=.;Database=AdminPortal;User ID=sa; Password=sa@123;Integrated Security=True;Trusted_Connection=true;TrustServerCertificate=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir AppDbContext -Tables Tbl_AdminUserLogin -f
 ```
+
+### CI
+
+GitHub Actions
