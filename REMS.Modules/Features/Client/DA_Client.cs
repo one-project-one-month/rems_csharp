@@ -62,6 +62,7 @@ public class DA_Client
 
             var clients = await _db.Clients
                 .AsNoTracking()
+                .Include(c => c.User)
                 .Skip((pageNo - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
