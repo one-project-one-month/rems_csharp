@@ -6,12 +6,10 @@
     <Nullable>enable</Nullable>
     <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\REMS.Database\REMS.Database.csproj" />
     <ProjectReference Include="..\REMS.Mapper\REMS.Mapper.csproj" />
     <ProjectReference Include="..\REMS.Models\REMS.Models.csproj" />
     <ProjectReference Include="..\REMS.Shared\REMS.Shared.csproj" />
   </ItemGroup>
-
 </Project>

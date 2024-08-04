@@ -14,4 +14,7 @@ global using REMS.Models.Custom;
 global using REMS.Models.Property;
 global using REMS.Models.Review;
 global using REMS.Models.Appointment;
+global using REMS.Models.Authentication;
+global using REMS.Models.Jwt;
 global using REMS.Models.Transaction;
+global using REMS.Shared;
