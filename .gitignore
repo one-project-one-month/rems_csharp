@@ -10,6 +10,8 @@
 *.userosscache
 *.sln.docstates
 
+.DS_Store
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
@@ -59,7 +61,6 @@ dlldata.c
 BenchmarkDotNet.Artifacts/
 
 # .NET Core
-project.lock.json
 project.fragment.lock.json
 artifacts/
 

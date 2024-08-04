@@ -1,11 +1,10 @@
-﻿using Azure;
-using REMS.Database.AppDbContextModels;
-using REMS.Modules.Features.Agent;
+﻿using Microsoft.AspNetCore.Authorization;
 
 namespace REMS.BackendApi.Features.Client;
 
 [Route("api/v1/clients")]
 [ApiController]
+[Authorize(Roles ="Agent")]
 public class ClientController : ControllerBase
 {
     private readonly BL_Client _blClient;
