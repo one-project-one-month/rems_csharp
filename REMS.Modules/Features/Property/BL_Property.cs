@@ -101,6 +101,16 @@ public class BL_Property
         return response;
     }
 
+    public async Task<Result<PropertyResponseModel>> ChangePropertyStatus(PropertyStatusChangeRequestModel requestModel)
+    {
+        if (requestModel.PropertyId < 1)
+        {
+            throw new Exception("Invalid Property Id");
+        }
+        var result = await _daProperty.ChangePropertyStatus(requestModel);
+        return result;
+    }
+
     public async Task<Result<object>> DeleteProperty(int propertyId)
     {
         if (propertyId < 1)

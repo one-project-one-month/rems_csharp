@@ -157,7 +157,7 @@ public class DA_Property
                                     .Include(x => x.PropertyImages)
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
-
+            
             var propertyResponse = new PropertyResponseModel
             {
                 Property = property.Change(),
@@ -189,6 +189,7 @@ public class DA_Property
 
             var property = requestModel.Change()
                            ?? throw new Exception("Failed to convert request model to property entity");
+            property.Status = nameof(PropertyStatus.Pending);
 
             await _db.Properties.AddAsync(property);
             await _db.SaveChangesAsync();
@@ -253,7 +254,6 @@ public class DA_Property
             property.NumberOfBathrooms = requestModel.NumberOfBathrooms;
             property.YearBuilt = requestModel.YearBuilt;
             property.Description = requestModel.Description;
-            property.Status = requestModel.Status;
             property.AvailiablityType = requestModel.AvailiablityType;
             property.MinrentalPeriod = requestModel.MinRentalPeriod;
             property.Editdate = DateTime.Now;
@@ -289,6 +289,48 @@ public class DA_Property
         }
     }
 
+    public async Task<Result<PropertyResponseModel>> ChangePropertyStatus(PropertyStatusChangeRequestModel requestModel)
+    {
+        Result<PropertyResponseModel> model = null;
+        try
+        {
+            var property = await _db.Properties
+                                    .Include(x => x.PropertyImages)
+                                    .FirstOrDefaultAsync(x => x.PropertyId == requestModel.PropertyId)
+                                    ?? throw new Exception("Property Not Found");
+
+            if (!Enum.TryParse<PropertyStatus>(requestModel.PropertyStatus, out var parsedStatus) || !Enum.IsDefined(typeof(PropertyStatus), parsedStatus))
+            {
+                throw new Exception($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
+            }
+
+            property.Status = requestModel.PropertyStatus;
+            property.Approvedby = requestModel.ApprovedBy;
+
+            _db.Properties.Update(property);
+            await _db.SaveChangesAsync();
+
+            var updatedProperty = await _db.Properties
+                                    .AsNoTracking()
+                                    .Include(x => x.PropertyImages)
+                                    .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
+                                    ?? throw new Exception("Property Not Found");
+
+            var responseModel = new PropertyResponseModel
+            {
+                Property = updatedProperty.Change(),
+                Images = updatedProperty.PropertyImages.Select(x => x.Change()).ToList()
+            };
+            model = Result<PropertyResponseModel>.Success(responseModel);
+            return model;
+        }
+        catch (Exception ex)
+        {
+            model = Result<PropertyResponseModel>.Error(ex);
+            return model;
+        }
+    }
+
     public async Task<Result<object>> DeleteProperty(int propertyId)
     {
         Result<object> model = null;
@@ -318,15 +360,6 @@ public class DA_Property
             return model;
         }
     }
-
-    //private async Task<Property> GetPropertyById(int propertyId)
-    //{
-    //    var property = await _db.Properties
-    //                            .AsNoTracking()
-    //                            .Include(x => x.PropertyImages)
-    //                            .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
-    //                            ?? throw new Exception("Property Not Found");
-    //}
 
     private async Task<string> SavePhotoInFolder(string base64Str)
     {

@@ -139,10 +139,8 @@ public static class ChangeModel
             NumberOfBathrooms = requestModel.NumberOfBathrooms,
             YearBuilt = requestModel.YearBuilt,
             Description = requestModel.Description,
-            Status = requestModel.Status,
             AvailiablityType = requestModel.AvailiablityType,
-            MinrentalPeriod = requestModel.MinRentalPeriod,
-            Approvedby = requestModel.ApprovedBy,         
+            MinrentalPeriod = requestModel.MinRentalPeriod,    
         };
 
         return property;
