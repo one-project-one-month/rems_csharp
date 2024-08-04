@@ -127,6 +127,31 @@ public class PropertyController : ControllerBase
         }
     }
 
+    [HttpPut("ChangeStatus")]
+    public async Task<IActionResult> ChangePropertyStatus(PropertyStatusChangeRequestModel requestModel)
+    {
+        if(requestModel == null)
+        {
+            return BadRequest("Reuqest cannot be null");
+        }
+
+        if (requestModel.PropertyId < 1)
+        {
+            return BadRequest("Invalid Property Id");
+        }
+
+        try
+        {
+            var result = await _blProperties.ChangePropertyStatus(requestModel);
+            return Ok(result);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
+    }
+
     [HttpDelete("{propertyId}")]
     public async Task<IActionResult> DeleteProperty(int propertyId)
     {

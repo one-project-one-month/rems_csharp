@@ -6,3 +6,12 @@ public enum EnumStatus
     Fail,
     NotFound
 }
+
+public enum PropertyStatus
+{
+    Pending,
+    Approved,
+    Sold,
+    Rented,
+    Canceled
+}
