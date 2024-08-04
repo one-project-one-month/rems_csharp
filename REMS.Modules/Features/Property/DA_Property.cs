@@ -146,7 +146,6 @@ public class DA_Property
         }
     }
 
-
     public async Task<Result<PropertyResponseModel>> GetPropertyById(int propertyId)
     {
         Result<PropertyResponseModel> model = null;
@@ -341,14 +340,8 @@ public class DA_Property
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
 
-            foreach (var propertyImage in property.PropertyImages)
-            {
-                RemovePhotoFromFolder(propertyImage.ImageUrl);
-            }
-
-            _db.Properties.Remove(property);
-            _db.PropertyImages.RemoveRange(property.PropertyImages);
-
+            property.Status = nameof(PropertyStatus.Canceled);
+            _db.Properties.Update(property);
             await _db.SaveChangesAsync();
 
             model = Result<object>.Success(null);
