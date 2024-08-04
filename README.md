@@ -143,7 +143,31 @@ CREATE TABLE Messages (
     status NVARCHAR(50)
 );
 ```
+#### LoginTable
+```sql
+USE [REMS]
+GO
+/****** Object:  Table [dbo].[Login]    Script Date: 8/4/2024 9:48:38 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Login](
+    [Id] [int] IDENTITY(1,1) NOT NULL,
+    [UserId] [nchar](120) NOT NULL,
+    [Role] [nchar](120) NOT NULL,
+    [AccessToken] [nchar](500) NOT NULL,
+    [LoginDate] [datetime] NOT NULL,
+    [Email] [nchar](120) NOT NULL,
+    [LogoutDate] [datetime] NULL,
+    CONSTRAINT [PK_Tbl_Login] PRIMARY KEY CLUSTERED
+(
+[Id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+    ) ON [PRIMARY]
+    GO
 
+```
 ### Database First Approach
 
 To scaffold the database using the Database First approach with Entity Framework Core, run the following commands:
