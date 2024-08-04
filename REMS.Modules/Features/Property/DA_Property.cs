@@ -21,6 +21,7 @@ public class DA_Property
         {
             var properties = await _db.Properties
                                             .AsNoTracking()
+                                            .Where(x=>x.Status == nameof(PropertyStatus.Approved))
                                             .Include(x => x.PropertyImages)
                                             .ToListAsync();
 
@@ -48,6 +49,7 @@ public class DA_Property
         {
             var properties = await _db.Properties
                                       .AsNoTracking()
+                                      .Where(x => x.Status == nameof(PropertyStatus.Approved))
                                       .Include(x => x.PropertyImages)
                                       .Skip((pageNo - 1) * pageSize)
                                       .Take(pageSize)
@@ -79,7 +81,7 @@ public class DA_Property
         }
     }
 
-    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId)
+    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId,string propertyStatus)
     {
         Result<List<PropertyResponseModel>> model = null;
         try
@@ -87,6 +89,7 @@ public class DA_Property
             var properties = await _db.Properties
                                        .AsNoTracking()
                                        .Where(x => x.AgentId == agentId)
+                                       .Where(x => x.Status == propertyStatus)
                                        .Include(x => x.PropertyImages)
                                        .ToListAsync();
 
@@ -107,7 +110,7 @@ public class DA_Property
         }
     }
 
-    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo = 1, int pageSize = 10)
+    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo = 1, int pageSize = 10, string propertyStatus = nameof(PropertyStatus.Approved))
     {
         Result<PropertyListResponseModel> model = null;
         try
@@ -115,6 +118,7 @@ public class DA_Property
             var properties = await _db.Properties
                                       .AsNoTracking()
                                       .Where(x=>x.AgentId == agentId)
+                                      .Where(x => x.Status == propertyStatus)
                                       .Include(x => x.PropertyImages)
                                       .Skip((pageNo - 1) * pageSize)
                                       .Take(pageSize)
@@ -253,7 +257,6 @@ public class DA_Property
             property.NumberOfBathrooms = requestModel.NumberOfBathrooms;
             property.YearBuilt = requestModel.YearBuilt;
             property.Description = requestModel.Description;
-            //property.Status = requestModel.Status;
             property.AvailiablityType = requestModel.AvailiablityType;
             property.MinrentalPeriod = requestModel.MinRentalPeriod;
             property.Editdate = DateTime.Now;
@@ -299,14 +302,16 @@ public class DA_Property
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
 
-            foreach (var propertyImage in property.PropertyImages)
-            {
-                RemovePhotoFromFolder(propertyImage.ImageUrl);
-            }
+            //foreach (var propertyImage in property.PropertyImages)
+            //{
+            //    RemovePhotoFromFolder(propertyImage.ImageUrl);
+            //}
 
-            _db.Properties.Remove(property);
-            _db.PropertyImages.RemoveRange(property.PropertyImages);
+            //_db.Properties.Remove(property);
+            //_db.PropertyImages.RemoveRange(property.PropertyImages);
+            property.Status = nameof(PropertyStatus.Canceled);
 
+            _db.Properties.Update(property);
             await _db.SaveChangesAsync();
 
             model = Result<object>.Success(null);

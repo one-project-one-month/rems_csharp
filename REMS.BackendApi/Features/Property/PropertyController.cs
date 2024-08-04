@@ -42,11 +42,15 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet("agent/{agentId}")]
-    public async Task<IActionResult> GetPropertiesByAgentId(int agentId)
+    public async Task<IActionResult> GetPropertiesByAgentId(int agentId, [FromQuery] string propertyStatus = nameof(PropertyStatus.Approved))
     {
         try
         {
-            var response = await _blProperties.GetPropertiesByAgentId(agentId);
+            if (!Enum.TryParse<PropertyStatus>(propertyStatus, out var parsedStatus) || !Enum.IsDefined(typeof(PropertyStatus), parsedStatus))
+            {
+                throw new Exception($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
+            }
+            var response = await _blProperties.GetPropertiesByAgentId(agentId, propertyStatus);
             return Ok(response);
         }
         catch (Exception ex)
@@ -56,11 +60,15 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet("agent/{agentId}/{pageNo}/{pageSize}")]
-    public async Task<IActionResult> GetPropertiesByAgentId(int agentId,int pageNo,int pageSize)
+    public async Task<IActionResult> GetPropertiesByAgentId(int agentId,int pageNo,int pageSize, [FromQuery] string propertyStatus = nameof(PropertyStatus.Approved))
     {
         try
         {
-            var response = await _blProperties.GetPropertiesByAgentId(agentId,pageNo, pageSize);
+            if (!Enum.TryParse<PropertyStatus>(propertyStatus, out var parsedStatus) || !Enum.IsDefined(typeof(PropertyStatus), parsedStatus))
+            {
+                throw new Exception($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
+            }
+            var response = await _blProperties.GetPropertiesByAgentId(agentId,pageNo, pageSize, propertyStatus);
             return Ok(response);
         }
         catch (Exception ex)
