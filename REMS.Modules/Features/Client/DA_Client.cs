@@ -129,11 +129,18 @@ public class DA_Client
                 throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
             }
 
+            if (CheckEmailDuplicate(requestModel.Email))
+            {
+                model = Result<ClientResponseModel>.Error("Client create failed. Email already exist");
+                goto result;
+            }
+
             await _db.Users.AddAsync(requestModel.ChangeUser());
             int result = await _db.SaveChangesAsync();
             if (result < 0)
             {
                 model = Result<ClientResponseModel>.Error("Client create failed.");
+                goto result;
             }
 
             //To get UserId for client create
@@ -161,6 +168,7 @@ public class DA_Client
         {
             model = Result<ClientResponseModel>.Error(ex);
         }
+    result:
         return model;
     }
 
@@ -176,6 +184,7 @@ public class DA_Client
             if (client is null)
             {
                 return model = Result<ClientResponseModel>.Error("Client Not Found");
+                goto result;
             }
 
             var user = await _db.Users
@@ -185,6 +194,7 @@ public class DA_Client
             if (user is null)
             {
                 return model = Result<ClientResponseModel>.Error("User Not Found");
+                goto result;
             }
 
             if (!string.IsNullOrWhiteSpace(requestModel.FirstName) || !string.IsNullOrWhiteSpace(requestModel.LastName))
@@ -232,6 +242,7 @@ public class DA_Client
         {
             model = Result<ClientResponseModel>.Error(ex);
         }
+    result:
         return model;
     }
 
@@ -273,5 +284,11 @@ public class DA_Client
             return model = Result<object>.Error(ex);
         }
         return model;
+    }
+
+    private bool CheckEmailDuplicate(string email)
+    {
+        var isDuplicate = _db.Users.Any(x => x.Email == email);
+        return isDuplicate;
     }
 }
