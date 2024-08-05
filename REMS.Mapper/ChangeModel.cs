@@ -143,7 +143,6 @@ public static class ChangeModel
             Description = requestModel.Description,
             AvailiablityType = requestModel.AvailiablityType,
             MinrentalPeriod = requestModel.MinRentalPeriod,
-            Approvedby = requestModel.ApprovedBy,
         };
 
         return property;
