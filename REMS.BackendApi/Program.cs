@@ -33,7 +33,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.Urls.Add($"http://localhost:{appSettings.Port}");
+//app.Urls.Add($"http://localhost:{appSettings.Port}");
 
 app.MapControllers();
 
