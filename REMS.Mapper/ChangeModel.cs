@@ -142,7 +142,7 @@ public static class ChangeModel
             YearBuilt = requestModel.YearBuilt,
             Description = requestModel.Description,
             AvailiablityType = requestModel.AvailiablityType,
-            MinrentalPeriod = requestModel.MinRentalPeriod,    
+            MinrentalPeriod = requestModel.MinRentalPeriod,
             Approvedby = requestModel.ApprovedBy,
         };
 

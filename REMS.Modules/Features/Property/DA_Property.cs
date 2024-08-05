@@ -21,7 +21,7 @@ public class DA_Property
         {
             var properties = await _db.Properties
                                             .AsNoTracking()
-                                            .Where(x=>x.Status == nameof(PropertyStatus.Approved))
+                                            .Where(x => x.Status == nameof(PropertyStatus.Approved))
                                             .Include(x => x.PropertyImages)
                                             .ToListAsync();
 
@@ -81,7 +81,7 @@ public class DA_Property
         }
     }
 
-    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId,string propertyStatus)
+    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId, string propertyStatus)
     {
         Result<List<PropertyResponseModel>> model = null;
         try
@@ -110,15 +110,15 @@ public class DA_Property
         }
     }
 
-    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo = 1, int pageSize = 10,string propertyStatus = nameof(PropertyStatus.Approved))
+    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo = 1, int pageSize = 10, string propertyStatus = nameof(PropertyStatus.Approved))
     {
         Result<PropertyListResponseModel> model = null;
         try
         {
             var properties = await _db.Properties
                                       .AsNoTracking()
-                                      .Where(x=>x.AgentId == agentId)
-                                      .Where(x=>x.Status == propertyStatus)
+                                      .Where(x => x.AgentId == agentId)
+                                      .Where(x => x.Status == propertyStatus)
                                       .Include(x => x.PropertyImages)
                                       .Skip((pageNo - 1) * pageSize)
                                       .Take(pageSize)
@@ -160,7 +160,7 @@ public class DA_Property
                                     .Include(x => x.PropertyImages)
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
-            
+
             var propertyResponse = new PropertyResponseModel
             {
                 Property = property.Change(),

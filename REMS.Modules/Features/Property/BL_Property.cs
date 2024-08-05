@@ -26,7 +26,7 @@ public class BL_Property
         return response;
     }
 
-    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId,string propertyStatus)
+    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId, string propertyStatus)
     {
         if (agentId < 1)
         {
@@ -36,7 +36,7 @@ public class BL_Property
         return response;
     }
 
-    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo, int pageSize,string propertyStatus)
+    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo, int pageSize, string propertyStatus)
     {
         if (agentId < 1)
         {
