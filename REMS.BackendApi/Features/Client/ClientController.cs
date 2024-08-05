@@ -4,7 +4,7 @@ namespace REMS.BackendApi.Features.Client;
 
 [Route("api/v1/clients")]
 [ApiController]
-[Authorize(Roles ="Agent")]
+[Authorize(Roles = "Agent")]
 public class ClientController : ControllerBase
 {
     private readonly BL_Client _blClient;
