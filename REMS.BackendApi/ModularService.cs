@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using REMS.Modules.Features.Authentication;
 using REMS.Shared;
 
 namespace REMS.BackendApi;
