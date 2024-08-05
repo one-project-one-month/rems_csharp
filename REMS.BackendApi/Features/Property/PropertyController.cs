@@ -56,11 +56,11 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet("agent/{agentId}/{pageNo}/{pageSize}")]
-    public async Task<IActionResult> GetPropertiesByAgentId(int agentId,int pageNo,int pageSize)
+    public async Task<IActionResult> GetPropertiesByAgentId(int agentId, int pageNo, int pageSize)
     {
         try
         {
-            var response = await _blProperties.GetPropertiesByAgentId(agentId,pageNo, pageSize);
+            var response = await _blProperties.GetPropertiesByAgentId(agentId, pageNo, pageSize);
             return Ok(response);
         }
         catch (Exception ex)

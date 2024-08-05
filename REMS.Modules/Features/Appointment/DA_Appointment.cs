@@ -1,6 +1,5 @@
 ﻿using Azure;
 using REMS.Models.Appointment;
-using REMS.Shared;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -151,8 +150,8 @@ namespace REMS.Modules.Features.Appointment
                 {
                     appointment.Notes = requestModel.Notes;
                 }
-                _db.Entry(appointment).State= EntityState.Modified;
-                int result=await _db.SaveChangesAsync();
+                _db.Entry(appointment).State = EntityState.Modified;
+                int result = await _db.SaveChangesAsync();
                 if (result < 0)
                 {
                     return Result<AppointmentResponseModel>.Error("Fail to update appointment");
@@ -161,7 +160,7 @@ namespace REMS.Modules.Features.Appointment
                 {
                     Appointment = appointment.Change()
                 };
-                response=Result<AppointmentResponseModel>.Success(appointmentResponse,"Appointment Update Successfully");
+                response = Result<AppointmentResponseModel>.Success(appointmentResponse, "Appointment Update Successfully");
             }
             catch (Exception ex)
             {

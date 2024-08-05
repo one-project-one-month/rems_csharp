@@ -114,7 +114,7 @@ public class DA_Property
         {
             var properties = await _db.Properties
                                       .AsNoTracking()
-                                      .Where(x=>x.AgentId == agentId)
+                                      .Where(x => x.AgentId == agentId)
                                       .Include(x => x.PropertyImages)
                                       .Skip((pageNo - 1) * pageSize)
                                       .Take(pageSize)
@@ -139,7 +139,7 @@ public class DA_Property
 
             return model;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             model = Result<PropertyListResponseModel>.Error(ex);
             return model;
