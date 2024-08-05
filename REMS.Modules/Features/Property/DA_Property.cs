@@ -143,7 +143,7 @@ public class DA_Property
 
             return model;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
             model = Result<PropertyListResponseModel>.Error(ex);
             return model;

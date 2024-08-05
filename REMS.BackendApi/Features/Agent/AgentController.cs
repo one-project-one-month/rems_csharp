@@ -82,7 +82,7 @@ public class AgentController : ControllerBase
     }
 
     [HttpGet("SearchUserByName/{name}/{pageNumber}/{pageSize}", Name = "SearchUserByName")]
-    public async Task<IActionResult> SearchUserByName(string name,int pageNumber,int pageSize)
+    public async Task<IActionResult> SearchUserByName(string name, int pageNumber, int pageSize)
     {
         Result<AgentListResponseModel> agentList = await _blAgent.SearchAgentByNameAsync(name, pageNumber, pageSize);
 

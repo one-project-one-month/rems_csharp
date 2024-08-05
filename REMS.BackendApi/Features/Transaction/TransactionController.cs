@@ -34,7 +34,7 @@ public class TransactionController : ControllerBase
     {
         try
         {
-            var response = await _blTransaction.GetTransactionsAsync(pageNumber,pageSize);
+            var response = await _blTransaction.GetTransactionsAsync(pageNumber, pageSize);
             if (response.IsError)
             {
                 return BadRequest(response);
