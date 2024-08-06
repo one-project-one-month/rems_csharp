@@ -1,7 +1,15 @@
-
-using REMS.Models.Jwt;
-
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
@@ -30,6 +38,9 @@ app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseCors("AllowAllOrigins");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -38,8 +49,3 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
-
-public class AppSettings
-{
-    public int Port { get; set; }
-}

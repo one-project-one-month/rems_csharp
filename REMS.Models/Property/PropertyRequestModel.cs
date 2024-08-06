@@ -32,9 +32,3 @@ public class PropertyRequestModel
 
     public List<PropertyImageRequestModel> Images { get; set; } = new List<PropertyImageRequestModel>();
 }
-
-public class PropertyImageRequestModel
-{
-    public string? ImgBase64 { get; set; }
-    public string? Description { get; set; }
-}
