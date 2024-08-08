@@ -4,7 +4,7 @@ namespace REMS.Models.Review;
 
 public class ReviewListResponseModel
 {
-    public List<ReviewModel> DataList { get; set; }
+    public List<ReviewResponseModel> DataList { get; set; }
 
     public PageSettingModel PageSetting { get; set; }
 }

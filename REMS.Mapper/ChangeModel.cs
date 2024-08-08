@@ -213,22 +213,19 @@ public static class ChangeModel
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
             Comments = dataModel.Comments,
-            DateCreated = dataModel.DateCreated
         };
 
         return reviewModel;
     }
 
-    public static Review Change(this ReviewModel dataModel)
+    public static Review Change(this ReviewRequestModel dataModel)
     {
         var review = new Review()
         {
-            ReviewId = dataModel.ReviewId,
             UserId = dataModel.UserId,
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
             Comments = dataModel.Comments,
-            DateCreated = dataModel.DateCreated
         };
 
         return review;
