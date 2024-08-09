@@ -8,3 +8,17 @@ public enum PropertyStatus
     Rented,
     Canceled
 }
+
+public enum PropertyAvailiableType
+{
+    Sell,
+    Rent,
+}
+
+public enum PropertyType
+{
+    Condominium,
+    Apartment,
+    Townhouses
+}
+
