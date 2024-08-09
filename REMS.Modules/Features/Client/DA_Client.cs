@@ -19,14 +19,20 @@ public class DA_Client
         var responseModel = new ClientListResponseModel();
         try
         {
+            //var clients = await _db
+            //    .Clients
+            //    .AsNoTracking()
+            //    .ToListAsync();
+
             var clients = await _db
-                .Clients
-                .AsNoTracking()
-                .ToListAsync();
+            .Clients
+            .Include(c => c.User)
+            .AsNoTracking()
+            .ToListAsync();
 
             var clientResponseModel = clients.Select(client => new ClientResponseModel
             {
-                Client = client.Change()
+                Client = client.Change(client.User)
             }).ToList();
 
             var clientListResponse = new ClientListResponseModel
@@ -56,13 +62,14 @@ public class DA_Client
 
             var clients = await _db.Clients
                 .AsNoTracking()
+                .Include(c => c.User)
                 .Skip((pageNo - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
             var clientResponseModel = clients.Select(client => new ClientResponseModel
             {
-                Client = client.Change()
+                Client = client.Change(client.User!)
             }).ToList();
 
             var clientListResponse = new ClientListResponseModel
@@ -89,8 +96,10 @@ public class DA_Client
         {
             var client = await _db
                 .Clients
+                .Include(c => c.User) // Include the User entity
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ClientId == id);
+
             if (client is null)
             {
                 throw new Exception("Client Not Found");
@@ -98,7 +107,7 @@ public class DA_Client
 
             var responseModel = new ClientResponseModel
             {
-                Client = client.Change()
+                Client = client.Change(client.User)
             };
 
             model = Result<ClientResponseModel>.Success(responseModel);
@@ -120,11 +129,18 @@ public class DA_Client
                 throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
             }
 
+            if (CheckEmailDuplicate(requestModel.Email))
+            {
+                model = Result<ClientResponseModel>.Error("Client create failed. Email already exist");
+                goto result;
+            }
+
             await _db.Users.AddAsync(requestModel.ChangeUser());
             int result = await _db.SaveChangesAsync();
             if (result < 0)
             {
                 model = Result<ClientResponseModel>.Error("Client create failed.");
+                goto result;
             }
 
             //To get UserId for client create
@@ -141,7 +157,7 @@ public class DA_Client
 
             var responseModel = new ClientResponseModel
             {
-                Client = client.Change(),
+                Client = client.Change(user),
             };
 
             model = addClient > 0
@@ -152,6 +168,7 @@ public class DA_Client
         {
             model = Result<ClientResponseModel>.Error(ex);
         }
+    result:
         return model;
     }
 
@@ -167,6 +184,7 @@ public class DA_Client
             if (client is null)
             {
                 return model = Result<ClientResponseModel>.Error("Client Not Found");
+                goto result;
             }
 
             var user = await _db.Users
@@ -176,6 +194,7 @@ public class DA_Client
             if (user is null)
             {
                 return model = Result<ClientResponseModel>.Error("User Not Found");
+                goto result;
             }
 
             if (!string.IsNullOrWhiteSpace(requestModel.FirstName) || !string.IsNullOrWhiteSpace(requestModel.LastName))
@@ -214,7 +233,7 @@ public class DA_Client
 
             var clientResponseModel = new ClientResponseModel
             {
-                Client = client.Change()
+                Client = client.Change(user)
             };
 
             model = Result<ClientResponseModel>.Success(clientResponseModel);
@@ -223,6 +242,7 @@ public class DA_Client
         {
             model = Result<ClientResponseModel>.Error(ex);
         }
+    result:
         return model;
     }
 
@@ -264,5 +284,11 @@ public class DA_Client
             return model = Result<object>.Error(ex);
         }
         return model;
+    }
+
+    private bool CheckEmailDuplicate(string email)
+    {
+        var isDuplicate = _db.Users.Any(x => x.Email == email);
+        return isDuplicate;
     }
 }
