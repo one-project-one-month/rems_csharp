@@ -275,9 +275,9 @@ public static class ChangeModel
     //    {
 
     //        PropertyId = requestModel.PropertyId,
-    //        BuyerId = requestModel.BuyerId,
-    //        SellerId = requestModel.SellerId,
-    //        AgentId = requestModel.AgentId,
+    //        ClientId = requestModel.ClientId,
+    //        //SellerId = requestModel.SellerId,
+    //        //AgentId = requestModel.AgentId,
     //        TransactionDate = requestModel.TransactionDate,
     //        SalePrice = requestModel.SalePrice,
     //        Commission = requestModel.Commission,
@@ -292,9 +292,7 @@ public static class ChangeModel
     //    {
 
     //        PropertyId = requestModel.PropertyId,
-    //        BuyerId = requestModel.BuyerId,
-    //        SellerId = requestModel.SellerId,
-    //        AgentId = requestModel.AgentId,
+    //        ClientId = requestModel.ClientId,
     //        TransactionDate = requestModel.TransactionDate,
     //        SalePrice = requestModel.SalePrice,
     //        Commission = requestModel.Commission,
@@ -327,7 +325,7 @@ public static class ChangeModel
         {
             TransactionId = model.TransactionId,
             PropertyId = model.PropertyId,
-            ClientId = model.BuyerId, // Assuming BuyerId is ClientId
+            ClientId = model.ClientId, // Assuming BuyerId is ClientId
             TransactionDate = model.TransactionDate,
             SalePrice = model.SalePrice,
             Commission = model.Commission,
@@ -341,9 +339,9 @@ public static class ChangeModel
         {
             TransactionId = transaction.TransactionId,
             PropertyId = transaction.PropertyId,
-            BuyerId = transaction.ClientId,  // Assuming ClientId is BuyerId
+            ClientId = transaction.ClientId,  // Assuming ClientId is BuyerId
             //SellerId = transaction.Property?.OwnerId,  // Assuming OwnerId exists in Property class
-            AgentId = transaction.Property?.AgentId,  // Assuming AgentId exists in Property class
+            //AgentId = transaction.Property?.AgentId,  // Assuming AgentId exists in Property class
             TransactionDate = transaction.TransactionDate,
             SalePrice = transaction.SalePrice,
             Commission = transaction.Commission,

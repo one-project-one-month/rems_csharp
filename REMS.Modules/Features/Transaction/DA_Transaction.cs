@@ -29,34 +29,15 @@ namespace REMS.Modules.Features.Transaction
                 }
 
                 var buyerClient = await _db.Clients
-                    .Where(x => x.ClientId == transactionRequestModel.BuyerId)
+                    .Where(x => x.ClientId == transactionRequestModel.ClientId)
                     .FirstOrDefaultAsync();
 
                 if (buyerClient is null)
                 {
-                    model = Result<string>.Error("Buyer Not Found!");
+                    model = Result<string>.Error("Client Not Found!");
                     goto result;
                 }
 
-                var sellerClient = await _db.Clients
-                    .Where(x => x.ClientId == transactionRequestModel.SellerId)
-                    .FirstOrDefaultAsync();
-
-                if (sellerClient is null)
-                {
-                    model = Result<string>.Error("Seller Not Found!");
-                    goto result;
-                }
-
-                var Agent = await _db.Agents
-                   .Where(x => x.AgentId == transactionRequestModel.AgentId)
-                   .FirstOrDefaultAsync();
-
-                if (Agent is null)
-                {
-                    model = Result<string>.Error("Agent Not Found!");
-                    goto result;
-                }
                 await _db.Transactions.AddAsync(transactionRequestModel.Change());
                 int result = await _db.SaveChangesAsync();
                 model = result > 0 ? Result<string>.Success("Transaction creation success.") : Result<string>.Error("Transaction creation fail.");
@@ -120,38 +101,13 @@ namespace REMS.Modules.Features.Transaction
             }
         }
 
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndAgentIdAsync(int pageNumber, int pageSize, int propertyId, int agentId)
+        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndClientIdAsync(int pageNumber, int pageSize, int propertyId, int clientId)
         {
             Result<TransactionListResponseModel> model = null;
             try
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId);
-                var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
-
-                int rowCount = _db.Transactions.Count();
-                int pageCount = rowCount / pageSize;
-                if (pageCount % pageSize > 0)
-                    pageCount++;
-
-                transactionListResponse.pageSetting = new PageSettingModel(pageNumber, pageSize, pageCount, rowCount);
-                transactionListResponse.lstTransaction = transaction;
-                model = Result<TransactionListResponseModel>.Success(transactionListResponse);
-                return model;
-            }
-            catch (Exception ex)
-            {
-                return model = Result<TransactionListResponseModel>.Error(ex);
-            }
-        }
-
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndBuyerIdAsync(int pageNumber, int pageSize, int propertyId, int buyerId)
-        {
-            Result<TransactionListResponseModel> model = null;
-            try
-            {
-                TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId);
+                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId && x.ClientId == clientId);
                 var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
 
                 int rowCount = _db.Transactions.Count();

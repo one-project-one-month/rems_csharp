@@ -65,30 +65,12 @@ public class TransactionController : ControllerBase
         }
     }
 
-    [HttpPost("GetTransactionsByPropertyIdAndAgentId/{pageNumber}/{pageSize}/{propertyId}/{agentId}")]
-    public async Task<IActionResult> GetTransactionsByPropertyIdAndAgentId(int pageNumber, int pageSize, int propertyId, int agentId)
-    {
-        try
-        {
-            var response = await _blTransaction.GetTransactionsByPropertyIdAndAgentIdAsync(pageNumber, pageSize, propertyId, agentId);
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
-        }
-    }
-
     [HttpPost("GetTransactionsByPropertyIdAndBuyerId/{buyerId}/{propertyId}/{pageNumber}/{pageSize}")]
     public async Task<IActionResult> GetTransactionsByPropertyIdAndBuyerId(int pageNumber, int pageSize, int propertyId, int buyerId)
     {
         try
         {
-            var response = await _blTransaction.GetTransactionsByPropertyIdAndBuyerIdAsync(pageNumber, pageSize, propertyId, buyerId);
+            var response = await _blTransaction.GetTransactionsByPropertyIdAndClientIdAsync(pageNumber, pageSize, propertyId, buyerId);
             if (response.IsError)
             {
                 return BadRequest(response);
