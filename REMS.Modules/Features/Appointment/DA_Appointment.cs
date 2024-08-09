@@ -130,11 +130,11 @@ namespace REMS.Modules.Features.Appointment
 
                 var appointment = await _db.Appointments
                                          .AsNoTracking()
-                                         .FirstOrDefaultAsync(x => x.AppointmentId == id); 
+                                         .FirstOrDefaultAsync(x => x.AppointmentId == id);
                 if (appointment is null)
                     return Result<AppointmentResponseModel>.Error("appointment not found");
 
-                if (requestModel.AppointmentDate!=DateTime.MinValue)
+                if (requestModel.AppointmentDate != DateTime.MinValue)
                 {
                     appointment.AppointmentDate = requestModel.AppointmentDate;
                 }
