@@ -21,7 +21,7 @@ public class ReviewController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
 
@@ -49,12 +49,12 @@ public class ReviewController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateReview(ReviewModel requestModel)
+    public async Task<IActionResult> CreateReview(ReviewRequestModel requestModel)
     {
         try
         {
@@ -68,7 +68,7 @@ public class ReviewController : ControllerBase
     }
 
     [HttpPatch("{id}")]
-    public async Task<IActionResult> Update(int id, ReviewModel requestModel)
+    public async Task<IActionResult> Update(int id, ReviewRequestModel requestModel)
     {
         try
         {
@@ -77,7 +77,7 @@ public class ReviewController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
 
@@ -91,7 +91,7 @@ public class ReviewController : ControllerBase
         }
         catch (Exception ex)
         {
-            return BadRequest(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
 }
