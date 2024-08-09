@@ -40,6 +40,8 @@ namespace REMS.Modules.Features.Transaction
 
                 await _db.Transactions.AddAsync(transactionRequestModel.Change());
                 int result = await _db.SaveChangesAsync();
+                if(property.AvailiablityType.Equals())
+                property.Status =
                 model = result > 0 ? Result<string>.Success("Transaction creation success.") : Result<string>.Error("Transaction creation fail.");
             }
             catch (Exception ex)
@@ -83,6 +85,12 @@ namespace REMS.Modules.Features.Transaction
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
                 var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == PropertyId);
+                if (transactionList is null)
+                {
+                    model = Result<TransactionListResponseModel>.Error("Property Not Found!");
+                    goto result;
+                }
+
                 var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
 
                 int rowCount = _db.Transactions.Count();
@@ -99,6 +107,8 @@ namespace REMS.Modules.Features.Transaction
             {
                 return model = Result<TransactionListResponseModel>.Error(ex);
             }
+        result:
+            return model;
         }
 
         public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndClientIdAsync(int pageNumber, int pageSize, int propertyId, int clientId)
@@ -108,6 +118,12 @@ namespace REMS.Modules.Features.Transaction
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
                 var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId && x.ClientId == clientId);
+                if (transactionList is null)
+                {
+                    model = Result<TransactionListResponseModel>.Error("Property Not Found!");
+                    goto result;
+                }
+
                 var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
 
                 int rowCount = _db.Transactions.Count();
@@ -124,31 +140,8 @@ namespace REMS.Modules.Features.Transaction
             {
                 return model = Result<TransactionListResponseModel>.Error(ex);
             }
-        }
-
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndSellerIdAsync(int pageNumber, int pageSize, int propertyId, int sellerId)
-        {
-            Result<TransactionListResponseModel> model = null;
-            try
-            {
-                TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId);
-                var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
-
-                int rowCount = _db.Transactions.Count();
-                int pageCount = rowCount / pageSize;
-                if (pageCount % pageSize > 0)
-                    pageCount++;
-
-                transactionListResponse.pageSetting = new PageSettingModel(pageNumber, pageSize, pageCount, rowCount);
-                transactionListResponse.lstTransaction = transaction;
-                model = Result<TransactionListResponseModel>.Success(transactionListResponse);
-                return model;
-            }
-            catch (Exception ex)
-            {
-                return model = Result<TransactionListResponseModel>.Error(ex);
-            }
+        result:
+            return model;
         }
     }
 }
