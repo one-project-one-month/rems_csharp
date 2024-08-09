@@ -1,4 +1,8 @@
-﻿namespace REMS.Modules.Features.Authentication;
+﻿using REMS.Models.Authentication;
+using REMS.Models.Jwt;
+using REMS.Shared;
+
+namespace REMS.Modules.Features.Authentication;
 
 public class DA_Signin
 {

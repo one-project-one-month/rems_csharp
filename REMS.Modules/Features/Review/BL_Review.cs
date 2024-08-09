@@ -7,13 +7,13 @@ public class BL_Review
     public BL_Review(DA_Review daReview) => _daReview = daReview;
 
 
-    public async Task<ReviewListResponseModel> GetReview()
+    public async Task<Result<ReviewListResponseModel>> GetReview()
     {
         var response = await _daReview.GetReview();
         return response;
     }
 
-    public async Task<ReviewListResponseModel> GetReviews(int pageNo, int pageSize)
+    public async Task<Result<ReviewListResponseModel>> GetReviews(int pageNo, int pageSize)
     {
         if (pageNo < 1 || pageSize < 1)
         {
@@ -24,7 +24,7 @@ public class BL_Review
         return response;
     }
 
-    public async Task<ReviewResponseModel> GetReviewById(int reviewId)
+    public async Task<Result<ReviewResponseModel>> GetReviewById(int reviewId)
     {
         if (reviewId < 1)
         {
@@ -35,13 +35,13 @@ public class BL_Review
         return response;
     }
 
-    public async Task<MessageResponseModel> CreateReview(ReviewModel requestModel)
+    public async Task<Result<ReviewResponseModel>> CreateReview(ReviewRequestModel requestModel)
     {
         var response = await _daReview.CreateReview(requestModel);
         return response;
     }
 
-    public async Task<MessageResponseModel> UpdateReview(int id, ReviewModel requestModel)
+    public async Task<Result<ReviewResponseModel>> UpdateReview(int id, ReviewRequestModel requestModel)
     {
         if (id <= 0) throw new Exception("ReviewId is null");
         //CheckProductNullValue(requestModel);
@@ -49,7 +49,7 @@ public class BL_Review
         return response;
     }
 
-    public async Task<MessageResponseModel> DeleteReview(int id)
+    public async Task<Result<object>> DeleteReview(int id)
     {
         if (id <= 0) throw new Exception("ReviewId is null");
         var response = await _daReview.DeleteReview(id);

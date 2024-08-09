@@ -79,7 +79,7 @@ public static class ChangeModel
         return client;
     }
 
-    public static ClientModel Change(this Client dataModel)
+    public static ClientModel Change(this Client dataModel, User user)
     {
         var clientResponseModel = new ClientModel
         {
@@ -88,6 +88,8 @@ public static class ChangeModel
             FirstName = dataModel.FirstName,
             LastName = dataModel.LastName,
             Address = dataModel.Address,
+            Email = user?.Email,
+            Phone = user?.Phone
         };
         return clientResponseModel;
     }
@@ -139,10 +141,8 @@ public static class ChangeModel
             NumberOfBathrooms = requestModel.NumberOfBathrooms,
             YearBuilt = requestModel.YearBuilt,
             Description = requestModel.Description,
-            Status = requestModel.Status,
             AvailiablityType = requestModel.AvailiablityType,
             MinrentalPeriod = requestModel.MinRentalPeriod,
-            Approvedby = requestModel.ApprovedBy,
         };
 
         return property;
@@ -213,22 +213,19 @@ public static class ChangeModel
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
             Comments = dataModel.Comments,
-            DateCreated = dataModel.DateCreated
         };
 
         return reviewModel;
     }
 
-    public static Review Change(this ReviewModel dataModel)
+    public static Review Change(this ReviewRequestModel dataModel)
     {
         var review = new Review()
         {
-            ReviewId = dataModel.ReviewId,
             UserId = dataModel.UserId,
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
             Comments = dataModel.Comments,
-            DateCreated = dataModel.DateCreated
         };
 
         return review;

@@ -26,19 +26,9 @@ public class PropertyRequestModel
 
     public string? Description { get; set; }
 
-    public string Status { get; set; }
-
     public string AvailiablityType { get; set; }
 
     public int? MinRentalPeriod { get; set; }
 
-    public string? ApprovedBy { get; set; }
-
     public List<PropertyImageRequestModel> Images { get; set; } = new List<PropertyImageRequestModel>();
-}
-
-public class PropertyImageRequestModel
-{
-    public string? ImgBase64 { get; set; }
-    public string? Description { get; set; }
 }

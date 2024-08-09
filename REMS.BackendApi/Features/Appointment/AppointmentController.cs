@@ -45,12 +45,12 @@
             }
         }
 
-        [HttpGet("{id}/{pageNo}/{pageSize}")]
-        public async Task<IActionResult> GetAppointmentByAgentId(int id, int pageNo, int pageSize)
+        [HttpGet("{propertyId}/{pageNo}/{pageSize}")]
+        public async Task<IActionResult> GetAppointmentByAgentId(int propertyId, int pageNo, int pageSize)
         {
             try
             {
-                var response = await _blAppointment.GetAppointmentByAgentIdAsync(id, pageNo, pageSize);
+                var response = await _blAppointment.GetAppointmentByPropertyIdAsycn(propertyId, pageNo, pageSize);
                 if (response.IsError)
                     return BadRequest(response);
                 return Ok(response);

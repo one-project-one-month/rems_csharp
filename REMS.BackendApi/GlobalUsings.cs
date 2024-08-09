@@ -12,6 +12,7 @@ global using REMS.Models.Client;
 global using REMS.Models.Review;
 global using REMS.Models.Appointment;
 global using REMS.Models.Authentication;
+global using REMS.Models.Jwt;
 global using REMS.Models.Transaction;
 global using REMS.Modules.Features.Agent;
 global using REMS.Modules.Features.Client;
