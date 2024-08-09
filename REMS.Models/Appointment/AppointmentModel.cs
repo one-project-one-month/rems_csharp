@@ -10,8 +10,6 @@ namespace REMS.Models.Appointment
     {
         public int AppointmentId { get; set; }
 
-        public int? AgentId { get; set; }
-
         public int? ClientId { get; set; }
 
         public int? PropertyId { get; set; }
