@@ -4,7 +4,7 @@ namespace REMS.Models.Client;
 
 public class ClientRequestModel
 {
-    [JsonIgnore] // Completely hides from API schema
+    [JsonIgnore] //hides from API schema
     public int? UserId { get; set; }
 
     public string? FirstName { get; set; } = null!;

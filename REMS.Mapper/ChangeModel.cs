@@ -79,9 +79,9 @@ public static class ChangeModel
         return client;
     }
 
-    public static ClientModel Change(this Client dataModel, User user)
+    public static ClientResponseModel Change(this Client dataModel, User user)
     {
-        var clientResponseModel = new ClientModel
+        var clientResponseModel = new ClientResponseModel
         {
             ClientId = dataModel.ClientId,
             UserId = dataModel.UserId,
@@ -89,7 +89,8 @@ public static class ChangeModel
             LastName = dataModel.LastName,
             Address = dataModel.Address,
             Email = user?.Email,
-            Phone = user?.Phone
+            Phone = user?.Phone,
+            Role = user?.Role
         };
         return clientResponseModel;
     }
