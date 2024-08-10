@@ -54,7 +54,7 @@ namespace REMS.Modules.Features.Transaction
                     _db.Properties.Update(property);
                     int propertyResult = await _db.SaveChangesAsync();
                 }
-                
+
                 model = result > 0 ? Result<string>.Success("Transaction creation success.") : Result<string>.Error("Transaction creation fail.");
             }
             catch (Exception ex)
@@ -72,7 +72,7 @@ namespace REMS.Modules.Features.Transaction
             try
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList =await  _db.Transactions.AsNoTracking()
+                var transactionList = await _db.Transactions.AsNoTracking()
                                 .Include(x => x.Client)
                                 .Include(x => x.Property)
                                 .Skip((pageNumber - 1) * pageSize)
