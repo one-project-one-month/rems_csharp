@@ -82,5 +82,23 @@ public class TransactionController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
+
+    [HttpPost("GetTransactionsByClientId/{clientId}/{pageNumber}/{pageSize}")]
+    public async Task<IActionResult> GetTransactionsByClientId(int pageNumber, int pageSize, int clientId)
+    {
+        try
+        {
+            var response = await _blTransaction.GetTransactionsByClientIdAsync(pageNumber, pageSize, clientId);
+            if (response.IsError)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+        }
+    }
 }
 
