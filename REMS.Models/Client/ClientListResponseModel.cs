@@ -10,6 +10,6 @@ namespace REMS.Models.Client;
 
 public class ClientListResponseModel
 {
-    public List<ClientResponseModel> DataLst { get; set; }
+    public List<ClientModel> DataLst { get; set; }
     public PageSettingModel PageSetting { get; set; }
 }
