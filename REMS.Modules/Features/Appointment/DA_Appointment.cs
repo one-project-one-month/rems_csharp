@@ -168,5 +168,61 @@ namespace REMS.Modules.Features.Appointment
             }
             return response;
         }
+
+        public async Task<Result<AppointmentDetailList>> GetAppointmentByClientId(int clientId, int pageNo, int pageSize)
+        {
+            Result<AppointmentDetailList> model = null;
+            try
+            {
+                var query = await (from _app in _db.Appointments
+                                   join _cli in _db.Clients on _app.ClientId equals _cli.ClientId
+                                   join _pro in _db.Properties on _app.PropertyId equals _pro.PropertyId
+                                   join _age in _db.Agents on _pro.AgentId equals _age.AgentId
+                                   where _app.ClientId == clientId
+                                   select new AppointmentDetail
+                                   {
+                                       AgentName = _age.AgencyName,
+                                       ClientName = _cli.FirstName + " " + _cli.LastName,
+                                       AppointmentDate = _app.AppointmentDate.ToString("yyyy-MM-dd"),
+                                       AppointmentTime = _app.AppointmentTime.ToString("HH:mm:ss"),
+                                       Status = _app.Status,
+                                       Note = _app.Notes,
+                                       Address = _pro.Address,
+                                       City = _pro.City,
+                                       State = _pro.State,
+                                       Price = _pro.Price,
+                                       Size = _pro.Size,
+                                       NumberOfBedrooms = _pro.NumberOfBedrooms,
+                                       NumberOfBathrooms = _pro.NumberOfBathrooms,
+                                   })
+                                   .Skip((pageNo - 1) * pageSize)
+                                   .Take(pageSize)
+                                   .ToListAsync();
+                if (query is null || query.Count == 0)
+                {
+                    return Result<AppointmentDetailList>.Error("No Data Found.");
+                }
+                int totalCount = query.Count();
+                int pageCount = totalCount / pageSize;
+                if (totalCount % pageSize != 0)
+                {
+                    pageCount++;
+                }
+                AppointmentDetailList newappdetailIst = new AppointmentDetailList
+                {
+                    TotalCount = totalCount,
+                    PageCount = pageCount,
+                    PageNo = pageNo,
+                    PageSize = pageSize,
+                    appointmentDetails = query
+                };
+                model = Result<AppointmentDetailList>.Success(newappdetailIst);
+            }
+            catch (Exception ex)
+            {
+                model = Result<AppointmentDetailList>.Error(ex);
+            }
+            return model;
+        }
     }
 }

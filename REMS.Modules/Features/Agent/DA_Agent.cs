@@ -142,33 +142,6 @@ public class DA_Agent
         }
         return response;
     }
-
-    public async Task<Result<string>> LoginAgentAsync(AgentLoginRequestModel agentLoginInfo)
-    {
-        Result<string> model = null;
-        try
-        {
-            User? user = await _db.Users
-                .Where(us => us.Name == agentLoginInfo.UserName && us.Password == agentLoginInfo.Password)
-                .FirstOrDefaultAsync();
-
-            if (user is null)
-            {
-                model = Result<string>.Error("Login Fail");
-                goto result;
-            }
-
-            model = model = Result<string>.Error("Login Success");
-        }
-        catch (Exception ex)
-        {
-            model = Result<string>.Error(ex);
-        }
-
-    result:
-        return model;
-    }
-
     public async Task<Result<AgentDto>> SearchAgentByUserIdAsync(int id)
     {
         Result<AgentDto> model = null;

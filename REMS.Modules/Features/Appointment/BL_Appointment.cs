@@ -83,5 +83,12 @@ namespace REMS.Modules.Features.Appointment
             }
             return default;
         }
+
+
+        public async Task<Result<AppointmentDetailList>> GetAppointmentByClientId(int clientId, int pageNo, int pageSize)
+        {
+            return await _daAppointment.GetAppointmentByClientId(clientId,pageNo,pageSize);
+        }
+
     }
 }

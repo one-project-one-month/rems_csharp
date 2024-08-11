@@ -65,14 +65,6 @@ public class AgentController : ControllerBase
         }
     }
 
-    [HttpPost("LoginAgent", Name = "LoginAgent")]
-    public async Task<IActionResult> LoginAgent(AgentLoginRequestModel agentLoginInfo)
-    {
-        Result<string> res = await _blAgent.LoginAgentAsync(agentLoginInfo);
-
-        return Ok(res);
-    }
-
     [HttpGet("SearchUser/{id}", Name = "SearchUser")]
     public async Task<IActionResult> SearchUser(int id)
     {
