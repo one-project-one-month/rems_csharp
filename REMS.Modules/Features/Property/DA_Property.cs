@@ -30,7 +30,7 @@ public class DA_Property
             {
                 Property = property.Change(),
                 Images = property.PropertyImages.Select(x => x.Change()).ToList(),
-                Reviews = property.Reviews.Select(x=>x.Change()).ToList()
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             }).ToList();
 
             model = Result<List<PropertyResponseModel>>.Success(propertyResponseModels);
@@ -216,7 +216,7 @@ public class DA_Property
             var createdProperty = await _db.Properties
                                     .AsNoTracking()
                                     .Include(x => x.PropertyImages)
-                                    .Include(x=>x.Reviews)
+                                    .Include(x => x.Reviews)
                                     .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
                                     ?? throw new Exception("Property Not Found");
 
