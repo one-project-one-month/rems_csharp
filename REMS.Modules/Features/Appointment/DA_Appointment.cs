@@ -194,11 +194,11 @@ namespace REMS.Modules.Features.Appointment
                                        Size = _pro.Size,
                                        NumberOfBedrooms = _pro.NumberOfBedrooms,
                                        NumberOfBathrooms = _pro.NumberOfBathrooms,
-                                   })
+                                   }).ToListAsync();
+                var appointmentList = query
                                    .Skip((pageNo - 1) * pageSize)
-                                   .Take(pageSize)
-                                   .ToListAsync();
-                if (query is null || query.Count == 0)
+                                   .Take(pageSize).ToList();
+                if (appointmentList is null || appointmentList.Count == 0)
                 {
                     return Result<AppointmentDetailList>.Error("No Data Found.");
                 }
