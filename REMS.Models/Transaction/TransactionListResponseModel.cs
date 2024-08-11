@@ -12,6 +12,6 @@ namespace REMS.Models.Transaction
     {
         public PageSettingModel? pageSetting { get; set; }
 
-        public List<TransactionModel>? lstTransaction { get; set; }
+        public List<TransactionResponseModel>? lstTransaction { get; set; }
     }
 }
