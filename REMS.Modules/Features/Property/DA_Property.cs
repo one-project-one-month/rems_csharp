@@ -23,12 +23,14 @@ public class DA_Property
                                             .AsNoTracking()
                                             .Where(x => x.Status == nameof(PropertyStatus.Approved))
                                             .Include(x => x.PropertyImages)
+                                            .Include(x => x.Reviews)
                                             .ToListAsync();
 
             var propertyResponseModels = properties.Select(property => new PropertyResponseModel
             {
                 Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             }).ToList();
 
             model = Result<List<PropertyResponseModel>>.Success(propertyResponseModels);
@@ -51,6 +53,7 @@ public class DA_Property
                                       .AsNoTracking()
                                       .Where(x => x.Status == nameof(PropertyStatus.Approved))
                                       .Include(x => x.PropertyImages)
+                                      .Include(x => x.Reviews)
                                       .Skip((pageNo - 1) * pageSize)
                                       .Take(pageSize)
                                       .ToListAsync();
@@ -58,7 +61,8 @@ public class DA_Property
             var propertyResponseModel = properties.Select(property => new PropertyResponseModel
             {
                 Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             }).ToList();
 
             var totalCount = await _db.Properties.CountAsync();
@@ -91,12 +95,14 @@ public class DA_Property
                                        .Where(x => x.AgentId == agentId)
                                        .Where(x => x.Status == propertyStatus)
                                        .Include(x => x.PropertyImages)
+                                       .Include(x => x.Reviews)
                                        .ToListAsync();
 
             var propertyResponseModels = properties.Select(property => new PropertyResponseModel
             {
                 Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             }).ToList();
 
             model = Result<List<PropertyResponseModel>>.Success(propertyResponseModels);
@@ -120,6 +126,7 @@ public class DA_Property
                                       .Where(x => x.AgentId == agentId)
                                       .Where(x => x.Status == propertyStatus)
                                       .Include(x => x.PropertyImages)
+                                      .Include(x => x.Reviews)
                                       .Skip((pageNo - 1) * pageSize)
                                       .Take(pageSize)
                                       .ToListAsync();
@@ -127,7 +134,8 @@ public class DA_Property
             var propertyResponseModel = properties.Select(property => new PropertyResponseModel
             {
                 Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             }).ToList();
 
             var totalCount = await _db.Properties.Where(x => x.AgentId == agentId).CountAsync();
@@ -158,13 +166,15 @@ public class DA_Property
             var property = await _db.Properties
                                     .AsNoTracking()
                                     .Include(x => x.PropertyImages)
+                                    .Include(x => x.Reviews)
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
 
             var propertyResponse = new PropertyResponseModel
             {
                 Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             };
 
             model = Result<PropertyResponseModel>.Success(propertyResponse);
@@ -206,13 +216,15 @@ public class DA_Property
             var createdProperty = await _db.Properties
                                     .AsNoTracking()
                                     .Include(x => x.PropertyImages)
+                                    .Include(x => x.Reviews)
                                     .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
                                     ?? throw new Exception("Property Not Found");
 
             var propertyResponse = new PropertyResponseModel
             {
                 Property = createdProperty.Change(),
-                Images = createdProperty.PropertyImages.Select(x => x.Change()).ToList()
+                Images = createdProperty.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             };
 
             model = Result<PropertyResponseModel>.Success(propertyResponse);
@@ -273,13 +285,15 @@ public class DA_Property
             var updatedProperty = await _db.Properties
                                     .AsNoTracking()
                                     .Include(x => x.PropertyImages)
+                                    .Include(x => x.Reviews)
                                     .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
                                     ?? throw new Exception("Property Not Found");
 
             var responseModel = new PropertyResponseModel
             {
                 Property = updatedProperty.Change(),
-                Images = updatedProperty.PropertyImages.Select(x => x.Change()).ToList()
+                Images = updatedProperty.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             };
             model = Result<PropertyResponseModel>.Success(responseModel);
             return model;
@@ -316,13 +330,15 @@ public class DA_Property
             var updatedProperty = await _db.Properties
                                     .AsNoTracking()
                                     .Include(x => x.PropertyImages)
+                                    .Include(x => x.Reviews)
                                     .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
                                     ?? throw new Exception("Property Not Found");
 
             var responseModel = new PropertyResponseModel
             {
                 Property = updatedProperty.Change(),
-                Images = updatedProperty.PropertyImages.Select(x => x.Change()).ToList()
+                Images = updatedProperty.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             };
             model = Result<PropertyResponseModel>.Success(responseModel);
             return model;
