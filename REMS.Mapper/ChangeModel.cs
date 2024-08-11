@@ -214,6 +214,7 @@ public static class ChangeModel
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
             Comments = dataModel.Comments,
+            DateCreated = dataModel.DateCreated,
         };
 
         return reviewModel;
