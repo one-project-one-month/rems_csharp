@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using REMS.Database.AppDbContextModels;
 using REMS.Models;
 using System.Data;
 
@@ -19,21 +20,13 @@ public class DA_Client
         var responseModel = new ClientListResponseModel();
         try
         {
-            //var clients = await _db
-            //    .Clients
-            //    .AsNoTracking()
-            //    .ToListAsync();
-
             var clients = await _db
             .Clients
             .Include(c => c.User)
             .AsNoTracking()
             .ToListAsync();
 
-            var clientResponseModel = clients.Select(client => new ClientResponseModel
-            {
-                Client = client.Change(client.User)
-            }).ToList();
+            var clientResponseModel = clients.Select(client => client.Change(client.User)).ToList();
 
             var clientListResponse = new ClientListResponseModel
             {
@@ -67,10 +60,7 @@ public class DA_Client
                 .Take(pageSize)
                 .ToListAsync();
 
-            var clientResponseModel = clients.Select(client => new ClientResponseModel
-            {
-                Client = client.Change(client.User!)
-            }).ToList();
+            var clientResponseModel = clients.Select(client => client.Change(client.User)).ToList();
 
             var clientListResponse = new ClientListResponseModel
             {
@@ -102,13 +92,10 @@ public class DA_Client
 
             if (client is null)
             {
-                throw new Exception("Client Not Found");
+                return model = Result<ClientResponseModel>.Error("Client not found.");
             }
 
-            var responseModel = new ClientResponseModel
-            {
-                Client = client.Change(client.User)
-            };
+            var responseModel = client.Change(client.User);
 
             model = Result<ClientResponseModel>.Success(responseModel);
         }
@@ -155,10 +142,7 @@ public class DA_Client
             await _db.Clients.AddAsync(client);
             int addClient = await _db.SaveChangesAsync();
 
-            var responseModel = new ClientResponseModel
-            {
-                Client = client.Change(user),
-            };
+            var responseModel = client.Change(user);
 
             model = addClient > 0
                 ? Result<ClientResponseModel>.Success(responseModel)
@@ -231,10 +215,7 @@ public class DA_Client
             _db.Entry(client).State = EntityState.Modified;
             int result = await _db.SaveChangesAsync();
 
-            var clientResponseModel = new ClientResponseModel
-            {
-                Client = client.Change(user)
-            };
+            var clientResponseModel = client.Change(user);
 
             model = Result<ClientResponseModel>.Success(clientResponseModel);
         }
