@@ -1,4 +1,5 @@
-﻿using REMS.Models.Appointment;
+﻿using REMS.Mapper;
+using REMS.Models.Appointment;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,36 +30,31 @@ namespace REMS.Modules.Features.Transaction
                 }
 
                 var buyerClient = await _db.Clients
-                    .Where(x => x.ClientId == transactionRequestModel.BuyerId)
+                    .Where(x => x.ClientId == transactionRequestModel.ClientId)
                     .FirstOrDefaultAsync();
 
                 if (buyerClient is null)
                 {
-                    model = Result<string>.Error("Buyer Not Found!");
+                    model = Result<string>.Error("Client Not Found!");
                     goto result;
                 }
 
-                var sellerClient = await _db.Clients
-                    .Where(x => x.ClientId == transactionRequestModel.SellerId)
-                    .FirstOrDefaultAsync();
-
-                if (sellerClient is null)
-                {
-                    model = Result<string>.Error("Seller Not Found!");
-                    goto result;
-                }
-
-                var Agent = await _db.Agents
-                   .Where(x => x.AgentId == transactionRequestModel.AgentId)
-                   .FirstOrDefaultAsync();
-
-                if (Agent is null)
-                {
-                    model = Result<string>.Error("Agent Not Found!");
-                    goto result;
-                }
                 await _db.Transactions.AddAsync(transactionRequestModel.Change());
                 int result = await _db.SaveChangesAsync();
+                if (result > 0)
+                {
+                    if (property.AvailiablityType.Equals(PropertyAvailiableType.Sell))
+                    {
+                        property.Status = PropertyStatus.Sold.ToString();
+                    }
+                    else
+                    {
+                        property.Status = PropertyStatus.Rented.ToString();
+                    }
+                    _db.Properties.Update(property);
+                    int propertyResult = await _db.SaveChangesAsync();
+                }
+
                 model = result > 0 ? Result<string>.Success("Transaction creation success.") : Result<string>.Error("Transaction creation fail.");
             }
             catch (Exception ex)
@@ -76,8 +72,12 @@ namespace REMS.Modules.Features.Transaction
             try
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = _db.Transactions.AsNoTracking();
-                var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
+                var transactionList = await _db.Transactions.AsNoTracking()
+                                .Include(x => x.Client)
+                                .Include(x => x.Property)
+                                .Skip((pageNumber - 1) * pageSize)
+                                .Take(pageSize)
+                                .ToListAsync();
 
                 int rowCount = _db.Transactions.Count();
                 int pageCount = rowCount / pageSize;
@@ -85,7 +85,15 @@ namespace REMS.Modules.Features.Transaction
                     pageCount++;
 
                 transactionListResponse.pageSetting = new PageSettingModel(pageNumber, pageSize, pageCount, rowCount);
-                transactionListResponse.lstTransaction = transaction;
+
+                var propertyResponseModel = transactionList.Select(Transactions => new TransactionResponseModel
+                {
+                    Transaction = Transactions.Change(),
+                    Client = Transactions.Client.Change(_db.Users.Where(x => x.UserId == Transactions.Client.UserId).FirstOrDefault()),
+                    Property = Transactions.Property.Change()
+
+                }).ToList();
+                transactionListResponse.lstTransaction = propertyResponseModel;
                 model = Result<TransactionListResponseModel>.Success(transactionListResponse);
                 return model;
             }
@@ -101,8 +109,18 @@ namespace REMS.Modules.Features.Transaction
             try
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == PropertyId);
-                var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
+                var transactionList = await _db.Transactions.AsNoTracking()
+                                            .Include(x => x.Client)
+                                            .Include(x => x.Property)
+                                            .Where(x => x.PropertyId == PropertyId)
+                                            .Skip((pageNumber - 1) * pageSize)
+                                            .Take(pageSize)
+                                            .ToListAsync();
+                if (transactionList is null)
+                {
+                    model = Result<TransactionListResponseModel>.Error("This property doesn't have in the transaction!");
+                    goto result;
+                }
 
                 int rowCount = _db.Transactions.Count();
                 int pageCount = rowCount / pageSize;
@@ -110,7 +128,15 @@ namespace REMS.Modules.Features.Transaction
                     pageCount++;
 
                 transactionListResponse.pageSetting = new PageSettingModel(pageNumber, pageSize, pageCount, rowCount);
-                transactionListResponse.lstTransaction = transaction;
+
+                var transactionresponseModel = transactionList.Select(Transactions => new TransactionResponseModel
+                {
+                    Transaction = Transactions.Change(),
+                    Client = Transactions.Client.Change(_db.Users.Where(x => x.UserId == Transactions.Client.UserId).FirstOrDefault()),
+                    Property = Transactions.Property.Change()
+
+                }).ToList();
+                transactionListResponse.lstTransaction = transactionresponseModel;
                 model = Result<TransactionListResponseModel>.Success(transactionListResponse);
                 return model;
             }
@@ -118,16 +144,28 @@ namespace REMS.Modules.Features.Transaction
             {
                 return model = Result<TransactionListResponseModel>.Error(ex);
             }
+        result:
+            return model;
         }
 
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndAgentIdAsync(int pageNumber, int pageSize, int propertyId, int agentId)
+        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndClientIdAsync(int pageNumber, int pageSize, int propertyId, int clientId)
         {
             Result<TransactionListResponseModel> model = null;
             try
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId);
-                var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
+                var transactionList = await _db.Transactions.AsNoTracking()
+                                      .Include(x => x.Client)
+                                      .Include(x => x.Property)
+                                      .Where(x => x.PropertyId == propertyId && x.ClientId == clientId)
+                                      .Skip((pageNumber - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToListAsync();
+                if (transactionList is null)
+                {
+                    model = Result<TransactionListResponseModel>.Error("Property Not Found!");
+                    goto result;
+                }
 
                 int rowCount = _db.Transactions.Count();
                 int pageCount = rowCount / pageSize;
@@ -135,7 +173,14 @@ namespace REMS.Modules.Features.Transaction
                     pageCount++;
 
                 transactionListResponse.pageSetting = new PageSettingModel(pageNumber, pageSize, pageCount, rowCount);
-                transactionListResponse.lstTransaction = transaction;
+                var transactionresponseModel = transactionList.Select(Transactions => new TransactionResponseModel
+                {
+                    Transaction = Transactions.Change(),
+                    Client = Transactions.Client.Change(_db.Users.Where(x => x.UserId == Transactions.Client.UserId).FirstOrDefault()),
+                    Property = Transactions.Property.Change()
+
+                }).ToList();
+                transactionListResponse.lstTransaction = transactionresponseModel;
                 model = Result<TransactionListResponseModel>.Success(transactionListResponse);
                 return model;
             }
@@ -143,16 +188,28 @@ namespace REMS.Modules.Features.Transaction
             {
                 return model = Result<TransactionListResponseModel>.Error(ex);
             }
+        result:
+            return model;
         }
 
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndBuyerIdAsync(int pageNumber, int pageSize, int propertyId, int buyerId)
+        public async Task<Result<TransactionListResponseModel>> GetTransactionsByClientIdAsync(int pageNumber, int pageSize, int clientId)
         {
             Result<TransactionListResponseModel> model = null;
             try
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId);
-                var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
+                var transactionList = await _db.Transactions.AsNoTracking()
+                                      .Include(x => x.Client)
+                                      .Include(x => x.Property)
+                                      .Where(x => x.ClientId == clientId)
+                                      .Skip((pageNumber - 1) * pageSize)
+                                      .Take(pageSize)
+                                      .ToListAsync();
+                if (transactionList is null)
+                {
+                    model = Result<TransactionListResponseModel>.Error("This client doesn't have in the transaction!!");
+                    goto result;
+                }
 
                 int rowCount = _db.Transactions.Count();
                 int pageCount = rowCount / pageSize;
@@ -160,7 +217,14 @@ namespace REMS.Modules.Features.Transaction
                     pageCount++;
 
                 transactionListResponse.pageSetting = new PageSettingModel(pageNumber, pageSize, pageCount, rowCount);
-                transactionListResponse.lstTransaction = transaction;
+                var transactionresponseModel = transactionList.Select(Transactions => new TransactionResponseModel
+                {
+                    Transaction = Transactions.Change(),
+                    Client = Transactions.Client.Change(_db.Users.Where(x => x.UserId == Transactions.Client.UserId).FirstOrDefault()),
+                    Property = Transactions.Property.Change()
+
+                }).ToList();
+                transactionListResponse.lstTransaction = transactionresponseModel;
                 model = Result<TransactionListResponseModel>.Success(transactionListResponse);
                 return model;
             }
@@ -168,31 +232,8 @@ namespace REMS.Modules.Features.Transaction
             {
                 return model = Result<TransactionListResponseModel>.Error(ex);
             }
-        }
-
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndSellerIdAsync(int pageNumber, int pageSize, int propertyId, int sellerId)
-        {
-            Result<TransactionListResponseModel> model = null;
-            try
-            {
-                TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = _db.Transactions.AsNoTracking().Where(x => x.PropertyId == propertyId);
-                var transaction = await transactionList.Pagination(pageNumber, pageSize).Select(x => x.Change()).ToListAsync();
-
-                int rowCount = _db.Transactions.Count();
-                int pageCount = rowCount / pageSize;
-                if (pageCount % pageSize > 0)
-                    pageCount++;
-
-                transactionListResponse.pageSetting = new PageSettingModel(pageNumber, pageSize, pageCount, rowCount);
-                transactionListResponse.lstTransaction = transaction;
-                model = Result<TransactionListResponseModel>.Success(transactionListResponse);
-                return model;
-            }
-            catch (Exception ex)
-            {
-                return model = Result<TransactionListResponseModel>.Error(ex);
-            }
+        result:
+            return model;
         }
     }
 }

@@ -79,15 +79,18 @@ public static class ChangeModel
         return client;
     }
 
-    public static ClientModel Change(this Client dataModel)
+    public static ClientResponseModel Change(this Client dataModel, User user)
     {
-        var clientResponseModel = new ClientModel
+        var clientResponseModel = new ClientResponseModel
         {
             ClientId = dataModel.ClientId,
             UserId = dataModel.UserId,
             FirstName = dataModel.FirstName,
             LastName = dataModel.LastName,
             Address = dataModel.Address,
+            Email = user?.Email,
+            Phone = user?.Phone,
+            Role = user?.Role
         };
         return clientResponseModel;
     }
@@ -139,10 +142,8 @@ public static class ChangeModel
             NumberOfBathrooms = requestModel.NumberOfBathrooms,
             YearBuilt = requestModel.YearBuilt,
             Description = requestModel.Description,
-            Status = requestModel.Status,
             AvailiablityType = requestModel.AvailiablityType,
             MinrentalPeriod = requestModel.MinRentalPeriod,
-            Approvedby = requestModel.ApprovedBy,
         };
 
         return property;
@@ -213,22 +214,19 @@ public static class ChangeModel
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
             Comments = dataModel.Comments,
-            DateCreated = dataModel.DateCreated
         };
 
         return reviewModel;
     }
 
-    public static Review Change(this ReviewModel dataModel)
+    public static Review Change(this ReviewRequestModel dataModel)
     {
         var review = new Review()
         {
-            ReviewId = dataModel.ReviewId,
             UserId = dataModel.UserId,
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
             Comments = dataModel.Comments,
-            DateCreated = dataModel.DateCreated
         };
 
         return review;
@@ -275,9 +273,9 @@ public static class ChangeModel
     //    {
 
     //        PropertyId = requestModel.PropertyId,
-    //        BuyerId = requestModel.BuyerId,
-    //        SellerId = requestModel.SellerId,
-    //        AgentId = requestModel.AgentId,
+    //        ClientId = requestModel.ClientId,
+    //        //SellerId = requestModel.SellerId,
+    //        //AgentId = requestModel.AgentId,
     //        TransactionDate = requestModel.TransactionDate,
     //        SalePrice = requestModel.SalePrice,
     //        Commission = requestModel.Commission,
@@ -292,9 +290,7 @@ public static class ChangeModel
     //    {
 
     //        PropertyId = requestModel.PropertyId,
-    //        BuyerId = requestModel.BuyerId,
-    //        SellerId = requestModel.SellerId,
-    //        AgentId = requestModel.AgentId,
+    //        ClientId = requestModel.ClientId,
     //        TransactionDate = requestModel.TransactionDate,
     //        SalePrice = requestModel.SalePrice,
     //        Commission = requestModel.Commission,
@@ -327,7 +323,7 @@ public static class ChangeModel
         {
             TransactionId = model.TransactionId,
             PropertyId = model.PropertyId,
-            ClientId = model.BuyerId, // Assuming BuyerId is ClientId
+            ClientId = model.ClientId, // Assuming BuyerId is ClientId
             TransactionDate = model.TransactionDate,
             SalePrice = model.SalePrice,
             Commission = model.Commission,
@@ -341,9 +337,9 @@ public static class ChangeModel
         {
             TransactionId = transaction.TransactionId,
             PropertyId = transaction.PropertyId,
-            BuyerId = transaction.ClientId,  // Assuming ClientId is BuyerId
+            ClientId = transaction.ClientId,  // Assuming ClientId is BuyerId
             //SellerId = transaction.Property?.OwnerId,  // Assuming OwnerId exists in Property class
-            AgentId = transaction.Property?.AgentId,  // Assuming AgentId exists in Property class
+            //AgentId = transaction.Property?.AgentId,  // Assuming AgentId exists in Property class
             TransactionDate = transaction.TransactionDate,
             SalePrice = transaction.SalePrice,
             Commission = transaction.Commission,

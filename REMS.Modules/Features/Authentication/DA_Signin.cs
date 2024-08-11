@@ -1,4 +1,8 @@
-﻿namespace REMS.Modules.Features.Authentication;
+﻿using REMS.Models.Authentication;
+using REMS.Models.Jwt;
+using REMS.Shared;
+
+namespace REMS.Modules.Features.Authentication;
 
 public class DA_Signin
 {
@@ -38,7 +42,7 @@ public class DA_Signin
 
         model = Result<SigninResponseModel>.Success(new SigninResponseModel(accessToken, role));
 
-        result:
+    result:
         return model;
     }
 
@@ -59,7 +63,7 @@ public class DA_Signin
     public async Task<Result<string>> SignOut(string accessToken)
     {
         Result<string> model;
-        
+
         var item = await _db.Logins
             .Where(l => l.AccessToken == accessToken)
             .FirstOrDefaultAsync();
@@ -76,7 +80,7 @@ public class DA_Signin
         await _db.SaveChangesAsync();
 
         model = Result<string>.Success("SignOut successful.");
-        result:
+    result:
         return model;
     }
 }

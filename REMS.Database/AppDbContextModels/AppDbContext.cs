@@ -39,7 +39,7 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<Agent>(entity =>
         {
-            entity.HasKey(e => e.AgentId).HasName("PK__Agents__2C05379EA6EBB571");
+            entity.HasKey(e => e.AgentId).HasName("PK__Agents__2C05379E031C7552");
 
             entity.Property(e => e.AgentId).HasColumnName("agent_id");
             entity.Property(e => e.Address)
@@ -60,7 +60,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Appointment>(entity =>
         {
-            entity.HasKey(e => e.AppointmentId).HasName("PK__Appointm__A50828FC24A54744");
+            entity.HasKey(e => e.AppointmentId).HasName("PK__Appointm__A50828FC11F5BF47");
 
             entity.Property(e => e.AppointmentId).HasColumnName("appointment_id");
             entity.Property(e => e.AppointmentDate)
@@ -85,7 +85,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Client>(entity =>
         {
-            entity.HasKey(e => e.ClientId).HasName("PK__Clients__BF21A4249CF6CCE3");
+            entity.HasKey(e => e.ClientId).HasName("PK__Clients__BF21A424084C6F3F");
 
             entity.Property(e => e.ClientId).HasColumnName("client_id");
             entity.Property(e => e.Address)
@@ -128,7 +128,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Message>(entity =>
         {
-            entity.HasKey(e => e.MessageId).HasName("PK__Messages__0BBF6EE6D6430682");
+            entity.HasKey(e => e.MessageId).HasName("PK__Messages__0BBF6EE6030CF454");
 
             entity.Property(e => e.MessageId).HasColumnName("message_id");
             entity.Property(e => e.DateSent)
@@ -158,7 +158,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Property>(entity =>
         {
-            entity.HasKey(e => e.PropertyId).HasName("PK__Properti__735BA463E2519AE2");
+            entity.HasKey(e => e.PropertyId).HasName("PK__Properti__735BA46382020C5F");
 
             entity.Property(e => e.PropertyId).HasColumnName("property_id");
             entity.Property(e => e.Adddate)
@@ -213,7 +213,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<PropertyImage>(entity =>
         {
-            entity.HasKey(e => e.ImageId).HasName("PK__Property__DC9AC955F55B85D2");
+            entity.HasKey(e => e.ImageId).HasName("PK__Property__DC9AC9559298D349");
 
             entity.Property(e => e.ImageId).HasColumnName("image_id");
             entity.Property(e => e.DateUploaded)
@@ -233,7 +233,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.ReviewId).HasName("PK__Reviews__60883D902BBAE4A3");
+            entity.HasKey(e => e.ReviewId).HasName("PK__Reviews__60883D9094BA37F0");
 
             entity.Property(e => e.ReviewId).HasColumnName("review_id");
             entity.Property(e => e.Comments).HasColumnName("comments");
@@ -256,7 +256,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__85C600AFF7042CF1");
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__85C600AF52FA1EC6");
 
             entity.Property(e => e.TransactionId).HasColumnName("transaction_id");
             entity.Property(e => e.ClientId).HasColumnName("client_id");
@@ -287,9 +287,9 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__B9BE370FBAC9D2EE");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__B9BE370F8DDB2A90");
 
-            entity.HasIndex(e => e.Email, "UQ__Users__AB6E6164B090FACB").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Users__AB6E61643D1F7791").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.DateCreated)

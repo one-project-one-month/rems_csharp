@@ -77,14 +77,14 @@ namespace REMS.Modules.Features.Appointment
             return response;
         }
 
-        public async Task<Result<AppointmentListResponseModel>> GetAppointmentByClientIdAsync(int id, int pageNo, int pageSize)
+        public async Task<Result<AppointmentListResponseModel>> GetAppointmentByPropertyIdAsycn(int id, int pageNo, int pageSize)
         {
             Result<AppointmentListResponseModel> response = null;
             try
             {
                 var query = _db.Appointments
                                 .AsNoTracking()
-                                .Where(x => x.ClientId == id)
+                                .Where(x => x.PropertyId == id)
                                 .Select(n => new AppointmentModel
                                 {
                                     AppointmentId = n.AppointmentId,
@@ -130,11 +130,11 @@ namespace REMS.Modules.Features.Appointment
 
                 var appointment = await _db.Appointments
                                          .AsNoTracking()
-                                         .FirstOrDefaultAsync(x => x.PropertyId == id); ;
+                                         .FirstOrDefaultAsync(x => x.AppointmentId == id);
                 if (appointment is null)
                     return Result<AppointmentResponseModel>.Error("appointment not found");
 
-                if (!string.IsNullOrWhiteSpace(requestModel.AppointmentDate.ToString()))
+                if (requestModel.AppointmentDate != DateTime.MinValue)
                 {
                     appointment.AppointmentDate = requestModel.AppointmentDate;
                 }

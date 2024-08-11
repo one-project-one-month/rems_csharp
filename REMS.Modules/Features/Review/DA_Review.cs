@@ -6,8 +6,9 @@ public class DA_Review
 
     public DA_Review(AppDbContext context) => _context = context;
 
-    public async Task<ReviewListResponseModel> GetReview()
+    public async Task<Result<ReviewListResponseModel>> GetReview()
     {
+        Result<ReviewListResponseModel> model = null;
         var responseModel = new ReviewListResponseModel();
         try
         {
@@ -15,87 +16,120 @@ public class DA_Review
                 .Reviews
                 .AsNoTracking()
                 .ToListAsync();
-            responseModel.DataList = reviews
-                .Select(x => x.Change()).ToList();
+            var reviewResponseModel = reviews.Select(review => new ReviewResponseModel
+            {
+                Review = review.Change()
+            }).ToList();
+
+            var reviewListResponse = new ReviewListResponseModel
+            {
+                DataList = reviewResponseModel,
+            };
+
+            model = Result<ReviewListResponseModel>.Success(reviewListResponse);
         }
         catch (Exception ex)
         {
-            responseModel.DataList = new List<ReviewModel>();
+            model = Result<ReviewListResponseModel>.Error(ex);
+            return model;
         }
 
-        return responseModel;
+        return model;
     }
 
-    public async Task<ReviewListResponseModel> GetReviews(int pageNo = 1, int pageSize = 10)
+    public async Task<Result<ReviewListResponseModel>> GetReviews(int pageNo = 1, int pageSize = 10)
     {
+        Result<ReviewListResponseModel> model = null;
         try
         {
             var totalCount = await _context.Reviews.CountAsync();
             var pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
 
-            var query = await _context
-                .Reviews
+            var reviews = await _context.Reviews
                 .AsNoTracking()
                 .Skip((pageNo - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
-            var response = new ReviewListResponseModel
+            var reviewResponseModel = reviews.Select(review => new ReviewResponseModel
             {
-                DataList = query.Select(x => x.Change()).ToList(),
+                Review = review.Change()
+            }).ToList();
+            var reviewListResponse = new ReviewListResponseModel
+            {
+                DataList = reviewResponseModel,
                 PageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount)
             };
 
-            return response;
+            model = Result<ReviewListResponseModel>.Success(reviewListResponse);
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            return null;
+            model = Result<ReviewListResponseModel>.Error(ex);
+            return model;
         }
+        return model;
     }
 
-    public async Task<ReviewResponseModel> GetReviewById(int reviewId)
+    public async Task<Result<ReviewResponseModel>> GetReviewById(int reviewId)
     {
+        Result<ReviewResponseModel> model = null;
         try
         {
-            var review = await _context.Reviews
-                             .AsNoTracking()
-                             .FirstOrDefaultAsync(x => x.ReviewId == reviewId)
-                         ?? throw new Exception("Review Not Found");
-
+            var review = await _context
+                .Reviews
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.ReviewId == reviewId);
+            if (review is null)
+            {
+                throw new Exception("review Not Found");
+            }
             var responseModel = new ReviewResponseModel
             {
                 Review = review.Change()
             };
-            return responseModel;
+            model = Result<ReviewResponseModel>.Success(responseModel);
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex);
-            return null;
+            model = Result<ReviewResponseModel>.Error(ex);
         }
+
+        return model;
     }
 
-    public async Task<MessageResponseModel> CreateReview(ReviewModel requestModel)
+    public async Task<Result<ReviewResponseModel>> CreateReview(ReviewRequestModel requestModel)
     {
+        Result<ReviewResponseModel> model = null;
         try
         {
-            await _context.Reviews.AddAsync(requestModel.Change());
+            if (requestModel == null)
+            {
+                throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
+            }
+
+            var review = requestModel.Change();
+            await _context.Reviews.AddAsync(review);
             int addReview = await _context.SaveChangesAsync();
-            var response = addReview > 0
-                ? new MessageResponseModel(true, "Successfully Saved.")
-                : new MessageResponseModel(false, "Review Create Failed.");
-            return response;
+            var responseModel = new ReviewResponseModel
+            {
+                Review = review.Change(),
+            };
+
+            model = addReview > 0
+                ? Result<ReviewResponseModel>.Success(responseModel)
+                : Result<ReviewResponseModel>.Error("Review create failed.");
         }
         catch (Exception ex)
         {
-            return new MessageResponseModel(false, ex);
+            model = Result<ReviewResponseModel>.Error(ex);
         }
+        return model;
     }
 
-    public async Task<MessageResponseModel> UpdateReview(int id, ReviewModel requestModel)
+    public async Task<Result<ReviewResponseModel>> UpdateReview(int id, ReviewRequestModel requestModel)
     {
+        Result<ReviewResponseModel> model = null;
         try
         {
             var review = await _context.Reviews
@@ -139,19 +173,23 @@ public class DA_Review
             _context.Reviews.Update(review);
             var result = await _context.SaveChangesAsync();
 
-            var response = result > 0
-                ? new MessageResponseModel(true, "Update Successfully")
-                : new MessageResponseModel(false, "Update failed");
-            return response;
+            var reviewResponseModel = new ReviewResponseModel
+            {
+                Review = review.Change()
+            };
+
+            model = Result<ReviewResponseModel>.Success(reviewResponseModel);
         }
         catch (Exception ex)
         {
-            return new MessageResponseModel(false, ex);
+            model = Result<ReviewResponseModel>.Error(ex);
         }
+        return model;
     }
 
-    public async Task<MessageResponseModel> DeleteReview(int id)
+    public async Task<Result<object>> DeleteReview(int id)
     {
+        Result<object> model = null;
         try
         {
             var review = await _context
@@ -165,14 +203,14 @@ public class DA_Review
 
             _context.Reviews.Remove(review);
             var result = await _context.SaveChangesAsync();
-            var response = result > 0
-                ? new MessageResponseModel(true, "Delete Successfully")
-                : new MessageResponseModel(false, "Delete Fail");
-            return response;
+            model = result > 0
+                ? Result<object>.Success(null)
+                : Result<object>.Error("Delete failed.");
         }
         catch (Exception ex)
         {
-            return new MessageResponseModel(false, ex);
+            return model = Result<object>.Error(ex);
         }
+        return model;
     }
 }

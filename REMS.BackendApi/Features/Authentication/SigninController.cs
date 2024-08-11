@@ -1,4 +1,7 @@
-﻿namespace REMS.BackendApi.Features.Authentication;
+﻿using REMS.Models.Authentication;
+using REMS.Modules.Features.Authentication;
+
+namespace REMS.BackendApi.Features.Authentication;
 
 [Route("api/v1/")]
 [ApiController]

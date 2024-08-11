@@ -33,14 +33,14 @@ namespace REMS.Modules.Features.Appointment
             return response;
         }
 
-        public async Task<Result<AppointmentListResponseModel>> GetAppointmentByAgentIdAsync(int id, int pageNo, int pageSize)
+        public async Task<Result<AppointmentListResponseModel>> GetAppointmentByPropertyIdAsycn(int id, int pageNo, int pageSize)
         {
             var response = CheckPageNoandPageSize(pageNo, pageSize);
             if (response is not null)
             {
                 return response;
             }
-            return await _daAppointment.GetAppointmentByClientIdAsync(id, pageNo, pageSize);
+            return await _daAppointment.GetAppointmentByPropertyIdAsycn(id, pageNo, pageSize);
         }
 
         public async Task<Result<AppointmentResponseModel>> UpdateAppointmentAsync(int id, AppointmentRequestModel requestModel)

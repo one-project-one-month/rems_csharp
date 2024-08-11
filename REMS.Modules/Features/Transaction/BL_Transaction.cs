@@ -25,17 +25,15 @@ namespace REMS.Modules.Features.Transaction
         {
             return await _daTransaction.GetTransactionsByPropertyIdAsync(pageNumber, pageSize, propertyId);
         }
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndAgentIdAsync(int pageNumber, int pageSize, int propertyId, int agentId)
+
+        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndClientIdAsync(int pageNumber, int pageSize, int propertyId, int buyerId)
         {
-            return await _daTransaction.GetTransactionsByPropertyIdAndAgentIdAsync(pageNumber, pageSize, propertyId, agentId);
+            return await _daTransaction.GetTransactionsByPropertyIdAndClientIdAsync(pageNumber, pageSize, propertyId, buyerId);
         }
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndBuyerIdAsync(int pageNumber, int pageSize, int propertyId, int buyerId)
+
+        public async Task<Result<TransactionListResponseModel>> GetTransactionsByClientIdAsync(int pageNumber, int pageSize, int clientId)
         {
-            return await _daTransaction.GetTransactionsByPropertyIdAndBuyerIdAsync(pageNumber, pageSize, propertyId, buyerId);
-        }
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndSellerIdAsync(int pageNumber, int pageSize, int propertyId, int sellerId)
-        {
-            return await _daTransaction.GetTransactionsByPropertyIdAndSellerIdAsync(pageNumber, pageSize, propertyId, sellerId);
+            return await _daTransaction.GetTransactionsByClientIdAsync(pageNumber, pageSize, clientId);
         }
     }
 }

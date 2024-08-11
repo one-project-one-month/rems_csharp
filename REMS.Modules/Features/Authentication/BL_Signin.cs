@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
 using REMS.Models;
+using REMS.Models.Authentication;
 
 namespace REMS.Modules.Features.Authentication;
 
@@ -23,7 +24,7 @@ public class BL_Signin
         }
 
         model = await _daSignin.Signin(requestModel);
-        result:
+    result:
         return model;
     }
 
