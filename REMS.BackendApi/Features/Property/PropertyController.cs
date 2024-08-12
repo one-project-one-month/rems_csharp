@@ -14,11 +14,16 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetProperties()
+    public async Task<IActionResult> GetProperties(string? propertyStatus = "")
     {
         try
         {
-            var response = await _blProperties.GetProperties();
+            if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus, out var parsedStatus))
+            {
+                return BadRequest($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
+            }
+
+            var response = await _blProperties.GetProperties(propertyStatus);
             return Ok(response);
         }
         catch (Exception ex)
@@ -28,11 +33,16 @@ public class PropertyController : ControllerBase
     }
 
     [HttpGet("{pageNo}/{pageSize}")]
-    public async Task<IActionResult> GetProperties(int pageNo, int pageSize)
+    public async Task<IActionResult> GetProperties(int pageNo, int pageSize, string? propertyStatus = "")
     {
         try
         {
-            var response = await _blProperties.GetProperties(pageNo, pageSize);
+            if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus, out var parsedStatus))
+            {
+                return BadRequest($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
+            }
+
+            var response = await _blProperties.GetProperties(pageNo, pageSize, propertyStatus);
             return Ok(response);
         }
         catch (Exception ex)
@@ -187,5 +197,10 @@ public class PropertyController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
+    }
+
+    private static bool IsValidPropertyStatus(string status, out PropertyStatus parsedStatus)
+    {
+        return Enum.TryParse(status, out parsedStatus) && Enum.IsDefined(typeof(PropertyStatus), parsedStatus);
     }
 }
