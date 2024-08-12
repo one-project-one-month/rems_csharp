@@ -26,7 +26,7 @@ public class BL_Property
         return response;
     }
 
-    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId, string propertyStatus)
+    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId, string? propertyStatus)
     {
         if (agentId < 1)
         {
