@@ -216,7 +216,7 @@ public class PropertyController : ControllerBase
 
     private static bool IsValidPropertyStatus(string status)
     {
-        return Enum.TryParse< PropertyStatus>(status, out var parsedStatus) && Enum.IsDefined(typeof(PropertyStatus), parsedStatus);
+        return Enum.TryParse<PropertyStatus>(status, out var parsedStatus) && Enum.IsDefined(typeof(PropertyStatus), parsedStatus);
     }
 
     private static bool IsValidPropertyType(string propertyType)

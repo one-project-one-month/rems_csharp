@@ -15,7 +15,7 @@ public class BL_Property
         return response;
     }
 
-    public async Task<Result<PropertyListResponseModel>> GetProperties(int pageNo, int pageSize,string? propertyStatus)
+    public async Task<Result<PropertyListResponseModel>> GetProperties(int pageNo, int pageSize, string? propertyStatus)
     {
         if (pageNo < 1 || pageSize < 1)
         {
