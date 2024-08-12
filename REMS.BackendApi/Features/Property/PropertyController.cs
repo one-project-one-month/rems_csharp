@@ -1,4 +1,5 @@
-﻿using REMS.Models.Property;
+﻿using REMS.Models;
+using REMS.Models.Property;
 
 namespace REMS.BackendApi.Features.Property;
 
@@ -18,7 +19,7 @@ public class PropertyController : ControllerBase
     {
         try
         {
-            if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus, out var parsedStatus))
+            if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus))
             {
                 return BadRequest($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
             }
@@ -37,7 +38,7 @@ public class PropertyController : ControllerBase
     {
         try
         {
-            if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus, out var parsedStatus))
+            if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus))
             {
                 return BadRequest($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
             }
@@ -56,7 +57,7 @@ public class PropertyController : ControllerBase
     {
         try
         {
-            if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus, out var parsedStatus))
+            if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus))
             {
                 return BadRequest($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
             }
@@ -75,7 +76,7 @@ public class PropertyController : ControllerBase
     {
         try
         {
-            if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus, out var parsedStatus))
+            if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus))
             {
                 return BadRequest($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
             }
@@ -106,15 +107,15 @@ public class PropertyController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateProperty([FromBody] PropertyRequestModel requestModel)
     {
-        if (requestModel == null)
+        var validationResult = ValidatePropertyRequestModel(requestModel);
+        if (validationResult != null)
         {
-            return BadRequest("Request model cannot be null");
+            return validationResult;
         }
 
         try
         {
             var response = await _blProperties.CreateProperty(requestModel);
-            // return CreatedAtAction(nameof(GetPropertyById), new { propertyId = response.Property.PropertyId }, response);
             return Ok(response);
         }
         catch (Exception ex)
@@ -131,9 +132,10 @@ public class PropertyController : ControllerBase
             return BadRequest("Invalid Property Id");
         }
 
-        if (requestModel == null)
+        var validationResult = ValidatePropertyRequestModel(requestModel);
+        if (validationResult != null)
         {
-            return BadRequest("Request model cannot be null");
+            return validationResult;
         }
 
         try
@@ -184,14 +186,6 @@ public class PropertyController : ControllerBase
         {
             var result = await _blProperties.DeleteProperty(propertyId);
             return Ok(result);
-            //if (result)
-            //{
-            //    return NoContent();
-            //}
-            //else
-            //{
-            //    return NotFound("Property not found");
-            //}
         }
         catch (Exception ex)
         {
@@ -199,8 +193,39 @@ public class PropertyController : ControllerBase
         }
     }
 
-    private static bool IsValidPropertyStatus(string status, out PropertyStatus parsedStatus)
+    private IActionResult ValidatePropertyRequestModel(PropertyRequestModel requestModel)
     {
-        return Enum.TryParse(status, out parsedStatus) && Enum.IsDefined(typeof(PropertyStatus), parsedStatus);
+        if (requestModel == null)
+        {
+            return BadRequest("Request model cannot be null");
+        }
+
+        if (!IsValidPropertyType(requestModel.PropertyType))
+        {
+            return BadRequest($"Invalid Type; Property Type should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyType)))}");
+        }
+
+        if (!IsValidPropertyAvailiableType(requestModel.AvailiablityType))
+        {
+            return BadRequest($"Invalid Availability Type; Property Availability Type should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyAvailiableType)))}");
+        }
+
+        return null;
+    }
+
+
+    private static bool IsValidPropertyStatus(string status)
+    {
+        return Enum.TryParse< PropertyStatus>(status, out var parsedStatus) && Enum.IsDefined(typeof(PropertyStatus), parsedStatus);
+    }
+
+    private static bool IsValidPropertyType(string propertyType)
+    {
+        return Enum.TryParse<PropertyType>(propertyType, out var parsedPropertyType) && Enum.IsDefined(typeof(PropertyType), parsedPropertyType);
+    }
+
+    private static bool IsValidPropertyAvailiableType(string propertyAvailiableType)
+    {
+        return Enum.TryParse<PropertyAvailiableType>(propertyAvailiableType, out var paresedPropertyAvailiableType) && Enum.IsDefined(typeof(PropertyAvailiableType), paresedPropertyAvailiableType);
     }
 }
