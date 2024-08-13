@@ -185,3 +185,27 @@ Scaffold-DbContext "Server=.;Database=AdminPortal;User ID=sa; Password=sa@123;In
 ### CI
 
 GitHub Actions
+
+https://stackoverflow.com/questions/30346907/how-to-remove-webdav-module-from-iis
+https://learn.microsoft.com/en-us/answers/questions/856808/iis-net-6-aspnetcorev2-405-method-not-allowed
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <system.webServer>
+        <security>
+            <requestFiltering>
+                <verbs>
+                    <add verb="GET" allowed="true" />
+                    <add verb="POST" allowed="true" />
+                    <add verb="PUT" allowed="true" />
+                    <add verb="PATCH" allowed="true" />
+                    <add verb="DELETE" allowed="true" />
+                </verbs>
+            </requestFiltering>
+        </security>
+		<modules runAllManagedModulesForAllRequests="true">
+		  <remove name="WebDAVModule" />
+		</modules>
+    </system.webServer>
+</configuration>
+```

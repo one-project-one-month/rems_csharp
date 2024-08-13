@@ -124,7 +124,7 @@ public class PropertyController : ControllerBase
         }
     }
 
-    [HttpPut("{propertyId}")]
+    [HttpPut("Update/{propertyId}")]
     public async Task<IActionResult> UpdateProperty(int propertyId, [FromBody] PropertyRequestModel requestModel)
     {
         if (propertyId < 1)
