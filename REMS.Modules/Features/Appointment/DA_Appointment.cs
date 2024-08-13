@@ -184,7 +184,7 @@ namespace REMS.Modules.Features.Appointment
                                        AgentName = _age.AgencyName,
                                        ClientName = _cli.FirstName + " " + _cli.LastName,
                                        AppointmentDate = _app.AppointmentDate.ToString("yyyy-MM-dd"),
-                                       AppointmentTime = _app.AppointmentTime.ToString("HH:mm:ss"),
+                                       AppointmentTime = _app.AppointmentTime.ToString(),
                                        Status = _app.Status,
                                        Note = _app.Notes,
                                        Address = _pro.Address,
