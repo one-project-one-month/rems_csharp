@@ -1,4 +1,5 @@
 ﻿using Azure;
+using REMS.Database.AppDbContextModels;
 using REMS.Models.Appointment;
 using System;
 using System.Collections.Generic;
@@ -77,45 +78,55 @@ namespace REMS.Modules.Features.Appointment
             return response;
         }
 
-        public async Task<Result<AppointmentListResponseModel>> GetAppointmentByPropertyIdAsycn(int id, int pageNo, int pageSize)
+        public async Task<Result<AppointmentDetailList>> GetAppointmentByPropertyIdAsycn(int propertyId, int pageNo, int pageSize)
         {
-            Result<AppointmentListResponseModel> response = null;
+            Result<AppointmentDetailList> response = null;
             try
             {
-                var query = _db.Appointments
-                                .AsNoTracking()
-                                .Where(x => x.PropertyId == id)
-                                .Select(n => new AppointmentModel
-                                {
-                                    AppointmentId = n.AppointmentId,
-                                    ClientId = n.ClientId,
-                                    PropertyId = n.PropertyId,
-                                    AppointmentDate = n.AppointmentDate,
-                                    AppointmentTime = n.AppointmentTime.ToString(),
-                                    Status = n.Status,
-                                    Notes = n.Notes
-                                });
-                var appointmentList = await query.Pagination(pageNo, pageSize).ToListAsync();
-                if (appointmentList is null || appointmentList.Count == 0)
+                var query = await (from _app in _db.Appointments
+                                   join _cli in _db.Clients on _app.ClientId equals _cli.ClientId
+                                   join _pro in _db.Properties on _app.PropertyId equals _pro.PropertyId
+                                   join _age in _db.Agents on _pro.AgentId equals _age.AgentId
+                                   where _app.ClientId == propertyId
+                                   select new AppointmentDetail
+                                   {
+                                       AgentName = _age.AgencyName,
+                                       ClientName = _cli.FirstName + " " + _cli.LastName,
+                                       AppointmentDate = _app.AppointmentDate.ToString("yyyy-MM-dd"),
+                                       AppointmentTime = _app.AppointmentTime.ToString(),
+                                       Status = _app.Status,
+                                       Note = _app.Notes,
+                                       Address = _pro.Address,
+                                       City = _pro.City,
+                                       State = _pro.State,
+                                       Price = _pro.Price,
+                                       Size = _pro.Size,
+                                       NumberOfBedrooms = _pro.NumberOfBedrooms,
+                                       NumberOfBathrooms = _pro.NumberOfBathrooms,
+                                   }).ToListAsync();
+                var appointmentList = query
+                                   .Skip((pageNo - 1) * pageSize)
+                                   .Take(pageSize).ToList();
+                if (appointmentList is null || appointmentList.Count < 0)
                 {
-                    return Result<AppointmentListResponseModel>.Error("No Data Found.");
+                    return Result<AppointmentDetailList>.Error("No Data Found.");
                 }
-                int totalCount = await query.CountAsync();
+                int totalCount = query.Count();
                 int pageCount = totalCount / pageSize;
                 if (totalCount % pageSize != 0)
                 {
                     pageCount++;
                 }
-                var appointmentResponse = new AppointmentListResponseModel
+                var appointmentResponse = new AppointmentDetailList
                 {
                     pageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount),
-                    lstAppointment = appointmentList
+                    appointmentDetails = appointmentList
                 };
-                response = Result<AppointmentListResponseModel>.Success(appointmentResponse);
+                response = Result<AppointmentDetailList>.Success(appointmentResponse);
             }
             catch (Exception ex)
             {
-                response = Result<AppointmentListResponseModel>.Error(ex);
+                response = Result<AppointmentDetailList>.Error(ex);
             }
             return response;
         }
@@ -210,11 +221,8 @@ namespace REMS.Modules.Features.Appointment
                 }
                 AppointmentDetailList newappdetailIst = new AppointmentDetailList
                 {
-                    TotalCount = totalCount,
-                    PageCount = pageCount,
-                    PageNo = pageNo,
-                    PageSize = pageSize,
-                    appointmentDetails = query
+                    pageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount),
+                    appointmentDetails = appointmentList
                 };
                 model = Result<AppointmentDetailList>.Success(newappdetailIst);
             }

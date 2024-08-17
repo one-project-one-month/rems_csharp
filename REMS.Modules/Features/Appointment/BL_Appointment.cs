@@ -33,7 +33,7 @@ namespace REMS.Modules.Features.Appointment
             return response;
         }
 
-        public async Task<Result<AppointmentListResponseModel>> GetAppointmentByPropertyIdAsycn(int id, int pageNo, int pageSize)
+        public async Task<Result<AppointmentDetailList>> GetAppointmentByPropertyIdAsycn(int id, int pageNo, int pageSize)
         {
             var response = CheckPageNoandPageSize(pageNo, pageSize);
             if (response is not null)
@@ -70,16 +70,16 @@ namespace REMS.Modules.Features.Appointment
             return default;
         }
 
-        private Result<AppointmentListResponseModel> CheckPageNoandPageSize(int pageNo, int pageSize)
+        private Result<AppointmentDetailList> CheckPageNoandPageSize(int pageNo, int pageSize)
         {
             AppointmentListResponseModel response = new AppointmentListResponseModel();
             if (pageNo <= 0)
             {
-                return Result<AppointmentListResponseModel>.Error("PageNo must be positive number");
-            }
+                return Result<AppointmentDetailList>.Error("PageNo must be positive number");
+            }   
             if (pageSize <= 0)
             {
-                return Result<AppointmentListResponseModel>.Error("pageSize must be positive number");
+                return Result<AppointmentDetailList>.Error("pageSize must be positive number");
             }
             return default;
         }

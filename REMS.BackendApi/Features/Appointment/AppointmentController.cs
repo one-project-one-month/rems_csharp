@@ -46,7 +46,7 @@
         }
 
         [HttpGet("{propertyId}/{pageNo}/{pageSize}")]
-        public async Task<IActionResult> GetAppointmentByAgentId(int propertyId, int pageNo, int pageSize)
+        public async Task<IActionResult> GetAppointmentByPropertyIdAsync(int propertyId, int pageNo, int pageSize)
         {
             try
             {

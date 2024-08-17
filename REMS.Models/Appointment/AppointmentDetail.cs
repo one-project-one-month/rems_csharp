@@ -1,4 +1,6 @@
 ﻿
+using REMS.Models.Custom;
+
 namespace REMS.Models.Appointment;
 
 
@@ -21,10 +23,6 @@ public partial class AppointmentDetail
 
 public partial class AppointmentDetailList
 {
-    public int TotalCount { get; set; }
-    public int PageCount { get; set; }
-    public int PageNo { get; set; }
-    public int PageSize { get; set; }
-    public bool IsEndOfPage => PageNo >= PageCount;
+    public PageSettingModel? pageSetting { get; set; }
     public List<AppointmentDetail> appointmentDetails { get; set; }
 }
