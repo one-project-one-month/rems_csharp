@@ -87,7 +87,7 @@ namespace REMS.Modules.Features.Appointment
                                    join _cli in _db.Clients on _app.ClientId equals _cli.ClientId
                                    join _pro in _db.Properties on _app.PropertyId equals _pro.PropertyId
                                    join _age in _db.Agents on _pro.AgentId equals _age.AgentId
-                                   where _app.ClientId == propertyId
+                                   where _app.PropertyId == propertyId
                                    select new AppointmentDetail
                                    {
                                        AgentName = _age.AgencyName,
