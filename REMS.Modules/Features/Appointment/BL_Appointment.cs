@@ -76,7 +76,7 @@ namespace REMS.Modules.Features.Appointment
             if (pageNo <= 0)
             {
                 return Result<AppointmentDetailList>.Error("PageNo must be positive number");
-            }   
+            }
             if (pageSize <= 0)
             {
                 return Result<AppointmentDetailList>.Error("pageSize must be positive number");
