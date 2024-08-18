@@ -1,5 +1,6 @@
 ﻿using Azure;
 using Microsoft.Extensions.Configuration;
+using REMS.Models;
 
 namespace REMS.Modules.Features.Property;
 
@@ -14,21 +15,29 @@ public class DA_Property
         _configuration = configuration;
     }
 
-    public async Task<Result<List<PropertyResponseModel>>> GetProperties()
+    public async Task<Result<List<PropertyResponseModel>>> GetProperties(string? propertyStatus)
     {
         Result<List<PropertyResponseModel>> model = null;
         try
         {
-            var properties = await _db.Properties
-                                            .AsNoTracking()
-                                            .Where(x => x.Status == nameof(PropertyStatus.Approved))
-                                            .Include(x => x.PropertyImages)
-                                            .ToListAsync();
+            var query = _db.Properties
+                        .AsNoTracking()
+                        .Include(x => x.PropertyImages)
+                        .Include(x => x.Reviews)
+                        .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(propertyStatus))
+            {
+                query = query.Where(x => x.Status == propertyStatus);
+            }
+
+            var properties = await query.ToListAsync();
 
             var propertyResponseModels = properties.Select(property => new PropertyResponseModel
             {
                 Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             }).ToList();
 
             model = Result<List<PropertyResponseModel>>.Success(propertyResponseModels);
@@ -42,23 +51,30 @@ public class DA_Property
         }
     }
 
-    public async Task<Result<PropertyListResponseModel>> GetProperties(int pageNo = 1, int pageSize = 10)
+    public async Task<Result<PropertyListResponseModel>> GetProperties(int pageNo = 1, int pageSize = 10, string? propertyStatus = "")
     {
         Result<PropertyListResponseModel> model = null;
         try
         {
-            var properties = await _db.Properties
+            var query = _db.Properties
                                       .AsNoTracking()
-                                      .Where(x => x.Status == nameof(PropertyStatus.Approved))
                                       .Include(x => x.PropertyImages)
+                                      .Include(x => x.Reviews)
                                       .Skip((pageNo - 1) * pageSize)
-                                      .Take(pageSize)
-                                      .ToListAsync();
+                                      .Take(pageSize);
+
+            if (!string.IsNullOrWhiteSpace(propertyStatus))
+            {
+                query = query.Where(x => x.Status == propertyStatus);
+            }
+
+            var properties = await query.ToListAsync();
 
             var propertyResponseModel = properties.Select(property => new PropertyResponseModel
             {
                 Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             }).ToList();
 
             var totalCount = await _db.Properties.CountAsync();
@@ -86,17 +102,25 @@ public class DA_Property
         Result<List<PropertyResponseModel>> model = null;
         try
         {
-            var properties = await _db.Properties
-                                       .AsNoTracking()
-                                       .Where(x => x.AgentId == agentId)
-                                       .Where(x => x.Status == propertyStatus)
-                                       .Include(x => x.PropertyImages)
-                                       .ToListAsync();
+            var query = _db.Properties
+               .AsNoTracking()
+               .Where(x => x.AgentId == agentId);
+
+            if (!string.IsNullOrWhiteSpace(propertyStatus))
+            {
+                query = query.Where(x => x.Status == propertyStatus);
+            }
+
+            query = query.Include(x => x.PropertyImages)
+                         .Include(x => x.Reviews);
+
+            var properties = await query.ToListAsync();
 
             var propertyResponseModels = properties.Select(property => new PropertyResponseModel
             {
                 Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             }).ToList();
 
             model = Result<List<PropertyResponseModel>>.Success(propertyResponseModels);
@@ -110,24 +134,33 @@ public class DA_Property
         }
     }
 
-    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo = 1, int pageSize = 10, string propertyStatus = nameof(PropertyStatus.Approved))
+    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo = 1, int pageSize = 10, string? propertyStatus = "")
     {
         Result<PropertyListResponseModel> model = null;
         try
         {
-            var properties = await _db.Properties
-                                      .AsNoTracking()
-                                      .Where(x => x.AgentId == agentId)
-                                      .Where(x => x.Status == propertyStatus)
-                                      .Include(x => x.PropertyImages)
-                                      .Skip((pageNo - 1) * pageSize)
-                                      .Take(pageSize)
-                                      .ToListAsync();
+            var query = _db.Properties
+                           .AsNoTracking()
+                           .Where(x => x.AgentId == agentId);
+
+            if (!string.IsNullOrWhiteSpace(propertyStatus))
+            {
+                query = query.Where(x => x.Status == propertyStatus);
+            }
+
+            query = query.Include(x => x.PropertyImages)
+                         .Include(x => x.Reviews);
+
+            var properties = await query
+                            .Skip((pageNo - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToListAsync();
 
             var propertyResponseModel = properties.Select(property => new PropertyResponseModel
             {
                 Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             }).ToList();
 
             var totalCount = await _db.Properties.Where(x => x.AgentId == agentId).CountAsync();
@@ -158,13 +191,15 @@ public class DA_Property
             var property = await _db.Properties
                                     .AsNoTracking()
                                     .Include(x => x.PropertyImages)
+                                    .Include(x => x.Reviews)
                                     .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
                                     ?? throw new Exception("Property Not Found");
 
             var propertyResponse = new PropertyResponseModel
             {
                 Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList()
+                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             };
 
             model = Result<PropertyResponseModel>.Success(propertyResponse);
@@ -206,13 +241,15 @@ public class DA_Property
             var createdProperty = await _db.Properties
                                     .AsNoTracking()
                                     .Include(x => x.PropertyImages)
+                                    .Include(x => x.Reviews)
                                     .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
                                     ?? throw new Exception("Property Not Found");
 
             var propertyResponse = new PropertyResponseModel
             {
                 Property = createdProperty.Change(),
-                Images = createdProperty.PropertyImages.Select(x => x.Change()).ToList()
+                Images = createdProperty.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             };
 
             model = Result<PropertyResponseModel>.Success(propertyResponse);
@@ -273,13 +310,15 @@ public class DA_Property
             var updatedProperty = await _db.Properties
                                     .AsNoTracking()
                                     .Include(x => x.PropertyImages)
+                                    .Include(x => x.Reviews)
                                     .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
                                     ?? throw new Exception("Property Not Found");
 
             var responseModel = new PropertyResponseModel
             {
                 Property = updatedProperty.Change(),
-                Images = updatedProperty.PropertyImages.Select(x => x.Change()).ToList()
+                Images = updatedProperty.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             };
             model = Result<PropertyResponseModel>.Success(responseModel);
             return model;
@@ -316,13 +355,15 @@ public class DA_Property
             var updatedProperty = await _db.Properties
                                     .AsNoTracking()
                                     .Include(x => x.PropertyImages)
+                                    .Include(x => x.Reviews)
                                     .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
                                     ?? throw new Exception("Property Not Found");
 
             var responseModel = new PropertyResponseModel
             {
                 Property = updatedProperty.Change(),
-                Images = updatedProperty.PropertyImages.Select(x => x.Change()).ToList()
+                Images = updatedProperty.PropertyImages.Select(x => x.Change()).ToList(),
+                Reviews = property.Reviews.Select(x => x.Change()).ToList()
             };
             model = Result<PropertyResponseModel>.Success(responseModel);
             return model;

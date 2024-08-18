@@ -46,7 +46,7 @@
         }
 
         [HttpGet("{propertyId}/{pageNo}/{pageSize}")]
-        public async Task<IActionResult> GetAppointmentByAgentId(int propertyId, int pageNo, int pageSize)
+        public async Task<IActionResult> GetAppointmentByPropertyIdAsync(int propertyId, int pageNo, int pageSize)
         {
             try
             {
@@ -74,6 +74,22 @@
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
+        }
+
+        [HttpGet("GetAppointmentByClientId/{clientId}/{pageNo}/{pageSize}", Name = "GetAppointmentByClientId")]
+        public async Task<IActionResult> GetAppointmentByClientId(int clientId, int pageNo, int pageSize)
+        {
+            try
+            {
+                var response = await _blAppointment.GetAppointmentByClientId(clientId, pageNo, pageSize);
+                if (response.IsError)
+                    return BadRequest(response);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
             }
         }
     }

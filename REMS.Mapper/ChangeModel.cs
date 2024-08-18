@@ -79,9 +79,9 @@ public static class ChangeModel
         return client;
     }
 
-    public static ClientResponseModel Change(this Client dataModel, User user)
+    public static ClientModel Change(this Client dataModel, User user)
     {
-        var clientResponseModel = new ClientResponseModel
+        var clientResponseModel = new ClientModel
         {
             ClientId = dataModel.ClientId,
             UserId = dataModel.UserId,
@@ -214,6 +214,7 @@ public static class ChangeModel
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
             Comments = dataModel.Comments,
+            DateCreated = dataModel.DateCreated,
         };
 
         return reviewModel;

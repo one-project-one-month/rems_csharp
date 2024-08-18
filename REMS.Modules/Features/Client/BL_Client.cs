@@ -29,19 +29,19 @@ public class BL_Client
         return response;
     }
 
-    public async Task<Result<ClientResponseModel>> GetClientById(int id)
+    public async Task<Result<ClientModel>> GetClientById(int id)
     {
         var responseModel = await _daClient.GetClientById(id);
         return responseModel;
     }
 
-    public async Task<Result<ClientResponseModel>> CreateClient(ClientRequestModel requestModel)
+    public async Task<Result<ClientModel>> CreateClient(ClientRequestModel requestModel)
     {
         var response = await _daClient.CreateClient(requestModel);
         return response;
     }
 
-    public async Task<Result<ClientResponseModel>> UpdateClient(int id, ClientRequestModel requestModel)
+    public async Task<Result<ClientModel>> UpdateClient(int id, ClientRequestModel requestModel)
     {
         if (id <= 0) throw new Exception("id is null");
         var response = await _daClient.UpdateClient(id, requestModel);
