@@ -12,8 +12,6 @@ namespace REMS.Models.Appointment
     public class AppointmentResponseModel
     {
         public AppointmentModel? Appointment { get; set; }
-        public ClientModel? Client { get; set; }
-        public AgentDto? Agent { get; set; }
 
     }
 }
