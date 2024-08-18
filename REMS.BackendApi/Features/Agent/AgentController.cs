@@ -65,14 +65,6 @@ public class AgentController : ControllerBase
         }
     }
 
-    [HttpPost("LoginAgent", Name = "LoginAgent")]
-    public async Task<IActionResult> LoginAgent(AgentLoginRequestModel agentLoginInfo)
-    {
-        Result<string> res = await _blAgent.LoginAgentAsync(agentLoginInfo);
-
-        return Ok(res);
-    }
-
     [HttpGet("SearchUser/{id}", Name = "SearchUser")]
     public async Task<IActionResult> SearchUser(int id)
     {
@@ -93,6 +85,14 @@ public class AgentController : ControllerBase
     public async Task<IActionResult> SearchAgentByNameAndLocation(SearchAgentRequestModel _searchAgentReqeustModel)
     {
         Result<AgentListResponseModel> agentList = await _blAgent.SearchAgentByNameAndLocationAsync(_searchAgentReqeustModel);
+
+        return Ok(agentList);
+    }
+
+    [HttpGet("AgentAll", Name = "AgentAll")]
+    public async Task<IActionResult> AgentAll()
+    {
+        Result<List<AgentDto>> agentList = await _blAgent.AgentAll();
 
         return Ok(agentList);
     }

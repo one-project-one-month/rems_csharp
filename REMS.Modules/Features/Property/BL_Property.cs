@@ -9,24 +9,24 @@ public class BL_Property
         _daProperty = daProperty;
     }
 
-    public async Task<Result<List<PropertyResponseModel>>> GetProperties()
+    public async Task<Result<List<PropertyResponseModel>>> GetProperties(string? propertyStatus)
     {
-        var response = await _daProperty.GetProperties();
+        var response = await _daProperty.GetProperties(propertyStatus);
         return response;
     }
 
-    public async Task<Result<PropertyListResponseModel>> GetProperties(int pageNo, int pageSize)
+    public async Task<Result<PropertyListResponseModel>> GetProperties(int pageNo, int pageSize, string? propertyStatus)
     {
         if (pageNo < 1 || pageSize < 1)
         {
             throw new Exception("PageNo or PageSize Cannot be less than 1");
         }
 
-        var response = await _daProperty.GetProperties(pageNo, pageSize);
+        var response = await _daProperty.GetProperties(pageNo, pageSize, propertyStatus);
         return response;
     }
 
-    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId, string propertyStatus)
+    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId, string? propertyStatus)
     {
         if (agentId < 1)
         {

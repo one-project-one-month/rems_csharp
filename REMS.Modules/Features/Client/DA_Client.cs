@@ -30,7 +30,7 @@ public class DA_Client
 
             var clientListResponse = new ClientListResponseModel
             {
-                DataLst = clientResponseModel,
+                DataLst = clientResponseModel
             };
 
             model = Result<ClientListResponseModel>.Success(clientListResponse);
@@ -79,9 +79,9 @@ public class DA_Client
         return model;
     }
 
-    public async Task<Result<ClientResponseModel>> GetClientById(int id)
+    public async Task<Result<ClientModel>> GetClientById(int id)
     {
-        Result<ClientResponseModel> model = null;
+        Result<ClientModel> model = null;
         try
         {
             var client = await _db
@@ -92,23 +92,23 @@ public class DA_Client
 
             if (client is null)
             {
-                return model = Result<ClientResponseModel>.Error("Client not found.");
+                return model = Result<ClientModel>.Error("Client not found.");
             }
 
             var responseModel = client.Change(client.User);
 
-            model = Result<ClientResponseModel>.Success(responseModel);
+            model = Result<ClientModel>.Success(responseModel);
         }
         catch (Exception ex)
         {
-            model = Result<ClientResponseModel>.Error(ex);
+            model = Result<ClientModel>.Error(ex);
         }
         return model;
     }
 
-    public async Task<Result<ClientResponseModel>> CreateClient(ClientRequestModel requestModel)
+    public async Task<Result<ClientModel>> CreateClient(ClientRequestModel requestModel)
     {
-        Result<ClientResponseModel> model = null;
+        Result<ClientModel> model = null;
         try
         {
             if (requestModel == null)
@@ -118,7 +118,7 @@ public class DA_Client
 
             if (CheckEmailDuplicate(requestModel.Email))
             {
-                model = Result<ClientResponseModel>.Error("Client create failed. Email already exist");
+                model = Result<ClientModel>.Error("Client create failed. Email already exist");
                 goto result;
             }
 
@@ -126,7 +126,7 @@ public class DA_Client
             int result = await _db.SaveChangesAsync();
             if (result < 0)
             {
-                model = Result<ClientResponseModel>.Error("Client create failed.");
+                model = Result<ClientModel>.Error("Client create failed.");
                 goto result;
             }
 
@@ -145,20 +145,20 @@ public class DA_Client
             var responseModel = client.Change(user);
 
             model = addClient > 0
-                ? Result<ClientResponseModel>.Success(responseModel)
-                : Result<ClientResponseModel>.Error("Client create failed.");
+                ? Result<ClientModel>.Success(responseModel)
+                : Result<ClientModel>.Error("Client create failed.");
         }
         catch (Exception ex)
         {
-            model = Result<ClientResponseModel>.Error(ex);
+            model = Result<ClientModel>.Error(ex);
         }
     result:
         return model;
     }
 
-    public async Task<Result<ClientResponseModel>> UpdateClient(int id, ClientRequestModel requestModel)
+    public async Task<Result<ClientModel>> UpdateClient(int id, ClientRequestModel requestModel)
     {
-        Result<ClientResponseModel> model = null;
+        Result<ClientModel> model = null;
         try
         {
             var client = await _db.Clients
@@ -167,7 +167,7 @@ public class DA_Client
 
             if (client is null)
             {
-                return model = Result<ClientResponseModel>.Error("Client Not Found");
+                return model = Result<ClientModel>.Error("Client Not Found");
                 goto result;
             }
 
@@ -177,7 +177,7 @@ public class DA_Client
 
             if (user is null)
             {
-                return model = Result<ClientResponseModel>.Error("User Not Found");
+                return model = Result<ClientModel>.Error("User Not Found");
                 goto result;
             }
 
@@ -217,11 +217,11 @@ public class DA_Client
 
             var clientResponseModel = client.Change(user);
 
-            model = Result<ClientResponseModel>.Success(clientResponseModel);
+            model = Result<ClientModel>.Success(clientResponseModel);
         }
         catch (Exception ex)
         {
-            model = Result<ClientResponseModel>.Error(ex);
+            model = Result<ClientModel>.Error(ex);
         }
     result:
         return model;

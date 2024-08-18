@@ -40,4 +40,9 @@ public class Result<T>
             IsSuccess = false,
         };
     }
+
+    public static implicit operator Result<T>(Result<string>? v)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -32,10 +32,6 @@ public class BL_Agent
         return await _daAgent.SearchAgentByUserIdAsync(id);
     }
 
-    public async Task<Result<string>> LoginAgentAsync(AgentLoginRequestModel agentLoginInfo)
-    {
-        return await _daAgent.LoginAgentAsync(agentLoginInfo);
-    }
 
     public async Task<Result<AgentListResponseModel>> SearchAgentByNameAsync(string name, int pageNumber, int pageSize)
     {
@@ -63,5 +59,10 @@ public class BL_Agent
             model = await _daAgent.SearchAgentByNameAsync(_searchAgent.AgentName ?? "", _searchAgent.PageNumber, _searchAgent.PageSize);
         }
         return model;
+    }
+
+    public async Task<Result<List<AgentDto>>> AgentAll()
+    {
+        return await _daAgent.AgentAllAsync();
     }
 }
