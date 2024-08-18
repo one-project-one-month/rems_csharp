@@ -88,4 +88,12 @@ public class AgentController : ControllerBase
 
         return Ok(agentList);
     }
+
+    [HttpGet("AgentAll", Name = "AgentAll")]
+    public async Task<IActionResult> AgentAll()
+    {
+        Result<List<AgentDto>> agentList = await _blAgent.AgentAll();
+
+        return Ok(agentList);
+    }
 }

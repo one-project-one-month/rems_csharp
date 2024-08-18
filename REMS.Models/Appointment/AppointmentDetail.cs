@@ -6,10 +6,12 @@ namespace REMS.Models.Appointment;
 
 public partial class AppointmentDetail
 {
+    public int? AppointmentId { get; set; }
     public string? AgentName { get; set; }
     public string? ClientName { get; set; }
     public string? AppointmentDate { get; set; }
     public string? AppointmentTime { get; set; }
+    public string? AgentPhoneNumber { get; set; }
     public string? Status { get; set; }
     public string? Note { get; set; }
     public string? Address { get; set; }

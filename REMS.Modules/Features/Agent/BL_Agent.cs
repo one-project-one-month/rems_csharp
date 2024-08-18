@@ -60,4 +60,9 @@ public class BL_Agent
         }
         return model;
     }
+
+    public async Task<Result<List<AgentDto>>> AgentAll()
+    {
+        return await _daAgent.AgentAllAsync();
+    }
 }

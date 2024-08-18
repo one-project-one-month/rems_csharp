@@ -304,4 +304,29 @@ public class DA_Agent
         return model;
 
     }
+
+
+    public async Task<Result<List<AgentDto>>> AgentAllAsync()
+    {
+        Result<List<AgentDto>> model = null;
+        try
+        {
+            List<AgentDto> agents = await _db.Agents
+                .Select(ag => new AgentDto
+                {
+                    AgentId = ag.AgentId,
+                    UserId = ag.UserId,
+                    AgencyName = ag.AgencyName,
+                    LicenseNumber = ag.LicenseNumber,
+                    Address = ag.Address
+                })
+                .ToListAsync();
+            model = Result<List<AgentDto>>.Success(agents);
+        }
+        catch (Exception ex)
+        {
+            model = Result<List<AgentDto>>.Error(ex);
+        }
+        return model;
+    }
 }
