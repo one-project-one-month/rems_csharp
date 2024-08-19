@@ -14,74 +14,55 @@ public class PropertyController : ControllerBase
         _blProperties = blProperties;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetProperties(string? propertyStatus = "")
-    {
-        try
-        {
-            if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus))
-            {
-                return BadRequest($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
-            }
-
-            var response = await _blProperties.GetProperties(propertyStatus);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-
+    
     [HttpGet("{pageNo}/{pageSize}")]
-    public async Task<IActionResult> GetProperties(int pageNo, int pageSize, string? propertyStatus = "")
+    public async Task<IActionResult> GetProperties(
+                                                int? agentId, string? address, string? city,
+                                                string? state, string? zipCode,
+                                                string? propertyType, decimal? minPrice,
+                                                decimal? maxPrice, decimal? size,
+                                                int? numberOfBedrooms, int? numberOfBathrooms,
+                                                int? yearBuilt, string? availabilityType,
+                                                int? minRentalPeriod, string? approvedBy,
+                                                DateTime? addDate, DateTime? editDate,
+                                                string? propertyStatus,
+                                                int pageNo =1, int pageSize=10
+                                                )
     {
         try
         {
+            
             if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus))
             {
-                return BadRequest($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
+                return BadRequest($"Invalid Status; Status should be one of the following: " +
+                    $"{string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
             }
-
-            var response = await _blProperties.GetProperties(pageNo, pageSize, propertyStatus);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-
-    [HttpGet("agent/{agentId}")]
-    public async Task<IActionResult> GetPropertiesByAgentId(int agentId, [FromQuery] string propertyStatus = "")
-    {
-        try
-        {
-            if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus))
+            if (!string.IsNullOrWhiteSpace(propertyType) && !IsValidPropertyType(propertyType))
             {
-                return BadRequest($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
+                return BadRequest($"Invalid Type; Property Type should be one of the following: " +
+                    $"{string.Join(", ", Enum.GetNames(typeof(PropertyType)))}");
             }
 
-            var response = await _blProperties.GetPropertiesByAgentId(agentId, propertyStatus);
-            return Ok(response);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
-    }
-
-    [HttpGet("agent/{agentId}/{pageNo}/{pageSize}")]
-    public async Task<IActionResult> GetPropertiesByAgentId(int agentId, int pageNo, int pageSize, [FromQuery] string propertyStatus = "")
-    {
-        try
-        {
-            if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus))
+            if (!string.IsNullOrWhiteSpace(availabilityType) && !IsValidPropertyAvailiableType(availabilityType))
             {
-                return BadRequest($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
+                return BadRequest($"Invalid Availability Type; Property Availability Type should be one of the following" +
+                    $": {string.Join(", ", Enum.GetNames(typeof(PropertyAvailiableType)))}");
             }
 
-            var response = await _blProperties.GetPropertiesByAgentId(agentId, pageNo, pageSize, propertyStatus);
+            if (pageNo < 1 || pageSize < 1)
+            {
+                return BadRequest("PageNo or PageSize cannot be less than 1");
+            }
+
+            var response = await _blProperties.GetProperties(agentId, address, city, state,
+                                                             zipCode, propertyType,
+                                                             minPrice, maxPrice,size,
+                                                             numberOfBedrooms, numberOfBathrooms,
+                                                             yearBuilt, availabilityType,
+                                                             minRentalPeriod, approvedBy,
+                                                             addDate, editDate,
+                                                             propertyStatus, pageNo, pageSize);
+
             return Ok(response);
         }
         catch (Exception ex)
@@ -212,7 +193,6 @@ public class PropertyController : ControllerBase
 
         return null;
     }
-
 
     private static bool IsValidPropertyStatus(string status)
     {

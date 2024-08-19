@@ -15,160 +15,47 @@ public class DA_Property
         _configuration = configuration;
     }
 
-    public async Task<Result<List<PropertyResponseModel>>> GetProperties(string? propertyStatus)
-    {
-        Result<List<PropertyResponseModel>> model = null;
-        try
-        {
-            var query = _db.Properties
-                        .AsNoTracking()
-                        .Include(x => x.PropertyImages)
-                        .Include(x => x.Reviews)
-                        .AsQueryable();
-
-            if (!string.IsNullOrWhiteSpace(propertyStatus))
-            {
-                query = query.Where(x => x.Status == propertyStatus);
-            }
-
-            var properties = await query.ToListAsync();
-
-            var propertyResponseModels = properties.Select(property => new PropertyResponseModel
-            {
-                Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
-                Reviews = property.Reviews.Select(x => x.Change()).ToList()
-            }).ToList();
-
-            model = Result<List<PropertyResponseModel>>.Success(propertyResponseModels);
-
-            return model;
-        }
-        catch (Exception ex)
-        {
-            model = Result<List<PropertyResponseModel>>.Error(ex);
-            return model;
-        }
-    }
-
-    public async Task<Result<PropertyListResponseModel>> GetProperties(int pageNo = 1, int pageSize = 10, string? propertyStatus = "")
+    public async Task<Result<PropertyListResponseModel>> GetProperties(
+        int? agentId, string? address, string? city, string? state, string? zipCode,
+        string? propertyType, decimal? minPrice,decimal? maxPrice,
+        decimal? size, int? numberOfBedrooms, int? numberOfBathrooms,
+        int? yearBuilt, string? availabilityType, int? minRentalPeriod,
+        string? approvedBy, DateTime? addDate, DateTime? editDate,
+        string? propertyStatus, int pageNo = 1, int pageSize = 10)
     {
         Result<PropertyListResponseModel> model = null;
         try
         {
-            var query = _db.Properties
-                                      .AsNoTracking()
-                                      .Include(x => x.PropertyImages)
-                                      .Include(x => x.Reviews)
-                                      .Skip((pageNo - 1) * pageSize)
-                                      .Take(pageSize);
+            var query = _db.Properties.AsNoTracking().AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(propertyStatus))
-            {
-                query = query.Where(x => x.Status == propertyStatus);
-            }
+            query = ApplyFilters(query, agentId, address, city,
+                                 state, zipCode, propertyType, 
+                                 minPrice, maxPrice, size,
+                                 numberOfBedrooms, numberOfBathrooms,
+                                 yearBuilt, availabilityType,
+                                 minRentalPeriod, approvedBy,
+                                 addDate, editDate, propertyStatus);
 
-            var properties = await query.ToListAsync();
-
-            var propertyResponseModel = properties.Select(property => new PropertyResponseModel
-            {
-                Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
-                Reviews = property.Reviews.Select(x => x.Change()).ToList()
-            }).ToList();
-
-            var totalCount = await _db.Properties.CountAsync();
-            var pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
-
-            var propertyListResponse = new PropertyListResponseModel
-            {
-                Properties = propertyResponseModel,
-                PageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount)
-            };
-
-            model = Result<PropertyListResponseModel>.Success(propertyListResponse);
-
-            return model;
-        }
-        catch (Exception ex)
-        {
-            model = Result<PropertyListResponseModel>.Error(ex);
-            return model;
-        }
-    }
-
-    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId, string propertyStatus)
-    {
-        Result<List<PropertyResponseModel>> model = null;
-        try
-        {
-            var query = _db.Properties
-               .AsNoTracking()
-               .Where(x => x.AgentId == agentId);
-
-            if (!string.IsNullOrWhiteSpace(propertyStatus))
-            {
-                query = query.Where(x => x.Status == propertyStatus);
-            }
-
-            query = query.Include(x => x.PropertyImages)
-                         .Include(x => x.Reviews);
-
-            var properties = await query.ToListAsync();
-
-            var propertyResponseModels = properties.Select(property => new PropertyResponseModel
-            {
-                Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
-                Reviews = property.Reviews.Select(x => x.Change()).ToList()
-            }).ToList();
-
-            model = Result<List<PropertyResponseModel>>.Success(propertyResponseModels);
-
-            return model;
-        }
-        catch (Exception ex)
-        {
-            model = Result<List<PropertyResponseModel>>.Error(ex);
-            return model;
-        }
-    }
-
-    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo = 1, int pageSize = 10, string? propertyStatus = "")
-    {
-        Result<PropertyListResponseModel> model = null;
-        try
-        {
-            var query = _db.Properties
-                           .AsNoTracking()
-                           .Where(x => x.AgentId == agentId);
-
-            if (!string.IsNullOrWhiteSpace(propertyStatus))
-            {
-                query = query.Where(x => x.Status == propertyStatus);
-            }
-
-            query = query.Include(x => x.PropertyImages)
-                         .Include(x => x.Reviews);
+            var totalCount = await query.CountAsync();
 
             var properties = await query
-                            .Skip((pageNo - 1) * pageSize)
-                            .Take(pageSize)
-                            .ToListAsync();
+                .Include(x => x.PropertyImages)
+                .Include(x => x.Reviews)
+                .Skip((pageNo - 1) * pageSize)
+                .Take(pageSize)
+                .Select(property => new PropertyResponseModel
+                {
+                    Property = property.Change(),
+                    Images = property.PropertyImages.Select(x => x.Change()).ToList(),
+                    Reviews = property.Reviews.Select(x => x.Change()).ToList()
+                })
+                .ToListAsync();
 
-            var propertyResponseModel = properties.Select(property => new PropertyResponseModel
-            {
-                Property = property.Change(),
-                Images = property.PropertyImages.Select(x => x.Change()).ToList(),
-                Reviews = property.Reviews.Select(x => x.Change()).ToList()
-            }).ToList();
-
-            var totalCount = await _db.Properties.Where(x => x.AgentId == agentId).CountAsync();
             var pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
 
             var propertyListResponse = new PropertyListResponseModel
             {
-                Properties = propertyResponseModel,
+                Properties = properties,
                 PageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount)
             };
 
@@ -429,5 +316,108 @@ public class DA_Property
         {
             File.Delete(photoPath);
         }
+    }
+
+    private static IQueryable<Database.AppDbContextModels.Property> ApplyFilters(
+        IQueryable<Database.AppDbContextModels.Property> query,
+        int? agentId, string? address, string? city,
+        string? state, string? zipCode, string? propertyType,
+        decimal? minPrice, decimal? maxPrice,
+        decimal? size, int? numberOfBedrooms,
+        int? numberOfBathrooms, int? yearBuilt, string? availabilityType, 
+        int? minRentalPeriod, string? approvedBy, DateTime? addDate,
+        DateTime? editDate, string? propertyStatus)
+    {
+        if (agentId.HasValue)
+        {
+            query = query.Where(x => x.AgentId == agentId);
+        }
+
+        if (!string.IsNullOrEmpty(address))
+        {
+            query = query.Where(x => x.Address.Contains(address));
+        }
+
+        if (!string.IsNullOrEmpty(city))
+        {
+            query = query.Where(x => x.City.Contains(city));
+        }
+
+        if (!string.IsNullOrEmpty(state))
+        {
+            query = query.Where(x => x.State.Contains(state));
+        }
+
+        if (!string.IsNullOrEmpty(zipCode))
+        {
+            query = query.Where(x => x.ZipCode.Contains(zipCode));
+        }
+
+        if (!string.IsNullOrEmpty(propertyType))
+        {
+            query = query.Where(x => x.PropertyType.Contains(propertyType));
+        }
+
+        if (minPrice.HasValue)
+        {
+            query = query.Where(x => x.Price >= minPrice.Value);
+        }
+
+        if (maxPrice.HasValue)
+        {
+            query = query.Where(x => x.Price <= maxPrice.Value);
+        }
+
+        if (size.HasValue)
+        {
+            query = query.Where(x => x.Size == size.Value);
+        }
+
+        if (numberOfBedrooms.HasValue)
+        {
+            query = query.Where(x => x.NumberOfBedrooms == numberOfBedrooms.Value);
+        }
+
+        if (numberOfBathrooms.HasValue)
+        {
+            query = query.Where(x => x.NumberOfBathrooms == numberOfBathrooms.Value);
+        }
+
+        if (yearBuilt.HasValue)
+        {
+            query = query.Where(x => x.YearBuilt == yearBuilt.Value);
+        }
+
+        if (!string.IsNullOrEmpty(availabilityType))
+        {
+            query = query.Where(x => x.AvailiablityType == availabilityType);
+        }
+
+        if (minRentalPeriod.HasValue)
+        {
+            query = query.Where(x => x.MinrentalPeriod == minRentalPeriod.Value);
+        }
+
+        if (!string.IsNullOrEmpty(approvedBy))
+        {
+            query = query.Where(x => x.Approvedby.Contains(approvedBy));
+        }
+
+        if (addDate.HasValue)
+        {
+            query = query.Where(x => x.Adddate.HasValue && x.Adddate.Value.Date == addDate.Value.Date);
+        }
+
+        if (editDate.HasValue)
+        {
+            query = query.Where(x => x.Editdate.HasValue && x.Editdate.Value.Date == editDate.Value.Date);
+        }
+
+        if (!string.IsNullOrWhiteSpace(propertyStatus))
+        {
+            query = query.Where(x => x.Status == propertyStatus);
+        }
+
+        return query;
     }
 }
