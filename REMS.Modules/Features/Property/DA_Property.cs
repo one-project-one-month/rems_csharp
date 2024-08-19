@@ -17,7 +17,7 @@ public class DA_Property
 
     public async Task<Result<PropertyListResponseModel>> GetProperties(
         int? agentId, string? address, string? city, string? state, string? zipCode,
-        string? propertyType, decimal? minPrice,decimal? maxPrice,
+        string? propertyType, decimal? minPrice, decimal? maxPrice,
         decimal? size, int? numberOfBedrooms, int? numberOfBathrooms,
         int? yearBuilt, string? availabilityType, int? minRentalPeriod,
         string? approvedBy, DateTime? addDate, DateTime? editDate,
@@ -29,7 +29,7 @@ public class DA_Property
             var query = _db.Properties.AsNoTracking().AsQueryable();
 
             query = ApplyFilters(query, agentId, address, city,
-                                 state, zipCode, propertyType, 
+                                 state, zipCode, propertyType,
                                  minPrice, maxPrice, size,
                                  numberOfBedrooms, numberOfBathrooms,
                                  yearBuilt, availabilityType,
@@ -324,7 +324,7 @@ public class DA_Property
         string? state, string? zipCode, string? propertyType,
         decimal? minPrice, decimal? maxPrice,
         decimal? size, int? numberOfBedrooms,
-        int? numberOfBathrooms, int? yearBuilt, string? availabilityType, 
+        int? numberOfBathrooms, int? yearBuilt, string? availabilityType,
         int? minRentalPeriod, string? approvedBy, DateTime? addDate,
         DateTime? editDate, string? propertyStatus)
     {

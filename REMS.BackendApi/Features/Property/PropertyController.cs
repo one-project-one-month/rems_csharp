@@ -14,7 +14,7 @@ public class PropertyController : ControllerBase
         _blProperties = blProperties;
     }
 
-    
+
     [HttpGet("{pageNo}/{pageSize}")]
     public async Task<IActionResult> GetProperties(
                                                 int? agentId, string? address, string? city,
@@ -26,12 +26,12 @@ public class PropertyController : ControllerBase
                                                 int? minRentalPeriod, string? approvedBy,
                                                 DateTime? addDate, DateTime? editDate,
                                                 string? propertyStatus,
-                                                int pageNo =1, int pageSize=10
+                                                int pageNo = 1, int pageSize = 10
                                                 )
     {
         try
         {
-            
+
             if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus))
             {
                 return BadRequest($"Invalid Status; Status should be one of the following: " +
@@ -56,7 +56,7 @@ public class PropertyController : ControllerBase
 
             var response = await _blProperties.GetProperties(agentId, address, city, state,
                                                              zipCode, propertyType,
-                                                             minPrice, maxPrice,size,
+                                                             minPrice, maxPrice, size,
                                                              numberOfBedrooms, numberOfBathrooms,
                                                              yearBuilt, availabilityType,
                                                              minRentalPeriod, approvedBy,
