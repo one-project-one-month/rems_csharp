@@ -1,4 +1,6 @@
-﻿using REMS.Mapper;
+﻿using Microsoft.IdentityModel.Tokens;
+using REMS.Database.AppDbContextModels;
+using REMS.Mapper;
 using REMS.Models.Appointment;
 using System;
 using System.Collections.Generic;
@@ -103,19 +105,23 @@ namespace REMS.Modules.Features.Transaction
             }
         }
 
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAsync(int pageNumber, int pageSize, int PropertyId)
+        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAsync(int PropertyId, int pageNo, int pageSize)
         {
             Result<TransactionListResponseModel> model = null;
             try
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = await _db.Transactions.AsNoTracking()
-                                            .Include(x => x.Client)
-                                            .Include(x => x.Property)
-                                            .Where(x => x.PropertyId == PropertyId)
-                                            .Skip((pageNumber - 1) * pageSize)
-                                            .Take(pageSize)
-                                            .ToListAsync();
+                var Query = _db.Transactions.AsQueryable();
+
+                if (PropertyId != 0)
+                    Query = Query.Where(x => x.PropertyId == PropertyId);
+
+                var transactionList = await Query.Include(x => x.Client)
+                                           .Include(x => x.Property)
+                                           .Skip((pageNo - 1) * pageSize)
+                                           .Take(pageSize)
+                                           .ToListAsync();
+
                 if (transactionList is null)
                 {
                     model = Result<TransactionListResponseModel>.Error("This property doesn't have in the transaction!");
@@ -127,12 +133,12 @@ namespace REMS.Modules.Features.Transaction
                 if (pageCount % pageSize > 0)
                     pageCount++;
 
-                transactionListResponse.pageSetting = new PageSettingModel(pageNumber, pageSize, pageCount, rowCount);
+                transactionListResponse.pageSetting = new PageSettingModel(pageNo, pageSize, pageCount, rowCount);
 
                 var transactionresponseModel = transactionList.Select(Transactions => new TransactionResponseModel
                 {
                     Transaction = Transactions.Change(),
-                    Client = Transactions.Client.Change(_db.Users.Where(x => x.UserId == Transactions.Client.UserId).FirstOrDefault()),
+                    Client = Transactions.Client.Change(_db.Users.FirstOrDefault(x => x.UserId == Transactions.Client.UserId)),
                     Property = Transactions.Property.Change()
 
                 }).ToList();
@@ -148,19 +154,24 @@ namespace REMS.Modules.Features.Transaction
             return model;
         }
 
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndClientIdAsync(int pageNumber, int pageSize, int propertyId, int clientId)
+        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndClientIdAsync(int propertyId, int clientId, int pageNo, int pageSize)
         {
             Result<TransactionListResponseModel> model = null;
             try
             {
+                var Query =  _db.Transactions.AsQueryable();
+                if(propertyId != 0)
+                    Query = Query.Where(x =>x.PropertyId == propertyId);
+                if (clientId != 0)
+                    Query = Query.Where(x => x.ClientId == clientId);
+
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = await _db.Transactions.AsNoTracking()
-                                      .Include(x => x.Client)
-                                      .Include(x => x.Property)
-                                      .Where(x => x.PropertyId == propertyId && x.ClientId == clientId)
-                                      .Skip((pageNumber - 1) * pageSize)
-                                      .Take(pageSize)
-                                      .ToListAsync();
+               
+                var transactionList =await Query.Include(x => x.Client)
+                                           .Include(x => x.Property)
+                                           .Skip((pageNo - 1) * pageSize)
+                                           .Take(pageSize)
+                                           .ToListAsync();
                 if (transactionList is null)
                 {
                     model = Result<TransactionListResponseModel>.Error("Property Not Found!");
@@ -172,11 +183,11 @@ namespace REMS.Modules.Features.Transaction
                 if (pageCount % pageSize > 0)
                     pageCount++;
 
-                transactionListResponse.pageSetting = new PageSettingModel(pageNumber, pageSize, pageCount, rowCount);
+                transactionListResponse.pageSetting = new PageSettingModel(pageNo, pageSize, pageCount, rowCount);
                 var transactionresponseModel = transactionList.Select(Transactions => new TransactionResponseModel
                 {
                     Transaction = Transactions.Change(),
-                    Client = Transactions.Client.Change(_db.Users.Where(x => x.UserId == Transactions.Client.UserId).FirstOrDefault()),
+                    Client = Transactions.Client.Change(_db.Users.FirstOrDefault(x => x.UserId == Transactions.Client.UserId)),
                     Property = Transactions.Property.Change()
 
                 }).ToList();
@@ -192,19 +203,24 @@ namespace REMS.Modules.Features.Transaction
             return model;
         }
 
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByClientIdAsync(int pageNumber, int pageSize, int clientId)
+        public async Task<Result<TransactionListResponseModel>> GetTransactionsByClientIdAsync(int clientId, int pageNo, int pageSize)
         {
             Result<TransactionListResponseModel> model = null;
             try
             {
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-                var transactionList = await _db.Transactions.AsNoTracking()
-                                      .Include(x => x.Client)
-                                      .Include(x => x.Property)
-                                      .Where(x => x.ClientId == clientId)
-                                      .Skip((pageNumber - 1) * pageSize)
-                                      .Take(pageSize)
-                                      .ToListAsync();
+
+                var Query = _db.Transactions.AsQueryable();
+
+                if (clientId != 0)
+                    Query = Query.Where(x => x.ClientId == clientId);
+
+                var transactionList = await Query.Include(x => x.Client)
+                                           .Include(x => x.Property)
+                                           .Skip((pageNo - 1) * pageSize)
+                                           .Take(pageSize)
+                                           .ToListAsync();
+
                 if (transactionList is null)
                 {
                     model = Result<TransactionListResponseModel>.Error("This client doesn't have in the transaction!!");
@@ -216,11 +232,11 @@ namespace REMS.Modules.Features.Transaction
                 if (pageCount % pageSize > 0)
                     pageCount++;
 
-                transactionListResponse.pageSetting = new PageSettingModel(pageNumber, pageSize, pageCount, rowCount);
+                transactionListResponse.pageSetting = new PageSettingModel(pageNo, pageSize, pageCount, rowCount);
                 var transactionresponseModel = transactionList.Select(Transactions => new TransactionResponseModel
                 {
                     Transaction = Transactions.Change(),
-                    Client = Transactions.Client.Change(_db.Users.Where(x => x.UserId == Transactions.Client.UserId).FirstOrDefault()),
+                    Client = Transactions.Client.Change(_db.Users.FirstOrDefault(x => x.UserId == Transactions.Client.UserId)),
                     Property = Transactions.Property.Change()
 
                 }).ToList();
