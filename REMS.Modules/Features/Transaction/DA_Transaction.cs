@@ -159,15 +159,15 @@ namespace REMS.Modules.Features.Transaction
             Result<TransactionListResponseModel> model = null;
             try
             {
-                var Query =  _db.Transactions.AsQueryable();
-                if(propertyId != 0)
-                    Query = Query.Where(x =>x.PropertyId == propertyId);
+                var Query = _db.Transactions.AsQueryable();
+                if (propertyId != 0)
+                    Query = Query.Where(x => x.PropertyId == propertyId);
                 if (clientId != 0)
                     Query = Query.Where(x => x.ClientId == clientId);
 
                 TransactionListResponseModel transactionListResponse = new TransactionListResponseModel();
-               
-                var transactionList =await Query.Include(x => x.Client)
+
+                var transactionList = await Query.Include(x => x.Client)
                                            .Include(x => x.Property)
                                            .Skip((pageNo - 1) * pageSize)
                                            .Take(pageSize)
