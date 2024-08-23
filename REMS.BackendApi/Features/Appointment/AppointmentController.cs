@@ -45,8 +45,8 @@
             }
         }
 
-        [HttpGet("{propertyId}/{pageNo}/{pageSize}")]
-        public async Task<IActionResult> GetAppointmentByPropertyIdAsync(int propertyId, int pageNo, int pageSize)
+        [HttpGet("property/{id}/{pageNo}/{pageSize}")]
+        public async Task<IActionResult> GetAppointmentByPropertyIdAsync(int propertyId, int pageNo = 1, int pageSize = 10)
         {
             try
             {
@@ -77,7 +77,7 @@
             }
         }
 
-        [HttpGet("GetAppointmentByClientId/{clientId}/{pageNo}/{pageSize}", Name = "GetAppointmentByClientId")]
+        [HttpGet("client/{id}/{pageNo}/{pageSize}", Name = "GetAppointmentByClientId")]
         public async Task<IActionResult> GetAppointmentByClientId(int clientId, int pageNo, int pageSize)
         {
             try

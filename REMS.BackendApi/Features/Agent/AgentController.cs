@@ -29,7 +29,7 @@ public class AgentController : ControllerBase
         }
     }
 
-    [HttpDelete("{userId}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteAgent(int userId)
     {
         try
@@ -47,7 +47,7 @@ public class AgentController : ControllerBase
         }
     }
 
-    [HttpPatch("{userId}")]
+    [HttpPatch("{id}")]
     public async Task<IActionResult> UpdateAgent(int userId, AgentRequestModel requestModel)
     {
         try
@@ -65,7 +65,7 @@ public class AgentController : ControllerBase
         }
     }
 
-    [HttpGet("SearchUser/{id}", Name = "SearchUser")]
+    [HttpGet("{id}", Name = "SearchUser")]
     public async Task<IActionResult> SearchUser(int id)
     {
         Result<AgentDto> agentList = await _blAgent.SearchAgentAsync(id);
@@ -73,7 +73,7 @@ public class AgentController : ControllerBase
         return Ok(agentList);
     }
 
-    [HttpGet("SearchUserByName/{name}/{pageNumber}/{pageSize}", Name = "SearchUserByName")]
+    [HttpGet("{name}/{pageNo}/{pageSize}", Name = "SearchUserByName")]
     public async Task<IActionResult> SearchUserByName(string name, int pageNumber, int pageSize)
     {
         Result<AgentListResponseModel> agentList = await _blAgent.SearchAgentByNameAsync(name, pageNumber, pageSize);
@@ -81,7 +81,7 @@ public class AgentController : ControllerBase
         return Ok(agentList);
     }
 
-    [HttpPost("SearchAgentByNameAndLocation", Name = "SearchAgentByNameAndLocation")]
+    [HttpPost("location", Name = "SearchAgentByNameAndLocation")]
     public async Task<IActionResult> SearchAgentByNameAndLocation(SearchAgentRequestModel _searchAgentReqeustModel)
     {
         Result<AgentListResponseModel> agentList = await _blAgent.SearchAgentByNameAndLocationAsync(_searchAgentReqeustModel);
