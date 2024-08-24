@@ -15,7 +15,7 @@ public class ClientController : ControllerBase
     }
 
     [HttpGet("{pageNo}/{pageSize}")]
-    public async Task<IActionResult> GetClients(string? firstName, string? lastName, string? email, string? phone, int pageNo =1, int pageSize = 10)
+    public async Task<IActionResult> GetClients(string? firstName, string? lastName, string? email, string? phone, int pageNo = 1, int pageSize = 10)
     {
         try
         {
@@ -23,7 +23,7 @@ public class ClientController : ControllerBase
             {
                 return BadRequest("PageNo or PageSize cannot be less than 1");
             }
-            var response = await _blClient.GetClients(firstName,lastName,email,phone,pageNo, pageSize);
+            var response = await _blClient.GetClients(firstName, lastName, email, phone, pageNo, pageSize);
             return Ok(response);
         }
         catch (Exception ex)

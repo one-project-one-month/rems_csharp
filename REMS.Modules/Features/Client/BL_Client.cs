@@ -25,7 +25,7 @@ public class BL_Client
             throw new Exception("PageNo or PageSize Cannot be less than 1");
         }
 
-        var response = await _daClient.GetClients(firstName,lastName,email,phone,pageNo, pageSize);
+        var response = await _daClient.GetClients(firstName, lastName, email, phone, pageNo, pageSize);
         return response;
     }
 
