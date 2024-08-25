@@ -89,10 +89,10 @@ public class AgentController : ControllerBase
         return Ok(agentList);
     }
 
-    [HttpGet(Name = "AgentAll")]
-    public async Task<IActionResult> AgentAll()
+    [HttpGet("{pageNumber}/{pageSize}",Name = "AgentAll")]
+    public async Task<IActionResult> AgentAll(int pageNumber, int pageSize)
     {
-        Result<List<AgentDto>> agentList = await _blAgent.AgentAll();
+        Result<AgentListResponseModel> agentList = await _blAgent.AgentAll(pageNumber,pageSize);
 
         return Ok(agentList);
     }

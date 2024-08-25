@@ -306,26 +306,41 @@ public class DA_Agent
     }
 
 
-    public async Task<Result<List<AgentDto>>> AgentAllAsync()
+    public async Task<Result<AgentListResponseModel>> AgentAllAsync(int pageNumber, int pageSize)
     {
-        Result<List<AgentDto>> model = null;
+        Result<AgentListResponseModel> model = null;
         try
         {
-            List<AgentDto> agents = await _db.Agents
-                .Select(ag => new AgentDto
-                {
-                    AgentId = ag.AgentId,
-                    UserId = ag.UserId,
-                    AgencyName = ag.AgencyName,
-                    LicenseNumber = ag.LicenseNumber,
-                    Address = ag.Address
-                })
-                .ToListAsync();
-            model = Result<List<AgentDto>>.Success(agents);
+            List<AgentDto> agents = await (from ag in _db.Agents
+                                           join _user in _db.Users on ag.UserId equals _user.UserId
+                                           select new AgentDto
+                                           {
+                                               AgentId = ag.AgentId,
+                                               UserId = ag.UserId,
+                                               AgencyName = ag.AgencyName,
+                                               LicenseNumber = ag.LicenseNumber,
+                                               Email = _user.Email,
+                                               PhoneNumber = _user.Phone,
+                                               Address = ag.Address,
+                                               Role = "agent",
+                                           }).ToListAsync();
+            int rowCount = _db.Agents.Count();
+            int pageCount = rowCount / pageSize;
+            if (pageCount % pageSize > 0)
+                pageCount++;
+
+            AgentListResponseModel data = new AgentListResponseModel
+            {
+                PageCount = pageCount,
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                AgentList = agents
+            };
+            model = Result<AgentListResponseModel>.Success(data);
         }
         catch (Exception ex)
         {
-            model = Result<List<AgentDto>>.Error(ex);
+            model = Result<AgentListResponseModel>.Error(ex);
         }
         return model;
     }
