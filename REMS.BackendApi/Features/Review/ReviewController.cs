@@ -26,11 +26,11 @@ public class ReviewController : ControllerBase
     }
 
     [HttpGet("{pageNo}/{pageSize}")]
-    public async Task<IActionResult> GetReviews(int pageNo, int pageSize)
+    public async Task<IActionResult> GetReviews(int? propertyId, int pageNo, int pageSize)
     {
         try
         {
-            var response = await _blReview.GetReviews(pageNo, pageSize);
+            var response = await _blReview.GetReviews(propertyId, pageNo, pageSize);
             return Ok(response);
         }
         catch (Exception ex)

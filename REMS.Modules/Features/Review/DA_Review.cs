@@ -37,19 +37,26 @@ public class DA_Review
         return model;
     }
 
-    public async Task<Result<ReviewListResponseModel>> GetReviews(int pageNo = 1, int pageSize = 10)
+    public async Task<Result<ReviewListResponseModel>> GetReviews(int? propertyId, int pageNo = 1, int pageSize = 10)
     {
         Result<ReviewListResponseModel> model = null;
         try
         {
+            var query = _context.Reviews.AsNoTracking();
+
+            // Apply filters
+            if (propertyId.HasValue)
+            {
+                query = query.Where(r => r.PropertyId == propertyId.Value);
+            }
+
             var totalCount = await _context.Reviews.CountAsync();
             var pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
 
-            var reviews = await _context.Reviews
-                .AsNoTracking()
-                .Skip((pageNo - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            var reviews = await query
+            .Skip((pageNo - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
             var reviewResponseModel = reviews.Select(review => new ReviewResponseModel
             {

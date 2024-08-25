@@ -13,14 +13,14 @@ public class BL_Review
         return response;
     }
 
-    public async Task<Result<ReviewListResponseModel>> GetReviews(int pageNo, int pageSize)
+    public async Task<Result<ReviewListResponseModel>> GetReviews(int? propertyId, int pageNo, int pageSize)
     {
         if (pageNo < 1 || pageSize < 1)
         {
             throw new Exception("PageNo or PageSize Cannot be less than 1");
         }
 
-        var response = await _daReview.GetReviews(pageNo, pageSize);
+        var response = await _daReview.GetReviews(propertyId, pageNo, pageSize);
         return response;
     }
 
