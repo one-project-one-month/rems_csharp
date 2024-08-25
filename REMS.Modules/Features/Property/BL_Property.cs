@@ -9,44 +9,33 @@ public class BL_Property
         _daProperty = daProperty;
     }
 
-    public async Task<Result<List<PropertyResponseModel>>> GetProperties(string? propertyStatus)
-    {
-        var response = await _daProperty.GetProperties(propertyStatus);
-        return response;
-    }
-
-    public async Task<Result<PropertyListResponseModel>> GetProperties(int pageNo, int pageSize, string? propertyStatus)
+    public async Task<Result<PropertyListResponseModel>> GetProperties(int? agentId, string? address, string? city,
+                                                                       string? state, string? zipCode,
+                                                                       string? propertyType, decimal? minPrice,
+                                                                       decimal? maxPrice,
+                                                                       decimal? size, int? numberOfBedrooms,
+                                                                       int? numberOfBathrooms,
+                                                                       int? yearBuilt, string? availabilityType,
+                                                                       int? minRentalPeriod,
+                                                                       string? approvedBy, DateTime? addDate,
+                                                                       DateTime? editDate,
+                                                                       string? propertyStatus,
+                                                                       int pageNo = 1, int pageSize = 10)
     {
         if (pageNo < 1 || pageSize < 1)
         {
             throw new Exception("PageNo or PageSize Cannot be less than 1");
         }
 
-        var response = await _daProperty.GetProperties(pageNo, pageSize, propertyStatus);
-        return response;
-    }
+        var response = await _daProperty.GetProperties(agentId, address, city,
+                                                       state, zipCode, propertyType,
+                                                       minPrice, maxPrice, size,
+                                                       numberOfBedrooms, numberOfBathrooms,
+                                                       yearBuilt, availabilityType,
+                                                       minRentalPeriod, approvedBy,
+                                                       addDate, editDate,
+                                                       propertyStatus, pageNo, pageSize);
 
-    public async Task<Result<List<PropertyResponseModel>>> GetPropertiesByAgentId(int agentId, string? propertyStatus)
-    {
-        if (agentId < 1)
-        {
-            throw new Exception("Invalid Agent Id");
-        }
-        var response = await _daProperty.GetPropertiesByAgentId(agentId, propertyStatus);
-        return response;
-    }
-
-    public async Task<Result<PropertyListResponseModel>> GetPropertiesByAgentId(int agentId, int pageNo, int pageSize, string propertyStatus)
-    {
-        if (agentId < 1)
-        {
-            throw new Exception("Invalid Agent Id");
-        }
-        if (pageNo < 1 || pageSize < 1)
-        {
-            throw new Exception("PageNo or PageSize Cannot be less than 1");
-        }
-        var response = await _daProperty.GetPropertiesByAgentId(agentId, pageNo, pageSize, propertyStatus);
         return response;
     }
 
@@ -84,7 +73,6 @@ public class BL_Property
         }
     }
 
-
     public async Task<Result<PropertyResponseModel>> UpdateProperty(int propertyId, PropertyRequestModel requestModel)
     {
         if (propertyId < 1)
@@ -121,5 +109,4 @@ public class BL_Property
         var result = await _daProperty.DeleteProperty(propertyId);
         return result;
     }
-
 }

@@ -44,21 +44,48 @@ public class DA_Client
         return model;
     }
 
-    public async Task<Result<ClientListResponseModel>> GetClients(int pageNo = 1, int pageSize = 10)
+    public async Task<Result<ClientListResponseModel>> GetClients(string? firstName, string? lastName, string? email, string? phone, int pageNo = 1, int pageSize = 10)
     {
         Result<ClientListResponseModel> model = null;
         var responseModel = new ClientListResponseModel();
         try
         {
-            var totalCount = await _db.Clients.CountAsync();
+            var query = _db.Clients
+                           .Include(c => c.User) // Join User table
+                           .AsQueryable();
+
+            #region Add filter
+            // Apply filters based on provided parameters
+            if (!string.IsNullOrEmpty(firstName))
+            {
+                query = query.Where(c => c.FirstName.Contains(firstName));
+            }
+
+            if (!string.IsNullOrEmpty(lastName))
+            {
+                query = query.Where(c => c.LastName.Contains(lastName));
+            }
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                query = query.Where(c => c.User.Email.Contains(email));
+            }
+
+            if (!string.IsNullOrEmpty(phone))
+            {
+                query = query.Where(c => c.User.Phone.Contains(phone));
+            }
+            #endregion
+
+            // Pagination logic
+            var totalCount = await query.CountAsync();
             var pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
 
-            var clients = await _db.Clients
-                .AsNoTracking()
-                .Include(c => c.User)
-                .Skip((pageNo - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
+            var clients = await query
+            .AsNoTracking()
+            .Skip((pageNo - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync();
 
             var clientResponseModel = clients.Select(client => client.Change(client.User)).ToList();
 

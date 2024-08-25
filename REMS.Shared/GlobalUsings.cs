@@ -6,3 +6,4 @@ global using System.Text;
 global using Microsoft.Extensions.Options;
 global using Microsoft.IdentityModel.Tokens;
 global using REMS.Models.Jwt;
+global using Newtonsoft.Json;

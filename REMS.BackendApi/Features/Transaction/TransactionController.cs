@@ -29,8 +29,8 @@ public class TransactionController : ControllerBase
         }
     }
 
-    [HttpGet("{pageNumber}/{pageSize}")]
-    public async Task<IActionResult> GetTransactions(int pageNumber, int pageSize)
+    [HttpGet]
+    public async Task<IActionResult> GetTransactions(int pageNumber = 1, int pageSize = 10)
     {
         try
         {
@@ -47,12 +47,12 @@ public class TransactionController : ControllerBase
         }
     }
 
-    [HttpGet("{propertyId}/{pageNumber}/{pageSize}")]
-    public async Task<IActionResult> GetTransactionsByPropertyId(int pageNumber, int pageSize, int propertyId)
+    [HttpGet("Property")]
+    public async Task<IActionResult> GetTransactionsByPropertyId(int propertyId, int pageNo = 1, int pageSize = 10)
     {
         try
         {
-            var response = await _blTransaction.GetTransactionsByPropertyIdAsync(pageNumber, pageSize, propertyId);
+            var response = await _blTransaction.GetTransactionsByPropertyIdAsync(propertyId, pageNo, pageSize);
             if (response.IsError)
             {
                 return BadRequest(response);
@@ -65,12 +65,12 @@ public class TransactionController : ControllerBase
         }
     }
 
-    [HttpPost("GetTransactionsByPropertyIdAndClientId/{clientId}/{propertyId}/{pageNumber}/{pageSize}")]
-    public async Task<IActionResult> GetTransactionsByPropertyIdAndClientId(int pageNumber, int pageSize, int propertyId, int clientId)
+    [HttpGet("Property/Client")]
+    public async Task<IActionResult> GetTransactionsByPropertyIdAndClientId(int propertyId, int clientId, int pageNo = 1, int pageSize = 10)
     {
         try
         {
-            var response = await _blTransaction.GetTransactionsByPropertyIdAndClientIdAsync(pageNumber, pageSize, propertyId, clientId);
+            var response = await _blTransaction.GetTransactionsByPropertyIdAndClientIdAsync(propertyId, clientId, pageNo, pageSize);
             if (response.IsError)
             {
                 return BadRequest(response);
@@ -83,12 +83,12 @@ public class TransactionController : ControllerBase
         }
     }
 
-    [HttpPost("GetTransactionsByClientId/{clientId}/{pageNumber}/{pageSize}")]
-    public async Task<IActionResult> GetTransactionsByClientId(int pageNumber, int pageSize, int clientId)
+    [HttpGet("Client")]
+    public async Task<IActionResult> GetTransactionsByClientId(int clientId, int pageNo, int pageSize)
     {
         try
         {
-            var response = await _blTransaction.GetTransactionsByClientIdAsync(pageNumber, pageSize, clientId);
+            var response = await _blTransaction.GetTransactionsByClientIdAsync(clientId, pageNo, pageSize);
             if (response.IsError)
             {
                 return BadRequest(response);

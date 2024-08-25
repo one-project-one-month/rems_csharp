@@ -26,14 +26,14 @@ namespace REMS.Modules.Features.Transaction
             return await _daTransaction.GetTransactionsByPropertyIdAsync(pageNumber, pageSize, propertyId);
         }
 
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndClientIdAsync(int pageNumber, int pageSize, int propertyId, int buyerId)
+        public async Task<Result<TransactionListResponseModel>> GetTransactionsByPropertyIdAndClientIdAsync(int propertyId, int buyerId, int pageNo, int pageSize)
         {
-            return await _daTransaction.GetTransactionsByPropertyIdAndClientIdAsync(pageNumber, pageSize, propertyId, buyerId);
+            return await _daTransaction.GetTransactionsByPropertyIdAndClientIdAsync(propertyId, buyerId, pageNo, pageSize);
         }
 
-        public async Task<Result<TransactionListResponseModel>> GetTransactionsByClientIdAsync(int pageNumber, int pageSize, int clientId)
+        public async Task<Result<TransactionListResponseModel>> GetTransactionsByClientIdAsync(int clientId, int pageNo, int pageSize)
         {
-            return await _daTransaction.GetTransactionsByClientIdAsync(pageNumber, pageSize, clientId);
+            return await _daTransaction.GetTransactionsByClientIdAsync(clientId, pageNo, pageSize);
         }
     }
 }

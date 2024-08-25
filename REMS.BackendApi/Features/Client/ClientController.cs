@@ -14,26 +14,16 @@ public class ClientController : ControllerBase
         _blClient = blClient;
     }
 
-    [HttpGet]
-    public async Task<IActionResult> GetClients()
-    {
-        try
-        {
-            var responseModel = await _blClient.GetClients();
-            return Ok(responseModel);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
-        }
-    }
-
     [HttpGet("{pageNo}/{pageSize}")]
-    public async Task<IActionResult> GetClients(int pageNo, int pageSize)
+    public async Task<IActionResult> GetClients(string? firstName, string? lastName, string? email, string? phone, int pageNo = 1, int pageSize = 10)
     {
         try
         {
-            var response = await _blClient.GetClients(pageNo, pageSize);
+            if (pageNo < 1 || pageSize < 1)
+            {
+                return BadRequest("PageNo or PageSize cannot be less than 1");
+            }
+            var response = await _blClient.GetClients(firstName, lastName, email, phone, pageNo, pageSize);
             return Ok(response);
         }
         catch (Exception ex)
