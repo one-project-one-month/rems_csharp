@@ -29,6 +29,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Documents", "_Documents", 
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 		REMS.sql = REMS.sql
+		_Documents\REMS_Latest.sql = _Documents\REMS_Latest.sql
 	EndProjectSection
 EndProject
 Global
