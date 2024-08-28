@@ -18,3 +18,5 @@ global using REMS.Models.Authentication;
 global using REMS.Models.Jwt;
 global using REMS.Models.Transaction;
 global using REMS.Shared;
+global using System.Globalization;
+global using System.Text.RegularExpressions;

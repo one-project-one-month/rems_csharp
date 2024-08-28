@@ -13,7 +13,7 @@ public class Result<T>
     public T Data { get; set; }
     public string Message { get; set; }
 
-    public static Result<T> Success(T data, string message = "Success.")
+    public static Result<T> Success(T data, string message = "Operation Successful.")
     {
         return new Result<T>()
         {
@@ -40,7 +40,10 @@ public class Result<T>
             IsSuccess = false,
         };
     }
-
+    public static Result<T> SuccessResult(string message = "Operation successful.")
+    {
+        return new Result<T> { IsSuccess = true, Message = message };
+    }
     public static implicit operator Result<T>(Result<string>? v)
     {
         throw new NotImplementedException();

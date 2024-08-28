@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NUlid" Version="1.7.2" />
   </ItemGroup>
 
   <ItemGroup>
