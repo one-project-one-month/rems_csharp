@@ -311,6 +311,14 @@
         "resolved": "13.0.3",
         "contentHash": "HrC5BXdl00IP9zeV+0Z848QWPAoCr9P3bDEZguI+gkLcBKAOxix/tLEAAHC+UvDNPv4a2d18lOReHMOagPa+zQ=="
       },
+      "NUlid": {
+        "type": "Transitive",
+        "resolved": "1.7.2",
+        "contentHash": "34DfywdGJ1/DUcmCHMn72zW/NtZDkfsS1/wEjgrowrMRTeL6iPyPyjVqeIUK8QnhsFd/CWp2Pw1HeYLVeagYMg==",
+        "dependencies": {
+          "System.Memory": "4.5.5"
+        }
+      },
       "Swashbuckle.AspNetCore.Swagger": {
         "type": "Transitive",
         "resolved": "6.7.0",
@@ -382,8 +390,8 @@
       },
       "System.Memory": {
         "type": "Transitive",
-        "resolved": "4.5.4",
-        "contentHash": "1MbJTHS1lZ4bS4FmsJjnuGJOu88ZzTT2rLvrhW7Ygic+pC0NWA+3hgAen0HRdsocuQXCkUTdFn9yHJJhsijDXw=="
+        "resolved": "4.5.5",
+        "contentHash": "XIWiDvKPXaTveaB7HVganDlOCRoj03l+jrwNvcge/t8vhGYKvqV+dMv6G4SAX2NoNmN0wZfVPTAlFwZcZvVOUw=="
       },
       "System.Memory.Data": {
         "type": "Transitive",
@@ -530,6 +538,7 @@
       "rems.shared": {
         "type": "Project",
         "dependencies": {
+          "NUlid": "[1.7.2, )",
           "Newtonsoft.Json": "[13.0.3, )",
           "REMS.Database": "[1.0.0, )",
           "REMS.Models": "[1.0.0, )"

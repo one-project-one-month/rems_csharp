@@ -1,3 +1,5 @@
+using REMS.Models.Jwt;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>

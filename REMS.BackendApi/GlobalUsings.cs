@@ -1,6 +1,5 @@
 ﻿// Global using directives
 
-global using Azure;
 global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
 global using Microsoft.EntityFrameworkCore;
@@ -21,3 +20,8 @@ global using REMS.Modules.Features.Review;
 global using REMS.Modules.Features.Appointment;
 global using REMS.Modules.Features.Authentication;
 global using REMS.Modules.Features.Transaction;
+global using System.Text;
+global using Microsoft.AspNetCore.Authentication.JwtBearer;
+global using Microsoft.IdentityModel.Tokens;
+global using Microsoft.OpenApi.Models;
+global using REMS.Shared;
