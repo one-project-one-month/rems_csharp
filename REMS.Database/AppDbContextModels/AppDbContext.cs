@@ -31,6 +31,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Review> Reviews { get; set; }
 
+    public virtual DbSet<Session> Sessions { get; set; }
+
     public virtual DbSet<Transaction> Transactions { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
@@ -39,7 +41,7 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<Agent>(entity =>
         {
-            entity.HasKey(e => e.AgentId).HasName("PK__Agents__2C05379E031C7552");
+            entity.HasKey(e => e.AgentId).HasName("PK__Agents__2C05379E0D85E265");
 
             entity.Property(e => e.AgentId).HasColumnName("agent_id");
             entity.Property(e => e.Address)
@@ -60,7 +62,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Appointment>(entity =>
         {
-            entity.HasKey(e => e.AppointmentId).HasName("PK__Appointm__A50828FC11F5BF47");
+            entity.HasKey(e => e.AppointmentId).HasName("PK__Appointm__A50828FC2D44F1FD");
 
             entity.Property(e => e.AppointmentId).HasColumnName("appointment_id");
             entity.Property(e => e.AppointmentDate)
@@ -85,7 +87,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Client>(entity =>
         {
-            entity.HasKey(e => e.ClientId).HasName("PK__Clients__BF21A424084C6F3F");
+            entity.HasKey(e => e.ClientId).HasName("PK__Clients__BF21A424FB5BB7AB");
 
             entity.Property(e => e.ClientId).HasColumnName("client_id");
             entity.Property(e => e.Address)
@@ -128,7 +130,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Message>(entity =>
         {
-            entity.HasKey(e => e.MessageId).HasName("PK__Messages__0BBF6EE6030CF454");
+            entity.HasKey(e => e.MessageId).HasName("PK__Messages__0BBF6EE6495B8F63");
 
             entity.Property(e => e.MessageId).HasColumnName("message_id");
             entity.Property(e => e.DateSent)
@@ -158,7 +160,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Property>(entity =>
         {
-            entity.HasKey(e => e.PropertyId).HasName("PK__Properti__735BA46382020C5F");
+            entity.HasKey(e => e.PropertyId).HasName("PK__Properti__735BA463449A0B6F");
 
             entity.Property(e => e.PropertyId).HasColumnName("property_id");
             entity.Property(e => e.Adddate)
@@ -213,7 +215,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<PropertyImage>(entity =>
         {
-            entity.HasKey(e => e.ImageId).HasName("PK__Property__DC9AC9559298D349");
+            entity.HasKey(e => e.ImageId).HasName("PK__Property__DC9AC955717FFF02");
 
             entity.Property(e => e.ImageId).HasColumnName("image_id");
             entity.Property(e => e.DateUploaded)
@@ -233,7 +235,7 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Review>(entity =>
         {
-            entity.HasKey(e => e.ReviewId).HasName("PK__Reviews__60883D9094BA37F0");
+            entity.HasKey(e => e.ReviewId).HasName("PK__Reviews__60883D906DA5B20E");
 
             entity.Property(e => e.ReviewId).HasColumnName("review_id");
             entity.Property(e => e.Comments).HasColumnName("comments");
@@ -254,9 +256,22 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("FK__Reviews__user_id__5812160E");
         });
 
+        modelBuilder.Entity<Session>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK_Tbl_Session");
+
+            entity.ToTable("Session");
+
+            entity.Property(e => e.ExpiredTime).HasColumnType("datetime");
+            entity.Property(e => e.LastActiveTime).HasColumnType("datetime");
+            entity.Property(e => e.RefreshToken)
+                .HasMaxLength(200)
+                .IsUnicode(false);
+        });
+
         modelBuilder.Entity<Transaction>(entity =>
         {
-            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__85C600AF52FA1EC6");
+            entity.HasKey(e => e.TransactionId).HasName("PK__Transact__85C600AF911FC6EB");
 
             entity.Property(e => e.TransactionId).HasColumnName("transaction_id");
             entity.Property(e => e.ClientId).HasColumnName("client_id");
@@ -287,9 +302,9 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.UserId).HasName("PK__Users__B9BE370F8DDB2A90");
+            entity.HasKey(e => e.UserId).HasName("PK__Users__B9BE370F38A9E273");
 
-            entity.HasIndex(e => e.Email, "UQ__Users__AB6E61643D1F7791").IsUnique();
+            entity.HasIndex(e => e.Email, "UQ__Users__AB6E61647F6E0744").IsUnique();
 
             entity.Property(e => e.UserId).HasColumnName("user_id");
             entity.Property(e => e.DateCreated)
