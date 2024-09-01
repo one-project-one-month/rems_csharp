@@ -63,6 +63,6 @@ public class BL_Agent
 
     public async Task<Result<AgentListResponseModel>> AgentAll(int pageNumber, int pageSize)
     {
-        return await _daAgent.AgentAllAsync(pageNumber,pageSize);
+        return await _daAgent.AgentAllAsync(pageNumber, pageSize);
     }
 }
