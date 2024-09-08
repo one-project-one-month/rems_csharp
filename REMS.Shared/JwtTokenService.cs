@@ -2,8 +2,8 @@
 
 public class JwtTokenService
 {
-    private readonly JwtTokenModel _token;
     private readonly AppDbContext _db;
+    private readonly JwtTokenModel _token;
 
     public JwtTokenService(IOptionsMonitor<JwtTokenModel> token, AppDbContext db)
     {
@@ -42,7 +42,7 @@ public class JwtTokenService
         var refreshToken = _DevCode.GenerateRefreshToken();
         await AddSession(requestModel.UserId, refreshToken, accessToken);
 
-        var model = new AccessTokenModel()
+        var model = new AccessTokenModel
         {
             AccessToken = accessToken,
             RefreshToken = refreshToken
@@ -56,7 +56,7 @@ public class JwtTokenService
     {
         #region Add Session
 
-        var tblSession = new Session()
+        var tblSession = new Session
         {
             UserId = userId!.CheckEntityItem<int>(),
             RefreshToken = refreshToken,
@@ -96,17 +96,14 @@ public class JwtTokenService
         var tokenExpire = decodedToken.Claims.FirstOrDefault(x => x.Type == "TokenExpired") ??
                           throw new Exception("TokenExpired is required.");
 
-        model = new JwtTokenUserModel()
+        model = new JwtTokenUserModel
         {
             UserId = userId.Value,
             Role = role.Value,
             SessionId = sessionId.Value,
             TokenExpired = tokenExpire.Value.CheckEntityItem<DateTime>()
         };
-        if (model is null)
-        {
-            throw new Exception("Unauthorized!");
-        }
+        if (model is null) throw new Exception("Unauthorized!");
 
         #endregion
 

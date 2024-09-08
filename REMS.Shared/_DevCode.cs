@@ -21,7 +21,7 @@ public static class _DevCode
 
     public static T CheckEntityItem<T>(this object obj)
     {
-        T res = default(T);
+        var res = default(T);
         if (obj != null && !string.IsNullOrEmpty(obj.ToString()) && obj is string)
             res = (T)Convert.ChangeType(obj.ToString().Trim(), typeof(T));
         else if (obj != null && !string.IsNullOrEmpty(obj.ToString()))
