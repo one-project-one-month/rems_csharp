@@ -292,6 +292,7 @@ public class DA_Agent
                                            {
                                                AgentId = ag.AgentId,
                                                UserId = ag.UserId,
+                                               AgentName = _user.Name,
                                                AgencyName = ag.AgencyName,
                                                LicenseNumber = ag.LicenseNumber,
                                                Email = _user.Email,
