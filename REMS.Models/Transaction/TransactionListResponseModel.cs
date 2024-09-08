@@ -1,17 +1,10 @@
-﻿using REMS.Models.Appointment;
-using REMS.Models.Custom;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using REMS.Models.Custom;
 
-namespace REMS.Models.Transaction
+namespace REMS.Models.Transaction;
+
+public class TransactionListResponseModel
 {
-    public class TransactionListResponseModel
-    {
-        public PageSettingModel? pageSetting { get; set; }
+    public PageSettingModel? pageSetting { get; set; }
 
-        public List<TransactionResponseModel>? lstTransaction { get; set; }
-    }
+    public List<TransactionResponseModel>? lstTransaction { get; set; }
 }

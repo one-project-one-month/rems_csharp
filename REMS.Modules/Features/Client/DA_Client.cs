@@ -1,9 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using REMS.Database.AppDbContextModels;
-using REMS.Models;
-using System.Data;
-
-namespace REMS.Modules.Features.Client;
+﻿namespace REMS.Modules.Features.Client;
 
 public class DA_Client
 {
@@ -21,10 +16,10 @@ public class DA_Client
         try
         {
             var clients = await _db
-            .Clients
-            .Include(c => c.User)
-            .AsNoTracking()
-            .ToListAsync();
+                .Clients
+                .Include(c => c.User)
+                .AsNoTracking()
+                .ToListAsync();
 
             var clientResponseModel = clients.Select(client => client.Change(client.User)).ToList();
 
@@ -44,37 +39,28 @@ public class DA_Client
         return model;
     }
 
-    public async Task<Result<ClientListResponseModel>> GetClients(string? firstName, string? lastName, string? email, string? phone, int pageNo = 1, int pageSize = 10)
+    public async Task<Result<ClientListResponseModel>> GetClients(string? firstName, string? lastName, string? email,
+        string? phone, int pageNo = 1, int pageSize = 10)
     {
         Result<ClientListResponseModel> model = null;
         var responseModel = new ClientListResponseModel();
         try
         {
             var query = _db.Clients
-                           .Include(c => c.User) // Join User table
-                           .AsQueryable();
+                .Include(c => c.User) // Join User table
+                .AsQueryable();
 
             #region Add filter
+
             // Apply filters based on provided parameters
-            if (!string.IsNullOrEmpty(firstName))
-            {
-                query = query.Where(c => c.FirstName.Contains(firstName));
-            }
+            if (!string.IsNullOrEmpty(firstName)) query = query.Where(c => c.FirstName.Contains(firstName));
 
-            if (!string.IsNullOrEmpty(lastName))
-            {
-                query = query.Where(c => c.LastName.Contains(lastName));
-            }
+            if (!string.IsNullOrEmpty(lastName)) query = query.Where(c => c.LastName.Contains(lastName));
 
-            if (!string.IsNullOrEmpty(email))
-            {
-                query = query.Where(c => c.User.Email.Contains(email));
-            }
+            if (!string.IsNullOrEmpty(email)) query = query.Where(c => c.User.Email.Contains(email));
 
-            if (!string.IsNullOrEmpty(phone))
-            {
-                query = query.Where(c => c.User.Phone.Contains(phone));
-            }
+            if (!string.IsNullOrEmpty(phone)) query = query.Where(c => c.User.Phone.Contains(phone));
+
             #endregion
 
             // Pagination logic
@@ -82,10 +68,10 @@ public class DA_Client
             var pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
 
             var clients = await query
-            .AsNoTracking()
-            .Skip((pageNo - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+                .AsNoTracking()
+                .Skip((pageNo - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
             var clientResponseModel = clients.Select(client => client.Change(client.User)).ToList();
 
@@ -117,10 +103,7 @@ public class DA_Client
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ClientId == id);
 
-            if (client is null)
-            {
-                return model = Result<ClientModel>.Error("Client not found.");
-            }
+            if (client is null) return model = Result<ClientModel>.Error("Client not found.");
 
             var responseModel = client.Change(client.User);
 
@@ -130,6 +113,7 @@ public class DA_Client
         {
             model = Result<ClientModel>.Error(ex);
         }
+
         return model;
     }
 
@@ -139,9 +123,7 @@ public class DA_Client
         try
         {
             if (requestModel == null)
-            {
                 throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
-            }
 
             if (CheckEmailDuplicate(requestModel.Email))
             {
@@ -150,7 +132,7 @@ public class DA_Client
             }
 
             await _db.Users.AddAsync(requestModel.ChangeUser());
-            int result = await _db.SaveChangesAsync();
+            var result = await _db.SaveChangesAsync();
             if (result < 0)
             {
                 model = Result<ClientModel>.Error("Client create failed.");
@@ -167,7 +149,7 @@ public class DA_Client
 
             var client = requestModel.Change();
             await _db.Clients.AddAsync(client);
-            int addClient = await _db.SaveChangesAsync();
+            var addClient = await _db.SaveChangesAsync();
 
             var responseModel = client.Change(user);
 
@@ -179,7 +161,8 @@ public class DA_Client
         {
             model = Result<ClientModel>.Error(ex);
         }
-    result:
+
+        result:
         return model;
     }
 
@@ -199,8 +182,8 @@ public class DA_Client
             }
 
             var user = await _db.Users
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(x => x.UserId == client.UserId);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UserId == client.UserId);
 
             if (user is null)
             {
@@ -210,37 +193,25 @@ public class DA_Client
 
             if (!string.IsNullOrWhiteSpace(requestModel.FirstName) || !string.IsNullOrWhiteSpace(requestModel.LastName))
             {
-                string firstName = requestModel.FirstName ?? string.Empty;
-                string lastName = requestModel.LastName ?? string.Empty;
-                string Name = string.Concat(firstName, (!string.IsNullOrEmpty(firstName) ? " " : string.Empty), lastName);
+                var firstName = requestModel.FirstName ?? string.Empty;
+                var lastName = requestModel.LastName ?? string.Empty;
+                var Name = string.Concat(firstName, !string.IsNullOrEmpty(firstName) ? " " : string.Empty, lastName);
                 user.Name = Name;
                 client.FirstName = requestModel.FirstName ?? client.FirstName;
                 client.LastName = requestModel.LastName ?? client.LastName;
             }
 
-            if (!string.IsNullOrWhiteSpace(requestModel.Phone))
-            {
-                user.Phone = requestModel.Phone;
-            }
+            if (!string.IsNullOrWhiteSpace(requestModel.Phone)) user.Phone = requestModel.Phone;
 
-            if (!string.IsNullOrWhiteSpace(requestModel.Email))
-            {
-                user.Email = requestModel.Email;
-            }
+            if (!string.IsNullOrWhiteSpace(requestModel.Email)) user.Email = requestModel.Email;
 
-            if (!string.IsNullOrWhiteSpace(requestModel.Password))
-            {
-                user.Password = requestModel.Password;
-            }
+            if (!string.IsNullOrWhiteSpace(requestModel.Password)) user.Password = requestModel.Password;
 
-            if (!string.IsNullOrWhiteSpace(requestModel.Address))
-            {
-                client.Address = requestModel.Address;
-            }
+            if (!string.IsNullOrWhiteSpace(requestModel.Address)) client.Address = requestModel.Address;
 
             _db.Entry(user).State = EntityState.Modified;
             _db.Entry(client).State = EntityState.Modified;
-            int result = await _db.SaveChangesAsync();
+            var result = await _db.SaveChangesAsync();
 
             var clientResponseModel = client.Change(user);
 
@@ -250,7 +221,8 @@ public class DA_Client
         {
             model = Result<ClientModel>.Error(ex);
         }
-    result:
+
+        result:
         return model;
     }
 
@@ -263,25 +235,19 @@ public class DA_Client
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ClientId == id);
 
-            if (client is null)
-            {
-                return model = Result<object>.Error("Client Not Found");
-            }
+            if (client is null) return model = Result<object>.Error("Client Not Found");
 
             var user = await _db.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.UserId == client.UserId);
 
-            if (user is null || client is null)
-            {
-                return model = Result<object>.Error("User Not Found");
-            }
+            if (user is null || client is null) return model = Result<object>.Error("User Not Found");
 
             _db.Users.Remove(user);
             _db.Entry(user).State = EntityState.Deleted;
             _db.Clients.Remove(client);
             _db.Entry(client).State = EntityState.Deleted;
-            int result = await _db.SaveChangesAsync();
+            var result = await _db.SaveChangesAsync();
 
             model = result > 0
                 ? Result<object>.Success(null)
@@ -291,6 +257,7 @@ public class DA_Client
         {
             return model = Result<object>.Error(ex);
         }
+
         return model;
     }
 

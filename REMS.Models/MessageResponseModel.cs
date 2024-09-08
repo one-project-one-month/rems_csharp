@@ -4,8 +4,8 @@ public class MessageResponseModel
 {
     public MessageResponseModel()
     {
-
     }
+
     public MessageResponseModel(bool isSuccess, string? message)
     {
         IsSuccess = isSuccess;
@@ -18,7 +18,7 @@ public class MessageResponseModel
         Message = ex.ToString();
     }
 
-    private bool IsSuccess { get; set; }
+    private bool IsSuccess { get; }
 
     public bool IsError => !IsSuccess;
 

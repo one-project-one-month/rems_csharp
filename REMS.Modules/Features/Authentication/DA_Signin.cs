@@ -1,8 +1,4 @@
-﻿using REMS.Models.Authentication;
-using REMS.Models.Jwt;
-using REMS.Shared;
-
-namespace REMS.Modules.Features.Authentication;
+﻿namespace REMS.Modules.Features.Authentication;
 
 public class DA_Signin
 {
@@ -26,33 +22,34 @@ public class DA_Signin
 
         if (user is null)
         {
-            model = Result<SigninResponseModel>.Error("Login Failed.");
+            model = Result<SigninResponseModel>.Error("Username or Password is incorrect.");
             goto result;
         }
 
-        string role = user.Role;
+        var role = user.Role;
         var tokenModel = new AccessTokenRequestModel
         {
             UserName = user.Name,
+            UserId = user.UserId,
             Role = user.Role
         };
-        string accessToken = _jwtTokenService.GenerateAccessToken(tokenModel);
+        var token = await _jwtTokenService.GenerateAccessToken(tokenModel);
 
-        await SaveLogin(user, accessToken);
+        await SaveLogin(user, token);
 
-        model = Result<SigninResponseModel>.Success(new SigninResponseModel(accessToken, role));
+        model = Result<SigninResponseModel>.Success(new SigninResponseModel(role, token));
 
-    result:
+        result:
         return model;
     }
 
-    private async Task SaveLogin(User data, string accessToken)
+    private async Task SaveLogin(User data, AccessTokenModel reqModel)
     {
         var login = new Login
         {
             UserId = data.UserId.ToString(),
             Role = data.Role,
-            AccessToken = accessToken,
+            AccessToken = reqModel.AccessToken,
             Email = data.Email,
             LoginDate = DateTime.UtcNow
         };
@@ -80,7 +77,61 @@ public class DA_Signin
         await _db.SaveChangesAsync();
 
         model = Result<string>.Success("SignOut successful.");
-    result:
+        result:
         return model;
     }
+
+    #region Refresh Token
+
+    public async Task<Result<RefreshTokenResponseModel>> GetRefreshTokenByUserId(int userId, string oldRefreshToken)
+    {
+        var model = new Result<RefreshTokenResponseModel>();
+        var session = await _db.Sessions.AsNoTracking()
+            .Where(x => x.UserId == userId)
+            .OrderByDescending(x => x.Id)
+            .FirstOrDefaultAsync();
+
+        if (session is null)
+        {
+            model = Result<RefreshTokenResponseModel>.Error("No Session found.");
+            goto result;
+        }
+
+        if (session.RefreshToken is null)
+        {
+            model = Result<RefreshTokenResponseModel>.Error("Invalid Session.");
+            goto result;
+        }
+
+        if (session.RefreshToken != oldRefreshToken)
+        {
+            model = Result<RefreshTokenResponseModel>.Error("Invalid Refresh Token.");
+            goto result;
+        }
+
+        var tokenObj = new RefreshTokenResponseModel
+        {
+            UserId = session.UserId,
+            RefreshToken = session.RefreshToken
+        };
+        model = Result<RefreshTokenResponseModel>.Success(tokenObj);
+
+        result:
+        return model;
+    }
+
+    public async Task DeleteUserRefreshToken(long userId, string refreshToken)
+    {
+        var session = await _db.Sessions.AsNoTracking()
+            .Where(x => x.UserId == userId && x.RefreshToken == refreshToken)
+            .FirstOrDefaultAsync();
+
+        if (session is null)
+            throw new Exception("Session is null.");
+
+        _db.Sessions.Remove(session);
+        await _db.SaveChangesAsync();
+    }
+
+    #endregion
 }

@@ -1,13 +1,11 @@
-﻿using Azure;
-using Microsoft.Extensions.Configuration;
-using REMS.Models;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace REMS.Modules.Features.Property;
 
 public class DA_Property
 {
-    private readonly AppDbContext _db;
     private readonly IConfiguration _configuration;
+    private readonly AppDbContext _db;
 
     public DA_Property(AppDbContext db, IConfiguration configuration)
     {
@@ -29,12 +27,12 @@ public class DA_Property
             var query = _db.Properties.AsNoTracking().AsQueryable();
 
             query = ApplyFilters(query, agentId, address, city,
-                                 state, zipCode, propertyType,
-                                 minPrice, maxPrice, size,
-                                 numberOfBedrooms, numberOfBathrooms,
-                                 yearBuilt, availabilityType,
-                                 minRentalPeriod, approvedBy,
-                                 addDate, editDate, propertyStatus);
+                state, zipCode, propertyType,
+                minPrice, maxPrice, size,
+                numberOfBedrooms, numberOfBathrooms,
+                yearBuilt, availabilityType,
+                minRentalPeriod, approvedBy,
+                addDate, editDate, propertyStatus);
 
             var totalCount = await query.CountAsync();
 
@@ -76,11 +74,11 @@ public class DA_Property
         try
         {
             var property = await _db.Properties
-                                    .AsNoTracking()
-                                    .Include(x => x.PropertyImages)
-                                    .Include(x => x.Reviews)
-                                    .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
-                                    ?? throw new Exception("Property Not Found");
+                               .AsNoTracking()
+                               .Include(x => x.PropertyImages)
+                               .Include(x => x.Reviews)
+                               .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
+                           ?? throw new Exception("Property Not Found");
 
             var propertyResponse = new PropertyResponseModel
             {
@@ -105,12 +103,10 @@ public class DA_Property
         try
         {
             if (requestModel == null)
-            {
                 throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
-            }
             var isAgentExist = _db.Agents.AsNoTracking()
-                                         .FirstOrDefault(x => x.AgentId == requestModel.AgentId)
-                                         ?? throw new Exception("Agent Id does not exist");
+                                   .FirstOrDefault(x => x.AgentId == requestModel.AgentId)
+                               ?? throw new Exception("Agent Id does not exist");
 
             var property = requestModel.Change()
                            ?? throw new Exception("Failed to convert request model to property entity");
@@ -126,11 +122,11 @@ public class DA_Property
             }
 
             var createdProperty = await _db.Properties
-                                    .AsNoTracking()
-                                    .Include(x => x.PropertyImages)
-                                    .Include(x => x.Reviews)
-                                    .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
-                                    ?? throw new Exception("Property Not Found");
+                                      .AsNoTracking()
+                                      .Include(x => x.PropertyImages)
+                                      .Include(x => x.Reviews)
+                                      .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
+                                  ?? throw new Exception("Property Not Found");
 
             var propertyResponse = new PropertyResponseModel
             {
@@ -155,18 +151,15 @@ public class DA_Property
         try
         {
             var property = await _db.Properties
-                                    .Include(x => x.PropertyImages)
-                                    .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
-                                    ?? throw new Exception("Property Not Found");
+                               .Include(x => x.PropertyImages)
+                               .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
+                           ?? throw new Exception("Property Not Found");
 
             var isAgentExist = _db.Agents.AsNoTracking()
-                                         .FirstOrDefault(x => x.AgentId == requestModel.AgentId)
-                                         ?? throw new Exception("Agent Id does not exist");
+                                   .FirstOrDefault(x => x.AgentId == requestModel.AgentId)
+                               ?? throw new Exception("Agent Id does not exist");
 
-            foreach (var propertyImage in property.PropertyImages)
-            {
-                RemovePhotoFromFolder(propertyImage.ImageUrl);
-            }
+            foreach (var propertyImage in property.PropertyImages) RemovePhotoFromFolder(propertyImage.ImageUrl);
 
             _db.PropertyImages.RemoveRange(property.PropertyImages);
 
@@ -195,11 +188,11 @@ public class DA_Property
             await _db.SaveChangesAsync();
 
             var updatedProperty = await _db.Properties
-                                    .AsNoTracking()
-                                    .Include(x => x.PropertyImages)
-                                    .Include(x => x.Reviews)
-                                    .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
-                                    ?? throw new Exception("Property Not Found");
+                                      .AsNoTracking()
+                                      .Include(x => x.PropertyImages)
+                                      .Include(x => x.Reviews)
+                                      .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
+                                  ?? throw new Exception("Property Not Found");
 
             var responseModel = new PropertyResponseModel
             {
@@ -224,14 +217,14 @@ public class DA_Property
         try
         {
             var property = await _db.Properties
-                                    .Include(x => x.PropertyImages)
-                                    .FirstOrDefaultAsync(x => x.PropertyId == requestModel.PropertyId)
-                                    ?? throw new Exception("Property Not Found");
+                               .Include(x => x.PropertyImages)
+                               .FirstOrDefaultAsync(x => x.PropertyId == requestModel.PropertyId)
+                           ?? throw new Exception("Property Not Found");
 
-            if (!Enum.TryParse<PropertyStatus>(requestModel.PropertyStatus, out var parsedStatus) || !Enum.IsDefined(typeof(PropertyStatus), parsedStatus))
-            {
-                throw new Exception($"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
-            }
+            if (!Enum.TryParse<PropertyStatus>(requestModel.PropertyStatus, out var parsedStatus) ||
+                !Enum.IsDefined(typeof(PropertyStatus), parsedStatus))
+                throw new Exception(
+                    $"Invalid Status; Status should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
 
             property.Status = requestModel.PropertyStatus;
             property.Approvedby = requestModel.ApprovedBy;
@@ -240,11 +233,11 @@ public class DA_Property
             await _db.SaveChangesAsync();
 
             var updatedProperty = await _db.Properties
-                                    .AsNoTracking()
-                                    .Include(x => x.PropertyImages)
-                                    .Include(x => x.Reviews)
-                                    .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
-                                    ?? throw new Exception("Property Not Found");
+                                      .AsNoTracking()
+                                      .Include(x => x.PropertyImages)
+                                      .Include(x => x.Reviews)
+                                      .FirstOrDefaultAsync(x => x.PropertyId == property.PropertyId)
+                                  ?? throw new Exception("Property Not Found");
 
             var responseModel = new PropertyResponseModel
             {
@@ -268,9 +261,9 @@ public class DA_Property
         try
         {
             var property = await _db.Properties
-                                    .Include(x => x.PropertyImages)
-                                    .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
-                                    ?? throw new Exception("Property Not Found");
+                               .Include(x => x.PropertyImages)
+                               .FirstOrDefaultAsync(x => x.PropertyId == propertyId)
+                           ?? throw new Exception("Property Not Found");
 
             property.Status = nameof(PropertyStatus.Canceled);
             _db.Properties.Update(property);
@@ -288,11 +281,11 @@ public class DA_Property
 
     private async Task<string> SavePhotoInFolder(string base64Str)
     {
-        string folderPath = _configuration.GetSection("ImageFolderPath").Value!;
-        string fileName = Guid.NewGuid().ToString() + ".png";
-        byte[] bytes = Convert.FromBase64String(base64Str);
+        var folderPath = _configuration.GetSection("ImageFolderPath").Value!;
+        var fileName = Guid.NewGuid() + ".png";
+        var bytes = Convert.FromBase64String(base64Str);
 
-        string filePath = Path.Combine(folderPath, fileName);
+        var filePath = Path.Combine(folderPath, fileName);
         await File.WriteAllBytesAsync(filePath, bytes);
 
         return filePath;
@@ -312,10 +305,7 @@ public class DA_Property
 
     private static void RemovePhotoFromFolder(string photoPath)
     {
-        if (File.Exists(photoPath))
-        {
-            File.Delete(photoPath);
-        }
+        if (File.Exists(photoPath)) File.Delete(photoPath);
     }
 
     private static IQueryable<Database.AppDbContextModels.Property> ApplyFilters(
@@ -328,95 +318,43 @@ public class DA_Property
         int? minRentalPeriod, string? approvedBy, DateTime? addDate,
         DateTime? editDate, string? propertyStatus)
     {
-        if (agentId.HasValue)
-        {
-            query = query.Where(x => x.AgentId == agentId);
-        }
+        if (agentId.HasValue) query = query.Where(x => x.AgentId == agentId);
 
-        if (!string.IsNullOrEmpty(address))
-        {
-            query = query.Where(x => x.Address.Contains(address));
-        }
+        if (!string.IsNullOrEmpty(address)) query = query.Where(x => x.Address.Contains(address));
 
-        if (!string.IsNullOrEmpty(city))
-        {
-            query = query.Where(x => x.City.Contains(city));
-        }
+        if (!string.IsNullOrEmpty(city)) query = query.Where(x => x.City.Contains(city));
 
-        if (!string.IsNullOrEmpty(state))
-        {
-            query = query.Where(x => x.State.Contains(state));
-        }
+        if (!string.IsNullOrEmpty(state)) query = query.Where(x => x.State.Contains(state));
 
-        if (!string.IsNullOrEmpty(zipCode))
-        {
-            query = query.Where(x => x.ZipCode.Contains(zipCode));
-        }
+        if (!string.IsNullOrEmpty(zipCode)) query = query.Where(x => x.ZipCode.Contains(zipCode));
 
-        if (!string.IsNullOrEmpty(propertyType))
-        {
-            query = query.Where(x => x.PropertyType.Contains(propertyType));
-        }
+        if (!string.IsNullOrEmpty(propertyType)) query = query.Where(x => x.PropertyType.Contains(propertyType));
 
-        if (minPrice.HasValue)
-        {
-            query = query.Where(x => x.Price >= minPrice.Value);
-        }
+        if (minPrice.HasValue) query = query.Where(x => x.Price >= minPrice.Value);
 
-        if (maxPrice.HasValue)
-        {
-            query = query.Where(x => x.Price <= maxPrice.Value);
-        }
+        if (maxPrice.HasValue) query = query.Where(x => x.Price <= maxPrice.Value);
 
-        if (size.HasValue)
-        {
-            query = query.Where(x => x.Size == size.Value);
-        }
+        if (size.HasValue) query = query.Where(x => x.Size == size.Value);
 
-        if (numberOfBedrooms.HasValue)
-        {
-            query = query.Where(x => x.NumberOfBedrooms == numberOfBedrooms.Value);
-        }
+        if (numberOfBedrooms.HasValue) query = query.Where(x => x.NumberOfBedrooms == numberOfBedrooms.Value);
 
-        if (numberOfBathrooms.HasValue)
-        {
-            query = query.Where(x => x.NumberOfBathrooms == numberOfBathrooms.Value);
-        }
+        if (numberOfBathrooms.HasValue) query = query.Where(x => x.NumberOfBathrooms == numberOfBathrooms.Value);
 
-        if (yearBuilt.HasValue)
-        {
-            query = query.Where(x => x.YearBuilt == yearBuilt.Value);
-        }
+        if (yearBuilt.HasValue) query = query.Where(x => x.YearBuilt == yearBuilt.Value);
 
-        if (!string.IsNullOrEmpty(availabilityType))
-        {
-            query = query.Where(x => x.AvailiablityType == availabilityType);
-        }
+        if (!string.IsNullOrEmpty(availabilityType)) query = query.Where(x => x.AvailiablityType == availabilityType);
 
-        if (minRentalPeriod.HasValue)
-        {
-            query = query.Where(x => x.MinrentalPeriod == minRentalPeriod.Value);
-        }
+        if (minRentalPeriod.HasValue) query = query.Where(x => x.MinrentalPeriod == minRentalPeriod.Value);
 
-        if (!string.IsNullOrEmpty(approvedBy))
-        {
-            query = query.Where(x => x.Approvedby.Contains(approvedBy));
-        }
+        if (!string.IsNullOrEmpty(approvedBy)) query = query.Where(x => x.Approvedby.Contains(approvedBy));
 
         if (addDate.HasValue)
-        {
             query = query.Where(x => x.Adddate.HasValue && x.Adddate.Value.Date == addDate.Value.Date);
-        }
 
         if (editDate.HasValue)
-        {
             query = query.Where(x => x.Editdate.HasValue && x.Editdate.Value.Date == editDate.Value.Date);
-        }
 
-        if (!string.IsNullOrWhiteSpace(propertyStatus))
-        {
-            query = query.Where(x => x.Status == propertyStatus);
-        }
+        if (!string.IsNullOrWhiteSpace(propertyStatus)) query = query.Where(x => x.Status == propertyStatus);
 
         return query;
     }

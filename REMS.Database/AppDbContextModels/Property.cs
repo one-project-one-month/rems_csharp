@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace REMS.Database.AppDbContextModels;
 
-namespace REMS.Database.AppDbContextModels;
-
-public partial class Property
+public class Property
 {
     public int PropertyId { get; set; }
 

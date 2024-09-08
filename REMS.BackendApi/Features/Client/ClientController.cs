@@ -1,10 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
-
-namespace REMS.BackendApi.Features.Client;
+﻿namespace REMS.BackendApi.Features.Client;
 
 [Route("api/v1/clients")]
 [ApiController]
-//[Authorize(Roles = "Agent")]
+// [Authorize(Roles = "Agent")]
 public class ClientController : ControllerBase
 {
     private readonly BL_Client _blClient;
@@ -15,14 +13,12 @@ public class ClientController : ControllerBase
     }
 
     [HttpGet("{pageNo}/{pageSize}")]
-    public async Task<IActionResult> GetClients(string? firstName, string? lastName, string? email, string? phone, int pageNo = 1, int pageSize = 10)
+    public async Task<IActionResult> GetClients(string? firstName, string? lastName, string? email, string? phone,
+        int pageNo = 1, int pageSize = 10)
     {
         try
         {
-            if (pageNo < 1 || pageSize < 1)
-            {
-                return BadRequest("PageNo or PageSize cannot be less than 1");
-            }
+            if (pageNo < 1 || pageSize < 1) return BadRequest("PageNo or PageSize cannot be less than 1");
             var response = await _blClient.GetClients(firstName, lastName, email, phone, pageNo, pageSize);
             return Ok(response);
         }
@@ -52,10 +48,7 @@ public class ClientController : ControllerBase
         try
         {
             var response = await _blClient.CreateClient(requestModel);
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
+            if (response.IsError) return BadRequest(response);
             return Ok(response);
         }
         catch (Exception ex)
@@ -70,10 +63,7 @@ public class ClientController : ControllerBase
         try
         {
             var response = await _blClient.UpdateClient(id, requestModel);
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
+            if (response.IsError) return BadRequest(response);
             return Ok(response);
         }
         catch (Exception ex)
@@ -88,10 +78,7 @@ public class ClientController : ControllerBase
         try
         {
             var response = await _blClient.DeleteClient(id);
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
+            if (response.IsError) return BadRequest(response);
             return Ok(response);
         }
         catch (Exception ex)

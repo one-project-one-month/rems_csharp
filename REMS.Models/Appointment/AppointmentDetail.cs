@@ -1,10 +1,8 @@
-﻿
-using REMS.Models.Custom;
+﻿using REMS.Models.Custom;
 
 namespace REMS.Models.Appointment;
 
-
-public partial class AppointmentDetail
+public class AppointmentDetail
 {
     public int? AppointmentId { get; set; }
     public string? AgentName { get; set; }
@@ -23,7 +21,7 @@ public partial class AppointmentDetail
     public int? NumberOfBathrooms { get; set; }
 }
 
-public partial class AppointmentDetailList
+public class AppointmentDetailList
 {
     public PageSettingModel? pageSetting { get; set; }
     public List<AppointmentDetail> appointmentDetails { get; set; }

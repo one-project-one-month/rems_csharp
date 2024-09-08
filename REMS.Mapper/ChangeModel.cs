@@ -1,15 +1,62 @@
-﻿using REMS.Models.Appointment;
-using REMS.Models.Transaction;
+﻿using REMS.Models.Transaction;
 
 namespace REMS.Mapper;
 
 public static class ChangeModel
 {
+    #region Property Image
+
+    public static PropertyImageModel Change(this PropertyImage dataModel)
+    {
+        var propertyModel = new PropertyImageModel
+        {
+            ImageId = dataModel.ImageId,
+            PropertyId = dataModel.PropertyId,
+            ImageUrl = dataModel.ImageUrl,
+            Description = dataModel.Description,
+            DateUploaded = dataModel.DateUploaded
+        };
+
+        return propertyModel;
+    }
+
+    #endregion
+
+    public static Transaction Change(this TransactionRequestModel model)
+    {
+        return new Transaction
+        {
+            TransactionId = model.TransactionId,
+            PropertyId = model.PropertyId,
+            ClientId = model.ClientId, // Assuming BuyerId is ClientId
+            TransactionDate = model.TransactionDate,
+            SalePrice = model.SalePrice,
+            Commission = model.Commission,
+            Status = model.Status
+        };
+    }
+
+    public static TransactionModel Change(this Transaction transaction)
+    {
+        return new TransactionModel
+        {
+            TransactionId = transaction.TransactionId,
+            PropertyId = transaction.PropertyId,
+            ClientId = transaction.ClientId, // Assuming ClientId is BuyerId
+            //SellerId = transaction.Property?.OwnerId,  // Assuming OwnerId exists in Property class
+            //AgentId = transaction.Property?.AgentId,  // Assuming AgentId exists in Property class
+            TransactionDate = transaction.TransactionDate,
+            SalePrice = transaction.SalePrice,
+            Commission = transaction.Commission,
+            Status = transaction.Status
+        };
+    }
+
     #region Agent
 
     public static User ChangeUser(this AgentRequestModel requestModel)
     {
-        User user = new User
+        var user = new User
         {
             Name = requestModel.UserName!,
             Email = requestModel.Email!,
@@ -23,7 +70,7 @@ public static class ChangeModel
 
     public static Agent ChangeAgent(this AgentRequestModel requestModel)
     {
-        Agent agent = new Agent
+        var agent = new Agent
         {
             UserId = requestModel.UserId,
             AgencyName = requestModel.AgentName!,
@@ -50,12 +97,13 @@ public static class ChangeModel
     #endregion
 
     #region Client
+
     public static User ChangeUser(this ClientRequestModel requestModel)
     {
-        string firstName = requestModel.FirstName ?? string.Empty;
-        string lastName = requestModel.LastName ?? string.Empty;
-        string Name = string.Concat(firstName, (!string.IsNullOrEmpty(firstName) ? " " : string.Empty), lastName);
-        User user = new User
+        var firstName = requestModel.FirstName ?? string.Empty;
+        var lastName = requestModel.LastName ?? string.Empty;
+        var Name = string.Concat(firstName, !string.IsNullOrEmpty(firstName) ? " " : string.Empty, lastName);
+        var user = new User
         {
             Name = Name,
             Email = requestModel.Email!,
@@ -69,12 +117,12 @@ public static class ChangeModel
 
     public static Client Change(this ClientRequestModel requestModel)
     {
-        Client client = new Client
+        var client = new Client
         {
             UserId = requestModel.UserId,
             FirstName = requestModel.FirstName,
             LastName = requestModel.LastName,
-            Address = requestModel.Address,
+            Address = requestModel.Address
         };
         return client;
     }
@@ -94,13 +142,14 @@ public static class ChangeModel
         };
         return clientResponseModel;
     }
+
     #endregion
 
     #region Property
 
     public static PropertyModel Change(this Property dataModel)
     {
-        var propertyModel = new PropertyModel()
+        var propertyModel = new PropertyModel
         {
             PropertyId = dataModel.PropertyId,
             AgentId = dataModel.AgentId,
@@ -120,7 +169,7 @@ public static class ChangeModel
             MinrentalPeriod = dataModel.MinrentalPeriod,
             Approvedby = dataModel.Approvedby,
             Adddate = dataModel.Adddate,
-            Editdate = dataModel.Editdate,
+            Editdate = dataModel.Editdate
         };
 
         return propertyModel;
@@ -143,7 +192,7 @@ public static class ChangeModel
             YearBuilt = requestModel.YearBuilt,
             Description = requestModel.Description,
             AvailiablityType = requestModel.AvailiablityType,
-            MinrentalPeriod = requestModel.MinRentalPeriod,
+            MinrentalPeriod = requestModel.MinRentalPeriod
         };
 
         return property;
@@ -185,36 +234,18 @@ public static class ChangeModel
 
     #endregion
 
-    #region Property Image
-
-    public static PropertyImageModel Change(this PropertyImage dataModel)
-    {
-        var propertyModel = new PropertyImageModel()
-        {
-            ImageId = dataModel.ImageId,
-            PropertyId = dataModel.PropertyId,
-            ImageUrl = dataModel.ImageUrl,
-            Description = dataModel.Description,
-            DateUploaded = dataModel.DateUploaded
-        };
-
-        return propertyModel;
-    }
-
-    #endregion
-
     #region Review
 
     public static ReviewModel Change(this Review dataModel)
     {
-        var reviewModel = new ReviewModel()
+        var reviewModel = new ReviewModel
         {
             ReviewId = dataModel.ReviewId,
             UserId = dataModel.UserId,
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
             Comments = dataModel.Comments,
-            DateCreated = dataModel.DateCreated,
+            DateCreated = dataModel.DateCreated
         };
 
         return reviewModel;
@@ -222,12 +253,12 @@ public static class ChangeModel
 
     public static Review Change(this ReviewRequestModel dataModel)
     {
-        var review = new Review()
+        var review = new Review
         {
             UserId = dataModel.UserId,
             PropertyId = dataModel.PropertyId,
             Rating = dataModel.Rating,
-            Comments = dataModel.Comments,
+            Comments = dataModel.Comments
         };
 
         return review;
@@ -239,7 +270,7 @@ public static class ChangeModel
 
     public static Appointment ChangeAppointment(this AppointmentRequestModel requestModel)
     {
-        Appointment appointment = new Appointment
+        var appointment = new Appointment
         {
             ClientId = requestModel.ClientId,
             PropertyId = requestModel.PropertyId,
@@ -268,6 +299,7 @@ public static class ChangeModel
     #endregion
 
     #region Transaction
+
     //public static Transaction Change(this TransactionRequestModel requestModel)
     //{
     //    Transaction transaction = new Transaction
@@ -316,35 +348,6 @@ public static class ChangeModel
     //    };
     //    return transaction;
     //}
+
     #endregion
-
-    public static Transaction Change(this TransactionRequestModel model)
-    {
-        return new Transaction
-        {
-            TransactionId = model.TransactionId,
-            PropertyId = model.PropertyId,
-            ClientId = model.ClientId, // Assuming BuyerId is ClientId
-            TransactionDate = model.TransactionDate,
-            SalePrice = model.SalePrice,
-            Commission = model.Commission,
-            Status = model.Status
-        };
-    }
-
-    public static TransactionModel Change(this Transaction transaction)
-    {
-        return new TransactionModel
-        {
-            TransactionId = transaction.TransactionId,
-            PropertyId = transaction.PropertyId,
-            ClientId = transaction.ClientId,  // Assuming ClientId is BuyerId
-            //SellerId = transaction.Property?.OwnerId,  // Assuming OwnerId exists in Property class
-            //AgentId = transaction.Property?.AgentId,  // Assuming AgentId exists in Property class
-            TransactionDate = transaction.TransactionDate,
-            SalePrice = transaction.SalePrice,
-            Commission = transaction.Commission,
-            Status = transaction.Status
-        };
-    }
 }

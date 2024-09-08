@@ -17,11 +17,8 @@ public class DA_Agent
         try
         {
             await _db.Users.AddAsync(requestModel.ChangeUser());
-            int result = await _db.SaveChangesAsync();
-            if (result < 0)
-            {
-                return Result<AgentResponseModel>.Error("Registration Fail");
-            }
+            var result = await _db.SaveChangesAsync();
+            if (result < 0) return Result<AgentResponseModel>.Error("Registration Fail");
 
             var user = await _db.Users
                 .OrderByDescending(x => x.UserId)
@@ -30,11 +27,8 @@ public class DA_Agent
             requestModel.UserId = user.UserId;
             var agent = requestModel.ChangeAgent();
             await _db.Agents.AddAsync(agent);
-            int addAgent = await _db.SaveChangesAsync();
-            if (addAgent < 0)
-            {
-                return Result<AgentResponseModel>.Error("Agent Register Fail");
-            }
+            var addAgent = await _db.SaveChangesAsync();
+            if (addAgent < 0) return Result<AgentResponseModel>.Error("Agent Register Fail");
             var agentResponse = new AgentResponseModel
             {
                 Agent = agent.ChangeAgent(user)
@@ -45,6 +39,7 @@ public class DA_Agent
         {
             response = Result<AgentResponseModel>.Error(ex);
         }
+
         return response;
     }
 
@@ -59,46 +54,20 @@ public class DA_Agent
             var agent = await _db.Agents
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.UserId == id);
-            if (user is null || agent is null)
-            {
-                return Result<AgentResponseModel>.Error("User Not Found");
-            }
-            if (!string.IsNullOrWhiteSpace(requestModel.UserName))
-            {
-                user.Name = requestModel.UserName;
-            }
-            if (!string.IsNullOrWhiteSpace(requestModel.AgentName))
-            {
-                agent.AgencyName = requestModel.AgentName;
-            }
+            if (user is null || agent is null) return Result<AgentResponseModel>.Error("User Not Found");
+            if (!string.IsNullOrWhiteSpace(requestModel.UserName)) user.Name = requestModel.UserName;
+            if (!string.IsNullOrWhiteSpace(requestModel.AgentName)) agent.AgencyName = requestModel.AgentName;
             if (!string.IsNullOrWhiteSpace(requestModel.LicenseNumber))
-            {
                 agent.LicenseNumber = requestModel.LicenseNumber;
-            }
-            if (!string.IsNullOrWhiteSpace(requestModel.Email))
-            {
-                user.Email = requestModel.Email;
-            }
-            if (!string.IsNullOrWhiteSpace(requestModel.Password))
-            {
-                user.Password = requestModel.Password;
-            }
-            if (!string.IsNullOrWhiteSpace(requestModel.Phone))
-            {
-                user.Phone = requestModel.Phone;
-            }
-            if (!string.IsNullOrWhiteSpace(requestModel.Address))
-            {
-                agent.Address = requestModel.Address;
-            }
+            if (!string.IsNullOrWhiteSpace(requestModel.Email)) user.Email = requestModel.Email;
+            if (!string.IsNullOrWhiteSpace(requestModel.Password)) user.Password = requestModel.Password;
+            if (!string.IsNullOrWhiteSpace(requestModel.Phone)) user.Phone = requestModel.Phone;
+            if (!string.IsNullOrWhiteSpace(requestModel.Address)) agent.Address = requestModel.Address;
             _db.Entry(user).State = EntityState.Modified;
             _db.Entry(agent).State = EntityState.Modified;
-            int result = await _db.SaveChangesAsync();
-            if (result < 0)
-            {
-                return Result<AgentResponseModel>.Error("Updating Fail");
-            }
-            AgentResponseModel agentResponse = new AgentResponseModel
+            var result = await _db.SaveChangesAsync();
+            if (result < 0) return Result<AgentResponseModel>.Error("Updating Fail");
+            var agentResponse = new AgentResponseModel
             {
                 Agent = agent.ChangeAgent(user)
             };
@@ -108,6 +77,7 @@ public class DA_Agent
         {
             return Result<AgentResponseModel>.Error(ex);
         }
+
         return response;
     }
 
@@ -122,16 +92,13 @@ public class DA_Agent
             var agent = await _db.Agents
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.UserId == userId);
-            if (user is null || agent is null)
-            {
-                return Result<object>.Error("User Not Found ");
-            }
+            if (user is null || agent is null) return Result<object>.Error("User Not Found ");
 
             _db.Users.Remove(user);
             _db.Entry(user).State = EntityState.Deleted;
             _db.Agents.Remove(agent);
             _db.Entry(agent).State = EntityState.Deleted;
-            int result = await _db.SaveChangesAsync();
+            var result = await _db.SaveChangesAsync();
             response = result > 0
                 ? Result<object>.Success(null, "Successfully Delete")
                 : Result<object>.Error("Deleting Fail");
@@ -140,14 +107,16 @@ public class DA_Agent
         {
             return Result<object>.Error(ex);
         }
+
         return response;
     }
+
     public async Task<Result<AgentDto>> SearchAgentByUserIdAsync(int id)
     {
         Result<AgentDto> model = null;
         try
         {
-            AgentDto? agent = await _db.Agents
+            var agent = await _db.Agents
                 .Where(ag => ag.UserId == id)
                 .Select(ag => new AgentDto
                 {
@@ -159,18 +128,19 @@ public class DA_Agent
                 })
                 .FirstOrDefaultAsync();
             var user = await _db.Users
-                              .Where(x => x.UserId == id)
-                              .Select(n => new UserModel
-                              {
-                                  Phone = n.Phone,
-                                  Email = n.Email
-                              })
-                              .FirstOrDefaultAsync();
+                .Where(x => x.UserId == id)
+                .Select(n => new UserModel
+                {
+                    Phone = n.Phone,
+                    Email = n.Email
+                })
+                .FirstOrDefaultAsync();
             if (agent is null || user is null)
             {
                 model = Result<AgentDto>.Error("User Not Found");
                 goto result;
             }
+
             agent.PhoneNumber = user.Phone;
             agent.Email = user.Email;
             model = Result<AgentDto>.Success(agent);
@@ -179,7 +149,8 @@ public class DA_Agent
         {
             model = Result<AgentDto>.Error(ex);
         }
-    result:
+
+        result:
         return model;
     }
 
@@ -188,7 +159,7 @@ public class DA_Agent
         Result<AgentListResponseModel> model = null;
         try
         {
-            List<AgentDto> agents = await _db.Agents
+            var agents = await _db.Agents
                 .Where(ag => string.IsNullOrEmpty(name) || ag.AgencyName.Contains(name))
                 .OrderBy(ag => ag.AgencyName)
                 .Skip((pageNumber - 1) * pageSize)
@@ -202,8 +173,8 @@ public class DA_Agent
                     Address = ag.Address
                 })
                 .ToListAsync();
-            int rowCount = _db.Agents.Count();
-            int pageCount = rowCount / pageSize;
+            var rowCount = _db.Agents.Count();
+            var pageCount = rowCount / pageSize;
             if (pageCount % pageSize > 0)
                 pageCount++;
             var data = new AgentListResponseModel
@@ -221,15 +192,17 @@ public class DA_Agent
         {
             model = Result<AgentListResponseModel>.Error(ex);
         }
+
         return model;
     }
 
-    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAsyncV2(string? name, int pageNumber, int pageSize)
+    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAsyncV2(string? name, int pageNumber,
+        int pageSize)
     {
         Result<AgentListResponseModel> model = null;
         try
         {
-            List<AgentDto> agents = await _db.Agents
+            var agents = await _db.Agents
                 .Where(ag => string.IsNullOrEmpty(name) || ag.AgencyName.Contains(name))
                 .OrderBy(ag => ag.AgencyName)
                 .Skip((pageNumber - 1) * pageSize)
@@ -243,8 +216,8 @@ public class DA_Agent
                     Address = ag.Address
                 })
                 .ToListAsync();
-            int rowCount = await _db.Agents.CountAsync();
-            int pageCount = rowCount / pageSize;
+            var rowCount = await _db.Agents.CountAsync();
+            var pageCount = rowCount / pageSize;
             if (pageCount % pageSize > 0)
                 pageCount++;
             var data = new AgentListResponseModel
@@ -261,15 +234,17 @@ public class DA_Agent
         {
             model = Result<AgentListResponseModel>.Error(ex);
         }
+
         return model;
     }
 
-    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAndLocationAsync(string name, string location, int pageNumber, int pageSize)
+    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAndLocationAsync(string name, string location,
+        int pageNumber, int pageSize)
     {
         Result<AgentListResponseModel> model = null;
         try
         {
-            List<AgentDto> agents = await _db.Agents
+            var agents = await _db.Agents
                 .Where(ag => ag.AgencyName.Contains(name) && ag.Address != null && ag.Address.Contains(location))
                 .OrderBy(ag => ag.AgencyName)
                 .Skip((pageNumber - 1) * pageSize)
@@ -283,12 +258,12 @@ public class DA_Agent
                     Address = ag.Address
                 })
                 .ToListAsync();
-            int rowCount = _db.Agents.Count();
-            int pageCount = rowCount / pageSize;
+            var rowCount = _db.Agents.Count();
+            var pageCount = rowCount / pageSize;
             if (pageCount % pageSize > 0)
                 pageCount++;
 
-            AgentListResponseModel data = new AgentListResponseModel
+            var data = new AgentListResponseModel
             {
                 PageCount = pageCount,
                 PageNumber = pageNumber,
@@ -301,8 +276,8 @@ public class DA_Agent
         {
             model = Result<AgentListResponseModel>.Error(ex);
         }
-        return model;
 
+        return model;
     }
 
 
@@ -312,24 +287,24 @@ public class DA_Agent
         try
         {
             List<AgentDto> agents = await (from ag in _db.Agents
-                                           join _user in _db.Users on ag.UserId equals _user.UserId
-                                           select new AgentDto
-                                           {
-                                               AgentId = ag.AgentId,
-                                               UserId = ag.UserId,
-                                               AgencyName = ag.AgencyName,
-                                               LicenseNumber = ag.LicenseNumber,
-                                               Email = _user.Email,
-                                               PhoneNumber = _user.Phone,
-                                               Address = ag.Address,
-                                               Role = "agent",
-                                           }).ToListAsync();
-            int rowCount = _db.Agents.Count();
-            int pageCount = rowCount / pageSize;
+                join _user in _db.Users on ag.UserId equals _user.UserId
+                select new AgentDto
+                {
+                    AgentId = ag.AgentId,
+                    UserId = ag.UserId,
+                    AgencyName = ag.AgencyName,
+                    LicenseNumber = ag.LicenseNumber,
+                    Email = _user.Email,
+                    PhoneNumber = _user.Phone,
+                    Address = ag.Address,
+                    Role = "agent"
+                }).ToListAsync();
+            var rowCount = _db.Agents.Count();
+            var pageCount = rowCount / pageSize;
             if (pageCount % pageSize > 0)
                 pageCount++;
 
-            AgentListResponseModel data = new AgentListResponseModel
+            var data = new AgentListResponseModel
             {
                 PageCount = pageCount,
                 PageNumber = pageNumber,
@@ -342,6 +317,7 @@ public class DA_Agent
         {
             model = Result<AgentListResponseModel>.Error(ex);
         }
+
         return model;
     }
 }

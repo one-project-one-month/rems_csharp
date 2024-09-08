@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace REMS.Database.AppDbContextModels;
 
-namespace REMS.Database.AppDbContextModels;
-
-public partial class PropertyImage
+public class PropertyImage
 {
     public int ImageId { get; set; }
 

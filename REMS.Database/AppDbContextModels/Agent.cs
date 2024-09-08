@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace REMS.Database.AppDbContextModels;
 
-namespace REMS.Database.AppDbContextModels;
-
-public partial class Agent
+public class Agent
 {
     public int AgentId { get; set; }
 
