@@ -33,7 +33,7 @@ public class SigninController : ControllerBase
     {
         try
         {
-            RefreshTokenModel request = new RefreshTokenModel
+            var request = new RefreshTokenModel
             {
                 AccessToken = GetAccessToken(),
                 RefreshToken = reqModel.RefreshToken

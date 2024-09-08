@@ -16,11 +16,8 @@ public class AgentController : ControllerBase
     {
         try
         {
-            Result<AgentResponseModel> response = await _blAgent.CreateAgentAsync(requestModel);
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
+            var response = await _blAgent.CreateAgentAsync(requestModel);
+            if (response.IsError) return BadRequest(response);
             return Ok(response);
         }
         catch (Exception ex)
@@ -34,11 +31,8 @@ public class AgentController : ControllerBase
     {
         try
         {
-            Result<object> response = await _blAgent.DeleteAgentAsync(userId);
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
+            var response = await _blAgent.DeleteAgentAsync(userId);
+            if (response.IsError) return BadRequest(response);
             return Ok(response);
         }
         catch (Exception ex)
@@ -52,11 +46,8 @@ public class AgentController : ControllerBase
     {
         try
         {
-            Result<AgentResponseModel> response = await _blAgent.UpdateAgentAsync(userId, requestModel);
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
+            var response = await _blAgent.UpdateAgentAsync(userId, requestModel);
+            if (response.IsError) return BadRequest(response);
             return Ok(response);
         }
         catch (Exception ex)
@@ -68,7 +59,7 @@ public class AgentController : ControllerBase
     [HttpGet("{id}", Name = "SearchUser")]
     public async Task<IActionResult> SearchUser(int id)
     {
-        Result<AgentDto> agentList = await _blAgent.SearchAgentAsync(id);
+        var agentList = await _blAgent.SearchAgentAsync(id);
 
         return Ok(agentList);
     }
@@ -76,7 +67,7 @@ public class AgentController : ControllerBase
     [HttpGet("{name}/{pageNo}/{pageSize}", Name = "SearchUserByName")]
     public async Task<IActionResult> SearchUserByName(string name, int pageNumber, int pageSize)
     {
-        Result<AgentListResponseModel> agentList = await _blAgent.SearchAgentByNameAsync(name, pageNumber, pageSize);
+        var agentList = await _blAgent.SearchAgentByNameAsync(name, pageNumber, pageSize);
 
         return Ok(agentList);
     }
@@ -84,15 +75,15 @@ public class AgentController : ControllerBase
     [HttpPost("location", Name = "SearchAgentByNameAndLocation")]
     public async Task<IActionResult> SearchAgentByNameAndLocation(SearchAgentRequestModel _searchAgentReqeustModel)
     {
-        Result<AgentListResponseModel> agentList = await _blAgent.SearchAgentByNameAndLocationAsync(_searchAgentReqeustModel);
+        var agentList = await _blAgent.SearchAgentByNameAndLocationAsync(_searchAgentReqeustModel);
 
         return Ok(agentList);
     }
 
-    [HttpGet("{pageNumber}/{pageSize}",Name = "AgentAll")]
+    [HttpGet("{pageNumber}/{pageSize}", Name = "AgentAll")]
     public async Task<IActionResult> AgentAll(int pageNumber, int pageSize)
     {
-        Result<AgentListResponseModel> agentList = await _blAgent.AgentAll(pageNumber,pageSize);
+        var agentList = await _blAgent.AgentAll(pageNumber, pageSize);
 
         return Ok(agentList);
     }

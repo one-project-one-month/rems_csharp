@@ -17,10 +17,7 @@ public class TransactionController : ControllerBase
         try
         {
             var response = await _blTransaction.CreateTransactionAsync(requestModel);
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
+            if (response.IsError) return BadRequest(response);
             return Ok(response);
         }
         catch (Exception ex)
@@ -35,10 +32,7 @@ public class TransactionController : ControllerBase
         try
         {
             var response = await _blTransaction.GetTransactionsAsync(pageNumber, pageSize);
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
+            if (response.IsError) return BadRequest(response);
             return Ok(response);
         }
         catch (Exception ex)
@@ -53,10 +47,7 @@ public class TransactionController : ControllerBase
         try
         {
             var response = await _blTransaction.GetTransactionsByPropertyIdAsync(propertyId, pageNo, pageSize);
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
+            if (response.IsError) return BadRequest(response);
             return Ok(response);
         }
         catch (Exception ex)
@@ -66,15 +57,15 @@ public class TransactionController : ControllerBase
     }
 
     [HttpGet("Property/Client")]
-    public async Task<IActionResult> GetTransactionsByPropertyIdAndClientId(int propertyId, int clientId, int pageNo = 1, int pageSize = 10)
+    public async Task<IActionResult> GetTransactionsByPropertyIdAndClientId(int propertyId, int clientId,
+        int pageNo = 1, int pageSize = 10)
     {
         try
         {
-            var response = await _blTransaction.GetTransactionsByPropertyIdAndClientIdAsync(propertyId, clientId, pageNo, pageSize);
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
+            var response =
+                await _blTransaction.GetTransactionsByPropertyIdAndClientIdAsync(propertyId, clientId, pageNo,
+                    pageSize);
+            if (response.IsError) return BadRequest(response);
             return Ok(response);
         }
         catch (Exception ex)
@@ -89,10 +80,7 @@ public class TransactionController : ControllerBase
         try
         {
             var response = await _blTransaction.GetTransactionsByClientIdAsync(clientId, pageNo, pageSize);
-            if (response.IsError)
-            {
-                return BadRequest(response);
-            }
+            if (response.IsError) return BadRequest(response);
             return Ok(response);
         }
         catch (Exception ex)
@@ -101,4 +89,3 @@ public class TransactionController : ControllerBase
         }
     }
 }
-

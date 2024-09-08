@@ -1,5 +1,4 @@
-﻿using REMS.Models;
-using REMS.Models.Property;
+﻿using REMS.Models.Property;
 
 namespace REMS.BackendApi.Features.Property;
 
@@ -17,51 +16,42 @@ public class PropertyController : ControllerBase
 
     [HttpGet("{pageNo}/{pageSize}")]
     public async Task<IActionResult> GetProperties(
-                                                int? agentId, string? address, string? city,
-                                                string? state, string? zipCode,
-                                                string? propertyType, decimal? minPrice,
-                                                decimal? maxPrice, decimal? size,
-                                                int? numberOfBedrooms, int? numberOfBathrooms,
-                                                int? yearBuilt, string? availabilityType,
-                                                int? minRentalPeriod, string? approvedBy,
-                                                DateTime? addDate, DateTime? editDate,
-                                                string? propertyStatus,
-                                                int pageNo = 1, int pageSize = 10
-                                                )
+        int? agentId, string? address, string? city,
+        string? state, string? zipCode,
+        string? propertyType, decimal? minPrice,
+        decimal? maxPrice, decimal? size,
+        int? numberOfBedrooms, int? numberOfBathrooms,
+        int? yearBuilt, string? availabilityType,
+        int? minRentalPeriod, string? approvedBy,
+        DateTime? addDate, DateTime? editDate,
+        string? propertyStatus,
+        int pageNo = 1, int pageSize = 10
+    )
     {
         try
         {
-
             if (!string.IsNullOrWhiteSpace(propertyStatus) && !IsValidPropertyStatus(propertyStatus))
-            {
                 return BadRequest($"Invalid Status; Status should be one of the following: " +
-                    $"{string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
-            }
+                                  $"{string.Join(", ", Enum.GetNames(typeof(PropertyStatus)))}");
             if (!string.IsNullOrWhiteSpace(propertyType) && !IsValidPropertyType(propertyType))
-            {
                 return BadRequest($"Invalid Type; Property Type should be one of the following: " +
-                    $"{string.Join(", ", Enum.GetNames(typeof(PropertyType)))}");
-            }
+                                  $"{string.Join(", ", Enum.GetNames(typeof(PropertyType)))}");
 
             if (!string.IsNullOrWhiteSpace(availabilityType) && !IsValidPropertyAvailiableType(availabilityType))
-            {
-                return BadRequest($"Invalid Availability Type; Property Availability Type should be one of the following" +
+                return BadRequest(
+                    $"Invalid Availability Type; Property Availability Type should be one of the following" +
                     $": {string.Join(", ", Enum.GetNames(typeof(PropertyAvailiableType)))}");
-            }
 
-            if (pageNo < 1 || pageSize < 1)
-            {
-                return BadRequest("PageNo or PageSize cannot be less than 1");
-            }
+            if (pageNo < 1 || pageSize < 1) return BadRequest("PageNo or PageSize cannot be less than 1");
 
             var response = await _blProperties.GetProperties(agentId, address, city, state,
-                                                             zipCode, propertyType,
-                                                             minPrice, maxPrice, size,
-                                                             numberOfBedrooms, numberOfBathrooms,
-                                                             yearBuilt, availabilityType,
-                                                             minRentalPeriod, approvedBy,
-                                                             addDate, editDate,
-                                                             propertyStatus, pageNo, pageSize);
+                zipCode, propertyType,
+                minPrice, maxPrice, size,
+                numberOfBedrooms, numberOfBathrooms,
+                yearBuilt, availabilityType,
+                minRentalPeriod, approvedBy,
+                addDate, editDate,
+                propertyStatus, pageNo, pageSize);
 
             return Ok(response);
         }
@@ -89,10 +79,7 @@ public class PropertyController : ControllerBase
     public async Task<IActionResult> CreateProperty([FromBody] PropertyRequestModel requestModel)
     {
         var validationResult = ValidatePropertyRequestModel(requestModel);
-        if (validationResult != null)
-        {
-            return validationResult;
-        }
+        if (validationResult != null) return validationResult;
 
         try
         {
@@ -108,16 +95,10 @@ public class PropertyController : ControllerBase
     [HttpPut("Update/{propertyId}")]
     public async Task<IActionResult> UpdateProperty(int propertyId, [FromBody] PropertyRequestModel requestModel)
     {
-        if (propertyId < 1)
-        {
-            return BadRequest("Invalid Property Id");
-        }
+        if (propertyId < 1) return BadRequest("Invalid Property Id");
 
         var validationResult = ValidatePropertyRequestModel(requestModel);
-        if (validationResult != null)
-        {
-            return validationResult;
-        }
+        if (validationResult != null) return validationResult;
 
         try
         {
@@ -133,15 +114,9 @@ public class PropertyController : ControllerBase
     [HttpPut("ChangeStatus")]
     public async Task<IActionResult> ChangePropertyStatus(PropertyStatusChangeRequestModel requestModel)
     {
-        if (requestModel == null)
-        {
-            return BadRequest("Reuqest cannot be null");
-        }
+        if (requestModel == null) return BadRequest("Reuqest cannot be null");
 
-        if (requestModel.PropertyId < 1)
-        {
-            return BadRequest("Invalid Property Id");
-        }
+        if (requestModel.PropertyId < 1) return BadRequest("Invalid Property Id");
 
         try
         {
@@ -152,16 +127,12 @@ public class PropertyController : ControllerBase
         {
             return BadRequest(ex.Message);
         }
-
     }
 
     [HttpDelete("{propertyId}")]
     public async Task<IActionResult> DeleteProperty(int propertyId)
     {
-        if (propertyId < 1)
-        {
-            return BadRequest("Invalid Property Id");
-        }
+        if (propertyId < 1) return BadRequest("Invalid Property Id");
 
         try
         {
@@ -176,36 +147,34 @@ public class PropertyController : ControllerBase
 
     private IActionResult ValidatePropertyRequestModel(PropertyRequestModel requestModel)
     {
-        if (requestModel == null)
-        {
-            return BadRequest("Request model cannot be null");
-        }
+        if (requestModel == null) return BadRequest("Request model cannot be null");
 
         if (!IsValidPropertyType(requestModel.PropertyType))
-        {
-            return BadRequest($"Invalid Type; Property Type should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyType)))}");
-        }
+            return BadRequest(
+                $"Invalid Type; Property Type should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyType)))}");
 
         if (!IsValidPropertyAvailiableType(requestModel.AvailiablityType))
-        {
-            return BadRequest($"Invalid Availability Type; Property Availability Type should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyAvailiableType)))}");
-        }
+            return BadRequest(
+                $"Invalid Availability Type; Property Availability Type should be one of the following: {string.Join(", ", Enum.GetNames(typeof(PropertyAvailiableType)))}");
 
         return null;
     }
 
     private static bool IsValidPropertyStatus(string status)
     {
-        return Enum.TryParse<PropertyStatus>(status, out var parsedStatus) && Enum.IsDefined(typeof(PropertyStatus), parsedStatus);
+        return Enum.TryParse<PropertyStatus>(status, out var parsedStatus) &&
+               Enum.IsDefined(typeof(PropertyStatus), parsedStatus);
     }
 
     private static bool IsValidPropertyType(string propertyType)
     {
-        return Enum.TryParse<PropertyType>(propertyType, out var parsedPropertyType) && Enum.IsDefined(typeof(PropertyType), parsedPropertyType);
+        return Enum.TryParse<PropertyType>(propertyType, out var parsedPropertyType) &&
+               Enum.IsDefined(typeof(PropertyType), parsedPropertyType);
     }
 
     private static bool IsValidPropertyAvailiableType(string propertyAvailiableType)
     {
-        return Enum.TryParse<PropertyAvailiableType>(propertyAvailiableType, out var paresedPropertyAvailiableType) && Enum.IsDefined(typeof(PropertyAvailiableType), paresedPropertyAvailiableType);
+        return Enum.TryParse<PropertyAvailiableType>(propertyAvailiableType, out var paresedPropertyAvailiableType) &&
+               Enum.IsDefined(typeof(PropertyAvailiableType), paresedPropertyAvailiableType);
     }
 }

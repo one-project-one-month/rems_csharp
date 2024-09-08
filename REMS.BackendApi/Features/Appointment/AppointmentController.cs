@@ -1,96 +1,92 @@
-﻿namespace REMS.BackendApi.Features.Appointment
+﻿namespace REMS.BackendApi.Features.Appointment;
+
+[Route("api/v1/appointments")]
+[ApiController]
+public class AppointmentController : ControllerBase
 {
-    [Route("api/v1/appointments")]
-    [ApiController]
-    public class AppointmentController : ControllerBase
+    private readonly BL_Appointment _blAppointment;
+
+    public AppointmentController(BL_Appointment blAppointment)
     {
-        private readonly BL_Appointment _blAppointment;
+        _blAppointment = blAppointment;
+    }
 
-        public AppointmentController(BL_Appointment blAppointment)
+    [HttpPost]
+    public async Task<IActionResult> PostAppointment(AppointmentRequestModel requestModel)
+    {
+        try
         {
-            _blAppointment = blAppointment;
+            var response = await _blAppointment.CreateAppointmentAsync(requestModel);
+            if (response.IsError) return BadRequest(response);
+            return Ok(response);
         }
-
-        [HttpPost]
-        public async Task<IActionResult> PostAppointment(AppointmentRequestModel requestModel)
+        catch (Exception ex)
         {
-            try
-            {
-                var response = await _blAppointment.CreateAppointmentAsync(requestModel);
-                if (response.IsError)
-                {
-                    return BadRequest(response);
-                }
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
-            }
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
+    }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAppointment(int id)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteAppointment(int id)
+    {
+        try
         {
-            try
-            {
-                var response = await _blAppointment.DeleteAppointmentAsync(id);
-                if (response.IsError)
-                    return BadRequest(response);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
-            }
+            var response = await _blAppointment.DeleteAppointmentAsync(id);
+            if (response.IsError)
+                return BadRequest(response);
+            return Ok(response);
         }
-
-        [HttpGet("property/{id}/{pageNo}/{pageSize}")]
-        public async Task<IActionResult> GetAppointmentByPropertyIdAsync(int propertyId, int pageNo = 1, int pageSize = 10)
+        catch (Exception ex)
         {
-            try
-            {
-                var response = await _blAppointment.GetAppointmentByPropertyIdAsycn(propertyId, pageNo, pageSize);
-                if (response.IsError)
-                    return BadRequest(response);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
-            }
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
+    }
 
-        [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateAppointment(int id, AppointmentRequestModel requestModel)
+    [HttpGet("property/{id}/{pageNo}/{pageSize}")]
+    public async Task<IActionResult> GetAppointmentByPropertyIdAsync(int propertyId, int pageNo = 1, int pageSize = 10)
+    {
+        try
         {
-            try
-            {
-                var response = await _blAppointment.UpdateAppointmentAsync(id, requestModel);
-                if (response.IsError)
-                    return BadRequest(response);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
-            }
+            var response = await _blAppointment.GetAppointmentByPropertyIdAsycn(propertyId, pageNo, pageSize);
+            if (response.IsError)
+                return BadRequest(response);
+            return Ok(response);
         }
-
-        [HttpGet("client/{id}/{pageNo}/{pageSize}", Name = "GetAppointmentByClientId")]
-        public async Task<IActionResult> GetAppointmentByClientId(int clientId, int pageNo, int pageSize)
+        catch (Exception ex)
         {
-            try
-            {
-                var response = await _blAppointment.GetAppointmentByClientId(clientId, pageNo, pageSize);
-                if (response.IsError)
-                    return BadRequest(response);
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
-            }
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
+        }
+    }
+
+    [HttpPatch("{id}")]
+    public async Task<IActionResult> UpdateAppointment(int id, AppointmentRequestModel requestModel)
+    {
+        try
+        {
+            var response = await _blAppointment.UpdateAppointmentAsync(id, requestModel);
+            if (response.IsError)
+                return BadRequest(response);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex);
+        }
+    }
+
+    [HttpGet("client/{id}/{pageNo}/{pageSize}", Name = "GetAppointmentByClientId")]
+    public async Task<IActionResult> GetAppointmentByClientId(int clientId, int pageNo, int pageSize)
+    {
+        try
+        {
+            var response = await _blAppointment.GetAppointmentByClientId(clientId, pageNo, pageSize);
+            if (response.IsError)
+                return BadRequest(response);
+            return Ok(response);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, ex.ToString());
         }
     }
 }

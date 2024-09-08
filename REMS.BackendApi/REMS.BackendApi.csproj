@@ -1,26 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.20" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.20" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
-  </ItemGroup>
+    <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' "/>
+    <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' "/>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.20"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.20"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\REMS.Database\REMS.Database.csproj" />
-    <ProjectReference Include="..\REMS.Mapper\REMS.Mapper.csproj" />
-    <ProjectReference Include="..\REMS.Models\REMS.Models.csproj" />
-    <ProjectReference Include="..\REMS.Modules\REMS.Modules.csproj" />
-    <ProjectReference Include="..\REMS.Shared\REMS.Shared.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\REMS.Database\REMS.Database.csproj"/>
+        <ProjectReference Include="..\REMS.Mapper\REMS.Mapper.csproj"/>
+        <ProjectReference Include="..\REMS.Models\REMS.Models.csproj"/>
+        <ProjectReference Include="..\REMS.Modules\REMS.Modules.csproj"/>
+        <ProjectReference Include="..\REMS.Shared\REMS.Shared.csproj"/>
+    </ItemGroup>
 
 </Project>
