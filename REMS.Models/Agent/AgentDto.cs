@@ -6,6 +6,8 @@ public class AgentDto
 
     public int? UserId { get; set; }
 
+    public string? AgentName { get; set; }
+
     public string? AgencyName { get; set; } = null!;
 
     public string? LicenseNumber { get; set; } = null!;

@@ -43,11 +43,11 @@ public class AppointmentController : ControllerBase
     }
 
     [HttpGet("property/{id}/{pageNo}/{pageSize}")]
-    public async Task<IActionResult> GetAppointmentByPropertyIdAsync(int propertyId, int pageNo = 1, int pageSize = 10)
+    public async Task<IActionResult> GetAppointmentByPropertyIdAsync(int id, int pageNo = 1, int pageSize = 10)
     {
         try
         {
-            var response = await _blAppointment.GetAppointmentByPropertyIdAsycn(propertyId, pageNo, pageSize);
+            var response = await _blAppointment.GetAppointmentByPropertyIdAsycn(id, pageNo, pageSize);
             if (response.IsError)
                 return BadRequest(response);
             return Ok(response);
@@ -75,11 +75,11 @@ public class AppointmentController : ControllerBase
     }
 
     [HttpGet("client/{id}/{pageNo}/{pageSize}", Name = "GetAppointmentByClientId")]
-    public async Task<IActionResult> GetAppointmentByClientId(int clientId, int pageNo, int pageSize)
+    public async Task<IActionResult> GetAppointmentByClientId(int id, int pageNo, int pageSize)
     {
         try
         {
-            var response = await _blAppointment.GetAppointmentByClientId(clientId, pageNo, pageSize);
+            var response = await _blAppointment.GetAppointmentByClientId(id, pageNo, pageSize);
             if (response.IsError)
                 return BadRequest(response);
             return Ok(response);
