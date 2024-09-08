@@ -1,6 +1,8 @@
 ## Real Estate Management System (REMS)
 
-The Real Estate Management System (REMS) is designed to facilitate the buying, selling, and renting of properties. This system allows users to manage property listings, transactions, appointments, and communications efficiently. Below is a summary of the domain logic and the corresponding database table structures.
+The Real Estate Management System (REMS) is designed to facilitate the buying, selling, and renting of properties. This
+system allows users to manage property listings, transactions, appointments, and communications efficiently. Below is a
+summary of the domain logic and the corresponding database table structures.
 
 ### Domain Logic Summary
 
@@ -18,6 +20,7 @@ The Real Estate Management System (REMS) is designed to facilitate the buying, s
 ### Database Table Structures
 
 #### Users
+
 ```sql
 CREATE TABLE Users (
     user_id INT PRIMARY KEY IDENTITY(1,1),
@@ -31,6 +34,7 @@ CREATE TABLE Users (
 ```
 
 #### Properties
+
 ```sql
 CREATE TABLE Properties (
     property_id INT PRIMARY KEY IDENTITY(1,1),
@@ -56,6 +60,7 @@ CREATE TABLE Properties (
 ```
 
 #### Agents
+
 ```sql
 CREATE TABLE Agents (
     agent_id INT PRIMARY KEY IDENTITY(1,1),
@@ -69,6 +74,7 @@ CREATE TABLE Agents (
 ```
 
 #### Clients
+
 ```sql
 CREATE TABLE Clients (
     client_id INT PRIMARY KEY IDENTITY(1,1),
@@ -82,6 +88,7 @@ CREATE TABLE Clients (
 ```
 
 #### Transactions
+
 ```sql
 CREATE TABLE Transactions (
     transaction_id INT PRIMARY KEY IDENTITY(1,1),
@@ -96,6 +103,7 @@ CREATE TABLE Transactions (
 ```
 
 #### Appointments
+
 ```sql
 CREATE TABLE Appointments (
     appointment_id INT PRIMARY KEY IDENTITY(1,1),
@@ -109,6 +117,7 @@ CREATE TABLE Appointments (
 ```
 
 #### Property Images
+
 ```sql
 CREATE TABLE PropertyImages (
     image_id INT PRIMARY KEY IDENTITY(1,1),
@@ -120,6 +129,7 @@ CREATE TABLE PropertyImages (
 ```
 
 #### Reviews
+
 ```sql
 CREATE TABLE Reviews (
     review_id INT PRIMARY KEY IDENTITY(1,1),
@@ -132,6 +142,7 @@ CREATE TABLE Reviews (
 ```
 
 #### Messages
+
 ```sql
 CREATE TABLE Messages (
     message_id INT PRIMARY KEY IDENTITY(1,1),
@@ -143,7 +154,9 @@ CREATE TABLE Messages (
     status NVARCHAR(50)
 );
 ```
+
 #### LoginTable
+
 ```sql
 USE [REMS]
 GO
@@ -168,6 +181,7 @@ CREATE TABLE [dbo].[Login](
     GO
 
 ```
+
 ### Database First Approach
 
 To scaffold the database using the Database First approach with Entity Framework Core, run the following commands:
@@ -188,6 +202,7 @@ GitHub Actions
 
 https://stackoverflow.com/questions/30346907/how-to-remove-webdav-module-from-iis
 https://learn.microsoft.com/en-us/answers/questions/856808/iis-net-6-aspnetcorev2-405-method-not-allowed
+
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
