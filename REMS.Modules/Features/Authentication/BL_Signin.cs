@@ -21,7 +21,7 @@ public class BL_Signin
         }
 
         model = await _daSignin.Signin(requestModel);
-        result:
+    result:
         return model;
     }
 
@@ -73,7 +73,7 @@ public class BL_Signin
         };
         model = Result<RefreshTokenResponseModel>.Success(model.Data);
 
-        result:
+    result:
         return model;
     }
 
@@ -139,7 +139,7 @@ public class BL_Signin
 
         model = Result<RefreshTokenResponseModel>.SuccessResult();
 
-        result:
+    result:
         return model;
     }
 }

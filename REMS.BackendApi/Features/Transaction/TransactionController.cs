@@ -29,6 +29,7 @@ public class TransactionController : ControllerBase
     [HttpGet]
     public async Task<IActionResult> GetTransactions(int pageNumber = 1, int pageSize = 10)
     {
+
         try
         {
             var response = await _blTransaction.GetTransactionsAsync(pageNumber, pageSize);
