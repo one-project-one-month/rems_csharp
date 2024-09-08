@@ -26,7 +26,7 @@ public class DA_Signin
             goto result;
         }
 
-        string role = user.Role;
+        var role = user.Role;
         var tokenModel = new AccessTokenRequestModel
         {
             UserName = user.Name,

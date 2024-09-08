@@ -4,7 +4,10 @@ public class BL_Review
 {
     private readonly DA_Review _daReview;
 
-    public BL_Review(DA_Review daReview) => _daReview = daReview;
+    public BL_Review(DA_Review daReview)
+    {
+        _daReview = daReview;
+    }
 
 
     public async Task<Result<ReviewListResponseModel>> GetReview()
@@ -15,10 +18,7 @@ public class BL_Review
 
     public async Task<Result<ReviewListResponseModel>> GetReviews(int? propertyId, int pageNo, int pageSize)
     {
-        if (pageNo < 1 || pageSize < 1)
-        {
-            throw new Exception("PageNo or PageSize Cannot be less than 1");
-        }
+        if (pageNo < 1 || pageSize < 1) throw new Exception("PageNo or PageSize Cannot be less than 1");
 
         var response = await _daReview.GetReviews(propertyId, pageNo, pageSize);
         return response;
@@ -26,10 +26,7 @@ public class BL_Review
 
     public async Task<Result<ReviewResponseModel>> GetReviewById(int reviewId)
     {
-        if (reviewId < 1)
-        {
-            throw new Exception("Invalid ReviewId");
-        }
+        if (reviewId < 1) throw new Exception("Invalid ReviewId");
 
         var response = await _daReview.GetReviewById(reviewId);
         return response;

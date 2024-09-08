@@ -1,7 +1,4 @@
-﻿using REMS.Modules.Features.Agent;
-using REMS.Modules.Features.Review;
-
-namespace REMS.Modules.Features.Client;
+﻿namespace REMS.Modules.Features.Client;
 
 public class BL_Client
 {
@@ -18,12 +15,10 @@ public class BL_Client
         return response;
     }
 
-    public async Task<Result<ClientListResponseModel>> GetClients(string? firstName, string? lastName, string? email, string? phone, int pageNo, int pageSize)
+    public async Task<Result<ClientListResponseModel>> GetClients(string? firstName, string? lastName, string? email,
+        string? phone, int pageNo, int pageSize)
     {
-        if (pageNo < 1 || pageSize < 1)
-        {
-            throw new Exception("PageNo or PageSize Cannot be less than 1");
-        }
+        if (pageNo < 1 || pageSize < 1) throw new Exception("PageNo or PageSize Cannot be less than 1");
 
         var response = await _daClient.GetClients(firstName, lastName, email, phone, pageNo, pageSize);
         return response;

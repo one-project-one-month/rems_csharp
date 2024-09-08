@@ -1,6 +1,4 @@
-﻿
-
-namespace REMS.Modules.Features.Authentication;
+﻿namespace REMS.Modules.Features.Authentication;
 
 public class BL_Signin
 {
@@ -34,10 +32,7 @@ public class BL_Signin
         #region Check Required Fields
 
         model = CheckRefreshTokenRequiredFields(reqModel);
-        if (model.IsError)
-        {
-            goto result;
-        }
+        if (model.IsError) goto result;
 
         #endregion
 
@@ -50,7 +45,7 @@ public class BL_Signin
             goto result;
         }
 
-        int userId = tokenUser.UserId!.CheckEntityItem<int>();
+        var userId = tokenUser.UserId!.CheckEntityItem<int>();
         model = await _daSignin.GetRefreshTokenByUserId(userId, reqModel.RefreshToken);
         if (model.IsError) goto result;
 
@@ -102,7 +97,7 @@ public class BL_Signin
             string DomainMapper(Match match)
             {
                 var idn = new IdnMapping();
-                string domainName = idn.GetAscii(match.Groups[2].Value);
+                var domainName = idn.GetAscii(match.Groups[2].Value);
                 return match.Groups[1].Value + domainName;
             }
         }

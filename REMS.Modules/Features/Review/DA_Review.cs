@@ -4,7 +4,10 @@ public class DA_Review
 {
     private readonly AppDbContext _context;
 
-    public DA_Review(AppDbContext context) => _context = context;
+    public DA_Review(AppDbContext context)
+    {
+        _context = context;
+    }
 
     public async Task<Result<ReviewListResponseModel>> GetReview()
     {
@@ -23,7 +26,7 @@ public class DA_Review
 
             var reviewListResponse = new ReviewListResponseModel
             {
-                DataList = reviewResponseModel,
+                DataList = reviewResponseModel
             };
 
             model = Result<ReviewListResponseModel>.Success(reviewListResponse);
@@ -45,18 +48,15 @@ public class DA_Review
             var query = _context.Reviews.AsNoTracking();
 
             // Apply filters
-            if (propertyId.HasValue)
-            {
-                query = query.Where(r => r.PropertyId == propertyId.Value);
-            }
+            if (propertyId.HasValue) query = query.Where(r => r.PropertyId == propertyId.Value);
 
             var totalCount = await _context.Reviews.CountAsync();
             var pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
 
             var reviews = await query
-            .Skip((pageNo - 1) * pageSize)
-            .Take(pageSize)
-            .ToListAsync();
+                .Skip((pageNo - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
 
             var reviewResponseModel = reviews.Select(review => new ReviewResponseModel
             {
@@ -75,6 +75,7 @@ public class DA_Review
             model = Result<ReviewListResponseModel>.Error(ex);
             return model;
         }
+
         return model;
     }
 
@@ -87,10 +88,7 @@ public class DA_Review
                 .Reviews
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ReviewId == reviewId);
-            if (review is null)
-            {
-                throw new Exception("review Not Found");
-            }
+            if (review is null) throw new Exception("review Not Found");
             var responseModel = new ReviewResponseModel
             {
                 Review = review.Change()
@@ -111,16 +109,14 @@ public class DA_Review
         try
         {
             if (requestModel == null)
-            {
                 throw new ArgumentNullException(nameof(requestModel), "Request model cannot be null");
-            }
 
             var review = requestModel.Change();
             await _context.Reviews.AddAsync(review);
-            int addReview = await _context.SaveChangesAsync();
+            var addReview = await _context.SaveChangesAsync();
             var responseModel = new ReviewResponseModel
             {
-                Review = review.Change(),
+                Review = review.Change()
             };
 
             model = addReview > 0
@@ -131,6 +127,7 @@ public class DA_Review
         {
             model = Result<ReviewResponseModel>.Error(ex);
         }
+
         return model;
     }
 
@@ -143,37 +140,19 @@ public class DA_Review
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ReviewId == id);
 
-            if (review is null)
-            {
-                new MessageResponseModel(false, "Not Found Error");
-            }
+            if (review is null) new MessageResponseModel(false, "Not Found Error");
 
             #region Patch Method Validation Conditions
 
-            if (requestModel.UserId != null)
-            {
-                review.UserId = requestModel.UserId;
-            }
+            if (requestModel.UserId != null) review.UserId = requestModel.UserId;
 
-            if (requestModel.PropertyId != null)
-            {
-                review.PropertyId = requestModel.PropertyId;
-            }
+            if (requestModel.PropertyId != null) review.PropertyId = requestModel.PropertyId;
 
-            if (requestModel.Rating != null)
-            {
-                review.Rating = requestModel.Rating;
-            }
+            if (requestModel.Rating != null) review.Rating = requestModel.Rating;
 
-            if (!string.IsNullOrEmpty(requestModel.Comments))
-            {
-                review.Comments = requestModel.Comments;
-            }
+            if (!string.IsNullOrEmpty(requestModel.Comments)) review.Comments = requestModel.Comments;
 
-            if (requestModel.DateCreated != null)
-            {
-                review.DateCreated = requestModel.DateCreated;
-            }
+            if (requestModel.DateCreated != null) review.DateCreated = requestModel.DateCreated;
 
             #endregion
 
@@ -191,6 +170,7 @@ public class DA_Review
         {
             model = Result<ReviewResponseModel>.Error(ex);
         }
+
         return model;
     }
 
@@ -203,10 +183,7 @@ public class DA_Review
                 .Reviews
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.ReviewId == id);
-            if (review is null)
-            {
-                new MessageResponseModel(false, "Review Not Found");
-            }
+            if (review is null) new MessageResponseModel(false, "Review Not Found");
 
             _context.Reviews.Remove(review);
             var result = await _context.SaveChangesAsync();
@@ -218,6 +195,7 @@ public class DA_Review
         {
             return model = Result<object>.Error(ex);
         }
+
         return model;
     }
 }
