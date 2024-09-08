@@ -150,7 +150,7 @@ public class DA_Agent
             model = Result<AgentDto>.Error(ex);
         }
 
-        result:
+    result:
         return model;
     }
 
@@ -287,18 +287,18 @@ public class DA_Agent
         try
         {
             List<AgentDto> agents = await (from ag in _db.Agents
-                join _user in _db.Users on ag.UserId equals _user.UserId
-                select new AgentDto
-                {
-                    AgentId = ag.AgentId,
-                    UserId = ag.UserId,
-                    AgencyName = ag.AgencyName,
-                    LicenseNumber = ag.LicenseNumber,
-                    Email = _user.Email,
-                    PhoneNumber = _user.Phone,
-                    Address = ag.Address,
-                    Role = "agent"
-                }).ToListAsync();
+                                           join _user in _db.Users on ag.UserId equals _user.UserId
+                                           select new AgentDto
+                                           {
+                                               AgentId = ag.AgentId,
+                                               UserId = ag.UserId,
+                                               AgencyName = ag.AgencyName,
+                                               LicenseNumber = ag.LicenseNumber,
+                                               Email = _user.Email,
+                                               PhoneNumber = _user.Phone,
+                                               Address = ag.Address,
+                                               Role = "agent"
+                                           }).ToListAsync();
             var rowCount = _db.Agents.Count();
             var pageCount = rowCount / pageSize;
             if (pageCount % pageSize > 0)

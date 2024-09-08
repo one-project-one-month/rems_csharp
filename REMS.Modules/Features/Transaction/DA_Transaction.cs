@@ -55,7 +55,7 @@ public class DA_Transaction
             model = Result<string>.Error(ex);
         }
 
-        result:
+    result:
         return model;
     }
 
@@ -143,7 +143,7 @@ public class DA_Transaction
             return model = Result<TransactionListResponseModel>.Error(ex);
         }
 
-        result:
+    result:
         return model;
     }
 
@@ -194,7 +194,7 @@ public class DA_Transaction
             return model = Result<TransactionListResponseModel>.Error(ex);
         }
 
-        result:
+    result:
         return model;
     }
 
@@ -245,7 +245,7 @@ public class DA_Transaction
             return model = Result<TransactionListResponseModel>.Error(ex);
         }
 
-        result:
+    result:
         return model;
     }
 }

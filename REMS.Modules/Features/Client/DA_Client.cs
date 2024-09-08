@@ -162,7 +162,7 @@ public class DA_Client
             model = Result<ClientModel>.Error(ex);
         }
 
-        result:
+    result:
         return model;
     }
 
@@ -222,7 +222,7 @@ public class DA_Client
             model = Result<ClientModel>.Error(ex);
         }
 
-        result:
+    result:
         return model;
     }
 

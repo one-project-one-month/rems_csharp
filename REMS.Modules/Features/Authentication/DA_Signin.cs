@@ -39,7 +39,7 @@ public class DA_Signin
 
         model = Result<SigninResponseModel>.Success(new SigninResponseModel(role, token));
 
-        result:
+    result:
         return model;
     }
 
@@ -77,7 +77,7 @@ public class DA_Signin
         await _db.SaveChangesAsync();
 
         model = Result<string>.Success("SignOut successful.");
-        result:
+    result:
         return model;
     }
 
@@ -116,7 +116,7 @@ public class DA_Signin
         };
         model = Result<RefreshTokenResponseModel>.Success(tokenObj);
 
-        result:
+    result:
         return model;
     }
 
