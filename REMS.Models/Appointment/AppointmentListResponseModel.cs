@@ -1,16 +1,10 @@
 ﻿using REMS.Models.Custom;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace REMS.Models.Appointment
+namespace REMS.Models.Appointment;
+
+public class AppointmentListResponseModel
 {
-    public class AppointmentListResponseModel
-    {
-        public PageSettingModel? pageSetting { get; set; }
+    public PageSettingModel? pageSetting { get; set; }
 
-        public List<AppointmentModel>? lstAppointment { get; set; }
-    }
+    public List<AppointmentModel>? lstAppointment { get; set; }
 }

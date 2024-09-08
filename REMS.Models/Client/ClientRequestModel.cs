@@ -19,6 +19,5 @@ public class ClientRequestModel
 
     public string? Address { get; set; }
 
-    [JsonIgnore]
-    public DateTime DateCreate { get; set; } = DateTime.Now;
+    [JsonIgnore] public DateTime DateCreate { get; set; } = DateTime.Now;
 }

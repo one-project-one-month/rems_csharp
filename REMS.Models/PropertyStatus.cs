@@ -12,7 +12,7 @@ public enum PropertyStatus
 public enum PropertyAvailiableType
 {
     Sell,
-    Rent,
+    Rent
 }
 
 public enum PropertyType
@@ -21,4 +21,3 @@ public enum PropertyType
     Apartment,
     Townhouses
 }
-

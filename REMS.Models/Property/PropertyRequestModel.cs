@@ -30,5 +30,5 @@ public class PropertyRequestModel
 
     public int? MinRentalPeriod { get; set; }
 
-    public List<PropertyImageRequestModel> Images { get; set; } = new List<PropertyImageRequestModel>();
+    public List<PropertyImageRequestModel> Images { get; set; } = new();
 }
