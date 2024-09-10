@@ -204,4 +204,63 @@ public class DA_Appointment
 
         return model;
     }
+
+    public async Task<Result<AppointmentDetailList>> GetAllAppointments(int pageNo, int pageSize)
+    {
+        Result<AppointmentDetailList> model = null;
+        try
+        {
+            var query = from app in _db.Appointments
+                        join cli in _db.Clients on app.ClientId equals cli.ClientId
+                        join pro in _db.Properties on app.PropertyId equals pro.PropertyId
+                        join age in _db.Agents on pro.AgentId equals age.AgentId
+                        join user in _db.Users on age.UserId equals user.UserId
+                        select new AppointmentDetail
+                        {
+                            AppointmentId = app.AppointmentId,
+                            AgentName = age.AgencyName,
+                            ClientName = $"{cli.FirstName} {cli.LastName}",
+                            AppointmentDate = app.AppointmentDate.ToString("yyyy-MM-dd"),
+                            AppointmentTime = app.AppointmentTime.ToString(),
+                            AgentPhoneNumber = user.Phone,
+                            Status = app.Status,
+                            Note = app.Notes,
+                            Address = pro.Address,
+                            City = pro.City,
+                            State = pro.State,
+                            Price = pro.Price,
+                            Size = pro.Size,
+                            NumberOfBedrooms = pro.NumberOfBedrooms,
+                            NumberOfBathrooms = pro.NumberOfBathrooms
+                        };
+
+            var totalCount = await query.CountAsync();
+
+            var appointmentList = await query
+                .Skip((pageNo - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+
+            if (!appointmentList.Any())
+                throw new Exception("No Data Found");
+
+            var pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
+
+            var appointmentDetailList = new AppointmentDetailList
+            {
+                pageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount),
+                appointmentDetails = appointmentList
+            };
+
+
+            model = Result<AppointmentDetailList>.Success(appointmentDetailList);
+            return model;
+        }
+        catch (Exception ex)
+        {
+            model = Result<AppointmentDetailList>.Error(ex);
+            return model;
+        }
+    } 
 }

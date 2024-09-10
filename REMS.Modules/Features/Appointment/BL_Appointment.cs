@@ -60,4 +60,9 @@ public class BL_Appointment
     {
         return await _daAppointment.GetAppointmentByClientId(clientId, pageNo, pageSize);
     }
+
+    public async Task<Result<AppointmentDetailList>> GetAllAppointments(int pageNo,int pageSize)
+    {
+        return await _daAppointment.GetAllAppointments(pageNo,pageSize);
+    }
 }
