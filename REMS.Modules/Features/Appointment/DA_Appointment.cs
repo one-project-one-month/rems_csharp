@@ -262,5 +262,5 @@ public class DA_Appointment
             model = Result<AppointmentDetailList>.Error(ex);
             return model;
         }
-    } 
+    }
 }

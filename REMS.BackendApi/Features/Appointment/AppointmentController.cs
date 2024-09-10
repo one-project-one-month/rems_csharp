@@ -77,7 +77,7 @@ public class AppointmentController : ControllerBase
     }
 
     [HttpGet("client/{id}/{pageNo}/{pageSize}", Name = "GetAppointmentByClientId")]
-    public async Task<IActionResult> GetAppointmentByClientId(int id, int pageNo =1 , int pageSize= 10)
+    public async Task<IActionResult> GetAppointmentByClientId(int id, int pageNo = 1, int pageSize = 10)
     {
         try
         {
@@ -93,7 +93,7 @@ public class AppointmentController : ControllerBase
     }
     [Authorize(Roles = "Admin")]
     [HttpGet("admin/{pageNo}/{pageSize}", Name = "GetAllAppointmentsForAdmin")]
-    public async Task<IActionResult> GetAllAppointmentsForAdmin(int pageNo = 1,int pageSize = 10)
+    public async Task<IActionResult> GetAllAppointmentsForAdmin(int pageNo = 1, int pageSize = 10)
     {
         try
         {
