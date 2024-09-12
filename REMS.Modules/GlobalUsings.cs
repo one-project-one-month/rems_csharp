@@ -8,6 +8,7 @@ global using Microsoft.EntityFrameworkCore;
 global using REMS.Database.AppDbContextModels;
 global using REMS.Mapper;
 global using REMS.Models;
+global using REMS.Models.Admin;
 global using REMS.Models.Agent;
 global using REMS.Models.Client;
 global using REMS.Models.Custom;

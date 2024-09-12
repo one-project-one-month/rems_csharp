@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\REMS.Database\REMS.Database.csproj"/>
+        <ProjectReference Include="..\REMS.Database\REMS.Database.csproj" />
     </ItemGroup>
 
 </Project>
