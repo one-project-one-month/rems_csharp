@@ -1,6 +1,4 @@
-﻿using REMS.Models.Admin;
-
-namespace REMS.Modules.Features.Admin;
+﻿namespace REMS.Modules.Features.Admin;
 
 public class BL_Admin
 {

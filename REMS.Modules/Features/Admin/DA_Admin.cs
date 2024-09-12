@@ -1,6 +1,4 @@
-﻿using REMS.Models.Admin;
-
-namespace REMS.Modules.Features.Admin;
+﻿namespace REMS.Modules.Features.Admin;
 
 public class DA_Admin
 {
@@ -31,7 +29,7 @@ public class DA_Admin
             return model;
         }catch(Exception ex)
         {
-            model = Result<AdminResponseModel>.Error(ex);
+            model = Result<AdminResponseModel>.Error(ex.Message);
             return model;
         }
     }

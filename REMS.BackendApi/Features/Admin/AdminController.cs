@@ -3,6 +3,7 @@
 namespace REMS.BackendApi.Features.Admin;
 
 [Route("api/v1/admins")]
+[ApiController]
 [Authorize(Roles = "Admin")]
 public class AdminController : ControllerBase
 {
@@ -19,7 +20,6 @@ public class AdminController : ControllerBase
         try
         {
             var response = await _blAdmin.CreateAdmin(adminRequest);
-
             return Ok(response);
         }
         catch (Exception ex)

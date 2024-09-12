@@ -1,7 +1,4 @@
-﻿using REMS.Models.Admin;
-using REMS.Models.Transaction;
-
-namespace REMS.Mapper;
+﻿namespace REMS.Mapper;
 
 public static class ChangeModel
 {
