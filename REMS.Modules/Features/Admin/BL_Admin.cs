@@ -3,7 +3,7 @@
 public class BL_Admin
 {
     private readonly DA_Admin _daAdmin;
-    
+
     public BL_Admin(DA_Admin daAdmin)
     {
         _daAdmin = daAdmin;

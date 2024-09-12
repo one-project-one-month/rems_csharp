@@ -27,7 +27,8 @@ public class DA_Admin
 
             model = Result<AdminResponseModel>.Success(adminResponse);
             return model;
-        }catch(Exception ex)
+        }
+        catch (Exception ex)
         {
             model = Result<AdminResponseModel>.Error(ex.Message);
             return model;
