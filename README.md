@@ -182,6 +182,33 @@ CREATE TABLE [dbo].[Login](
 
 ```
 
+### Session
+
+```sql
+CREATE TABLE [dbo].[Session]
+(
+    [Id] INT IDENTITY(1, 1) NOT NULL,
+    [UserId] INT NOT NULL,
+    [RefreshToken] VARCHAR(200) NOT NULL,
+    [ExpiredTime] DATETIME NOT NULL,
+    [LastActiveTime] DATETIME NOT NULL,
+    CONSTRAINT [PK_Tbl_Session] PRIMARY KEY CLUSTERED
+    (
+        [Id] ASC
+    )
+    WITH 
+    (
+        PAD_INDEX = OFF, 
+        STATISTICS_NORECOMPUTE = OFF, 
+        IGNORE_DUP_KEY = OFF, 
+        ALLOW_ROW_LOCKS = ON, 
+        ALLOW_PAGE_LOCKS = ON, 
+        OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF
+    ) ON [PRIMARY]
+) ON [PRIMARY];
+
+```
+
 ### Database First Approach
 
 To scaffold the database using the Database First approach with Entity Framework Core, run the following commands:
