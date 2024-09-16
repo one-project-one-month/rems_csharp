@@ -6,3 +6,5 @@ global using REMS.Models.Client;
 global using REMS.Models.Property;
 global using REMS.Models.Review;
 global using REMS.Models.Appointment;
+global using REMS.Models.Admin;
+global using REMS.Models.Transaction;

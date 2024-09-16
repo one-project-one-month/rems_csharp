@@ -1,6 +1,4 @@
-﻿using REMS.Models.Transaction;
-
-namespace REMS.Mapper;
+﻿namespace REMS.Mapper;
 
 public static class ChangeModel
 {
@@ -349,6 +347,35 @@ public static class ChangeModel
     //    };
     //    return transaction;
     //}
+
+    #endregion
+
+    #region Admin
+
+    public static User Change(this AdminRequestModel adminRequest)
+    {
+        var user = new User()
+        {
+            Email = adminRequest.Email,
+            Name = adminRequest.Name,
+            Phone = adminRequest.Phone,
+            Password = adminRequest.Password
+        };
+
+        return user;
+    }
+
+    public static AdminResponseModel Change(this User user)
+    {
+        var adminResponse = new AdminResponseModel()
+        {
+            Email = user.Email,
+            Name = user.Name,
+            Phone = user.Phone
+        };
+
+        return adminResponse;
+    }
 
     #endregion
 }
