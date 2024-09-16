@@ -58,7 +58,7 @@ public static class ChangeModel
     {
         var user = new User
         {
-            Name = requestModel.UserName!,
+            Name = requestModel.AgentName,
             Email = requestModel.Email!,
             Password = requestModel.Password!,
             Phone = requestModel.Phone,
@@ -73,7 +73,7 @@ public static class ChangeModel
         var agent = new Agent
         {
             UserId = requestModel.UserId,
-            AgencyName = requestModel.AgentName!,
+            AgencyName = requestModel.AgencyName,
             LicenseNumber = requestModel.LicenseNumber!,
             Address = requestModel.Address!
         };
@@ -87,9 +87,10 @@ public static class ChangeModel
             AgentId = agent.AgentId,
             UserId = agent.UserId,
             AgencyName = agent.AgencyName,
+            AgentName = user.Name,
             LicenseNumber = agent.LicenseNumber,
             Email = user.Email,
-            PhoneNumber = user.Phone,
+            Phone = user.Phone,
             Address = agent.Address
         };
     }
