@@ -37,7 +37,7 @@ public class BL_Agent
         return await _daAgent.SearchAgentById(AgentId);
     }
 
-    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAsync(string name, int pageNo, 
+    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAsync(string name, int pageNo,
         int pageSize)
     {
         if (pageNo < 1 || pageSize < 1)
@@ -45,7 +45,7 @@ public class BL_Agent
         return await _daAgent.SearchAgentByNameAsync(name, pageNo, pageSize);
     }
 
-    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAndLocation(string agencyName, string location, 
+    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAndLocation(string agencyName, string location,
         int pageNo, int pageSize)
     {
         Result<AgentListResponseModel> model = null;

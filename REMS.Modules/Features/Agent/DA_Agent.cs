@@ -107,7 +107,7 @@ public class DA_Agent
                 .AsNoTracking()
                 .Where(x => x.AgentId == agent.AgentId).ToListAsync();
 
-            if(Property.Count > 0)
+            if (Property.Count > 0)
             {
                 foreach (var property in Property)
                 {
@@ -118,7 +118,7 @@ public class DA_Agent
                     var Transaction = await _db.Transactions
                     .AsNoTracking()
                     .Where(x => x.PropertyId == property.PropertyId).ToListAsync();
-                    if(Transaction.Count > 0)
+                    if (Transaction.Count > 0)
                     {
                         _db.Transactions.RemoveRange(Transaction);
                         //_db.Entry(Transaction).State = EntityState.Deleted;
@@ -127,7 +127,7 @@ public class DA_Agent
                     if (Appointment.Count > 0)
                     {
                         _db.Appointments.RemoveRange(Appointment);
-                       // _db.Entry(Appointment).State = EntityState.Deleted;
+                        // _db.Entry(Appointment).State = EntityState.Deleted;
                     }
                 }
 
@@ -176,7 +176,7 @@ public class DA_Agent
                     Role = ag.User.Role
                 })
                 .FirstOrDefaultAsync();
-            
+
             if (agent is null)
             {
                 model = Result<AgentDto>.Error("Agent Not Found");
@@ -215,7 +215,7 @@ public class DA_Agent
                     Role = ag.User.Role
                 })
                 .FirstOrDefaultAsync();
-            
+
             if (agent is null)
             {
                 model = Result<AgentDto>.Error("Agent Not Found");
@@ -232,7 +232,7 @@ public class DA_Agent
         return model;
     }
 
-    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAsync(string? name, int pageNumber, 
+    public async Task<Result<AgentListResponseModel>> SearchAgentByNameAsync(string? name, int pageNumber,
         int pageSize)
     {
         Result<AgentListResponseModel> model = null;
@@ -355,7 +355,7 @@ public class DA_Agent
             //    .Where(ag => ag.AgencyName.Contains(name) && ag.Address != null && ag.Address.Contains(location))
             //    .Include(x => x.User)
             //    .OrderBy(ag => ag.AgencyName)
-                
+
             var rowCount = _db.Agents.Count();
             var pageCount = rowCount / pageSize;
             if (pageCount % pageSize > 0)
