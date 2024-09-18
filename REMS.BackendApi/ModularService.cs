@@ -28,6 +28,7 @@ public static class ModularService
 
     public static WebApplicationBuilder AddDataAccessService(this WebApplicationBuilder builder)
     {
+        builder.Services.AddScoped<DA_Admin>();
         builder.Services.AddScoped<DA_Agent>();
         builder.Services.AddScoped<DA_Appointment>();
         builder.Services.AddScoped<DA_Client>();
@@ -42,6 +43,7 @@ public static class ModularService
 
     public static WebApplicationBuilder AddBusinessLogicService(this WebApplicationBuilder builder)
     {
+        builder.Services.AddScoped<BL_Admin>();
         builder.Services.AddScoped<BL_Agent>();
         builder.Services.AddScoped<BL_Appointment>();
         builder.Services.AddScoped<BL_Client>();
