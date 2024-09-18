@@ -17,6 +17,7 @@ builder.Services.AddControllers();
 builder
     .AddSwagger()
     .AddDbService()
+    .AddDpService()
     .AddDataAccessService()
     .AddBusinessLogicService()
     .AddJwtAuthorization();
@@ -40,6 +41,7 @@ app.UseHttpsRedirection();
 app.UseRouting();
 
 app.UseCors("AllowAllOrigins");
+
 
 app.UseAuthentication();
 app.UseAuthorization();
