@@ -2,6 +2,12 @@
   "version": 1,
   "dependencies": {
     "net7.0": {
+      "Dapper": {
+        "type": "Direct",
+        "requested": "[2.1.35, )",
+        "resolved": "2.1.35",
+        "contentHash": "YKRwjVfrG7GYOovlGyQoMvr1/IJdn+7QzNXJxyMh0YfFF5yvDmTYaJOVYWsckreNjGsGSEtrMTpnzxTUq/tZQw=="
+      },
       "Microsoft.AspNetCore.Authentication.JwtBearer": {
         "type": "Direct",
         "requested": "[7.0.20, )",
@@ -538,6 +544,7 @@
       "rems.shared": {
         "type": "Project",
         "dependencies": {
+          "Dapper": "[2.1.35, )",
           "NUlid": "[1.7.2, )",
           "Newtonsoft.Json": "[13.0.3, )",
           "REMS.Database": "[1.0.0, )",

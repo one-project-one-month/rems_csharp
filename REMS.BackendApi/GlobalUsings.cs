@@ -20,6 +20,7 @@ global using REMS.Modules.Features.Review;
 global using REMS.Modules.Features.Appointment;
 global using REMS.Modules.Features.Authentication;
 global using REMS.Modules.Features.Transaction;
+global using REMS.Modules.Features.Dashboard;
 global using System.Text;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.IdentityModel.Tokens;

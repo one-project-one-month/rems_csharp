@@ -8,13 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
-        <PackageReference Include="NUlid" Version="1.7.2"/>
+        <PackageReference Include="Dapper" Version="2.1.35" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="NUlid" Version="1.7.2" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\REMS.Database\REMS.Database.csproj"/>
-        <ProjectReference Include="..\REMS.Models\REMS.Models.csproj"/>
+        <ProjectReference Include="..\REMS.Database\REMS.Database.csproj" />
+        <ProjectReference Include="..\REMS.Models\REMS.Models.csproj" />
     </ItemGroup>
 
 </Project>
