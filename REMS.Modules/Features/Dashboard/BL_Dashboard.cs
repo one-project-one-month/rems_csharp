@@ -2,7 +2,7 @@
 
 namespace REMS.Modules.Features.Dashboard
 {
-    public class BL_Dashboard 
+    public class BL_Dashboard
     {
         private readonly DA_Dashboard _daDashboard;
 
