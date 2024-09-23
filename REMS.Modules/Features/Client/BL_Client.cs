@@ -29,6 +29,11 @@ public class BL_Client
         var responseModel = await _daClient.GetClientById(id);
         return responseModel;
     }
+    public async Task<Result<ClientModel>> GetClientByUserId(int id)
+    {
+        var responseModel = await _daClient.GetClientByUserId(id);
+        return responseModel;
+    }
 
     public async Task<Result<ClientModel>> CreateClient(ClientRequestModel requestModel)
     {
