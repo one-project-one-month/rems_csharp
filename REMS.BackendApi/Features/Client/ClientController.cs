@@ -42,6 +42,15 @@ public class ClientController : ControllerBase
         }
     }
 
+    [HttpGet("Users/{id}")]
+    public async Task<IActionResult> GetClientByUserId(int id)
+    {
+        var agentList = await _blClient.GetClientByUserId(id);
+
+        return Ok(agentList);
+    }
+
+
     [HttpPost]
     public async Task<IActionResult> PostClient(ClientRequestModel requestModel)
     {

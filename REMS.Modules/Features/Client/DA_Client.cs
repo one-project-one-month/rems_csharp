@@ -117,6 +117,32 @@ public class DA_Client
         return model;
     }
 
+    public async Task<Result<ClientModel>> GetClientByUserId(int userId)
+    {
+        Result<ClientModel> model = null;
+        try
+        {
+            var client = await _db
+                .Clients
+                .Include(c => c.User) // Include the User entity
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.UserId == userId);
+
+            if (client is null) return model = Result<ClientModel>.Error("Client not found.");
+
+            var responseModel = client.Change(client.User);
+
+            model = Result<ClientModel>.Success(responseModel);
+        }
+        catch (Exception ex)
+        {
+            model = Result<ClientModel>.Error(ex);
+        }
+
+        return model;
+    }
+
+
     public async Task<Result<ClientModel>> CreateClient(ClientRequestModel requestModel)
     {
         Result<ClientModel> model = null;
