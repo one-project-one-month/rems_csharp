@@ -6,13 +6,15 @@ public class AgentDto
 
     public int? UserId { get; set; }
 
+    public string? AgentName { get; set; }
+
     public string? AgencyName { get; set; } = null!;
 
     public string? LicenseNumber { get; set; } = null!;
 
     public string? Email { get; set; }
 
-    public string? PhoneNumber { get; set; }
+    public string? Phone { get; set; }
 
     public string? Address { get; set; }
 

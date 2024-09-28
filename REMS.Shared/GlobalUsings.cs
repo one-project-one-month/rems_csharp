@@ -10,3 +10,6 @@ global using Newtonsoft.Json;
 global using REMS.Database.AppDbContextModels;
 global using REMS.Models.Authentication;
 global using NUlid;
+global using Dapper;
+global using Microsoft.Data.SqlClient;
+global using System.Data;

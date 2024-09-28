@@ -364,3 +364,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 .idea/
+*.json

@@ -72,26 +72,26 @@ public class DA_Appointment
         try
         {
             var query = await (from _app in _db.Appointments
-                join _cli in _db.Clients on _app.ClientId equals _cli.ClientId
-                join _pro in _db.Properties on _app.PropertyId equals _pro.PropertyId
-                join _age in _db.Agents on _pro.AgentId equals _age.AgentId
-                where _app.PropertyId == propertyId
-                select new AppointmentDetail
-                {
-                    AgentName = _age.AgencyName,
-                    ClientName = _cli.FirstName + " " + _cli.LastName,
-                    AppointmentDate = _app.AppointmentDate.ToString("yyyy-MM-dd"),
-                    AppointmentTime = _app.AppointmentTime.ToString(),
-                    Status = _app.Status,
-                    Note = _app.Notes,
-                    Address = _pro.Address,
-                    City = _pro.City,
-                    State = _pro.State,
-                    Price = _pro.Price,
-                    Size = _pro.Size,
-                    NumberOfBedrooms = _pro.NumberOfBedrooms,
-                    NumberOfBathrooms = _pro.NumberOfBathrooms
-                }).ToListAsync();
+                               join _cli in _db.Clients on _app.ClientId equals _cli.ClientId
+                               join _pro in _db.Properties on _app.PropertyId equals _pro.PropertyId
+                               join _age in _db.Agents on _pro.AgentId equals _age.AgentId
+                               where _app.PropertyId == propertyId
+                               select new AppointmentDetail
+                               {
+                                   AgentName = _age.AgencyName,
+                                   ClientName = _cli.FirstName + " " + _cli.LastName,
+                                   AppointmentDate = _app.AppointmentDate.ToString("yyyy-MM-dd"),
+                                   AppointmentTime = _app.AppointmentTime.ToString(),
+                                   Status = _app.Status,
+                                   Note = _app.Notes,
+                                   Address = _pro.Address,
+                                   City = _pro.City,
+                                   State = _pro.State,
+                                   Price = _pro.Price,
+                                   Size = _pro.Size,
+                                   NumberOfBedrooms = _pro.NumberOfBedrooms,
+                                   NumberOfBathrooms = _pro.NumberOfBathrooms
+                               }).ToListAsync();
             var appointmentList = query
                 .Skip((pageNo - 1) * pageSize)
                 .Take(pageSize).ToList();
@@ -159,29 +159,29 @@ public class DA_Appointment
         try
         {
             var query = await (from _app in _db.Appointments
-                join _cli in _db.Clients on _app.ClientId equals _cli.ClientId
-                join _pro in _db.Properties on _app.PropertyId equals _pro.PropertyId
-                join _age in _db.Agents on _pro.AgentId equals _age.AgentId
-                join _user in _db.Users on _age.UserId equals _user.UserId
-                where _app.ClientId == clientId
-                select new AppointmentDetail
-                {
-                    AppointmentId = _app.AppointmentId,
-                    AgentName = _age.AgencyName,
-                    ClientName = _cli.FirstName + " " + _cli.LastName,
-                    AppointmentDate = _app.AppointmentDate.ToString("yyyy-MM-dd"),
-                    AppointmentTime = _app.AppointmentTime.ToString(),
-                    AgentPhoneNumber = _user.Phone,
-                    Status = _app.Status,
-                    Note = _app.Notes,
-                    Address = _pro.Address,
-                    City = _pro.City,
-                    State = _pro.State,
-                    Price = _pro.Price,
-                    Size = _pro.Size,
-                    NumberOfBedrooms = _pro.NumberOfBedrooms,
-                    NumberOfBathrooms = _pro.NumberOfBathrooms
-                }).ToListAsync();
+                               join _cli in _db.Clients on _app.ClientId equals _cli.ClientId
+                               join _pro in _db.Properties on _app.PropertyId equals _pro.PropertyId
+                               join _age in _db.Agents on _pro.AgentId equals _age.AgentId
+                               join _user in _db.Users on _age.UserId equals _user.UserId
+                               where _app.ClientId == clientId
+                               select new AppointmentDetail
+                               {
+                                   AppointmentId = _app.AppointmentId,
+                                   AgentName = _age.AgencyName,
+                                   ClientName = _cli.FirstName + " " + _cli.LastName,
+                                   AppointmentDate = _app.AppointmentDate.ToString("yyyy-MM-dd"),
+                                   AppointmentTime = _app.AppointmentTime.ToString(),
+                                   AgentPhoneNumber = _user.Phone,
+                                   Status = _app.Status,
+                                   Note = _app.Notes,
+                                   Address = _pro.Address,
+                                   City = _pro.City,
+                                   State = _pro.State,
+                                   Price = _pro.Price,
+                                   Size = _pro.Size,
+                                   NumberOfBedrooms = _pro.NumberOfBedrooms,
+                                   NumberOfBathrooms = _pro.NumberOfBathrooms
+                               }).ToListAsync();
             var appointmentList = query
                 .Skip((pageNo - 1) * pageSize)
                 .Take(pageSize).ToList();
@@ -203,5 +203,64 @@ public class DA_Appointment
         }
 
         return model;
+    }
+
+    public async Task<Result<AppointmentDetailList>> GetAllAppointments(int pageNo, int pageSize)
+    {
+        Result<AppointmentDetailList> model = null;
+        try
+        {
+            var query = from app in _db.Appointments
+                        join cli in _db.Clients on app.ClientId equals cli.ClientId
+                        join pro in _db.Properties on app.PropertyId equals pro.PropertyId
+                        join age in _db.Agents on pro.AgentId equals age.AgentId
+                        join user in _db.Users on age.UserId equals user.UserId
+                        select new AppointmentDetail
+                        {
+                            AppointmentId = app.AppointmentId,
+                            AgentName = age.AgencyName,
+                            ClientName = $"{cli.FirstName} {cli.LastName}",
+                            AppointmentDate = app.AppointmentDate.ToString("yyyy-MM-dd"),
+                            AppointmentTime = app.AppointmentTime.ToString(),
+                            AgentPhoneNumber = user.Phone,
+                            Status = app.Status,
+                            Note = app.Notes,
+                            Address = pro.Address,
+                            City = pro.City,
+                            State = pro.State,
+                            Price = pro.Price,
+                            Size = pro.Size,
+                            NumberOfBedrooms = pro.NumberOfBedrooms,
+                            NumberOfBathrooms = pro.NumberOfBathrooms
+                        };
+
+            var totalCount = await query.CountAsync();
+
+            var appointmentList = await query
+                .Skip((pageNo - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+
+            if (!appointmentList.Any())
+                throw new Exception("No Data Found");
+
+            var pageCount = (int)Math.Ceiling((double)totalCount / pageSize);
+
+            var appointmentDetailList = new AppointmentDetailList
+            {
+                pageSetting = new PageSettingModel(pageNo, pageSize, pageCount, totalCount),
+                appointmentDetails = appointmentList
+            };
+
+
+            model = Result<AppointmentDetailList>.Success(appointmentDetailList);
+            return model;
+        }
+        catch (Exception ex)
+        {
+            model = Result<AppointmentDetailList>.Error(ex);
+            return model;
+        }
     }
 }

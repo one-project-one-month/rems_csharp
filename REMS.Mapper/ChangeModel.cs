@@ -1,6 +1,4 @@
-﻿using REMS.Models.Transaction;
-
-namespace REMS.Mapper;
+﻿namespace REMS.Mapper;
 
 public static class ChangeModel
 {
@@ -58,7 +56,7 @@ public static class ChangeModel
     {
         var user = new User
         {
-            Name = requestModel.UserName!,
+            Name = requestModel.AgentName,
             Email = requestModel.Email!,
             Password = requestModel.Password!,
             Phone = requestModel.Phone,
@@ -73,7 +71,7 @@ public static class ChangeModel
         var agent = new Agent
         {
             UserId = requestModel.UserId,
-            AgencyName = requestModel.AgentName!,
+            AgencyName = requestModel.AgencyName,
             LicenseNumber = requestModel.LicenseNumber!,
             Address = requestModel.Address!
         };
@@ -87,9 +85,10 @@ public static class ChangeModel
             AgentId = agent.AgentId,
             UserId = agent.UserId,
             AgencyName = agent.AgencyName,
+            AgentName = user.Name,
             LicenseNumber = agent.LicenseNumber,
             Email = user.Email,
-            PhoneNumber = user.Phone,
+            Phone = user.Phone,
             Address = agent.Address
         };
     }
@@ -348,6 +347,35 @@ public static class ChangeModel
     //    };
     //    return transaction;
     //}
+
+    #endregion
+
+    #region Admin
+
+    public static User Change(this AdminRequestModel adminRequest)
+    {
+        var user = new User()
+        {
+            Email = adminRequest.Email,
+            Name = adminRequest.Name,
+            Phone = adminRequest.Phone,
+            Password = adminRequest.Password
+        };
+
+        return user;
+    }
+
+    public static AdminResponseModel Change(this User user)
+    {
+        var adminResponse = new AdminResponseModel()
+        {
+            Email = user.Email,
+            Name = user.Name,
+            Phone = user.Phone
+        };
+
+        return adminResponse;
+    }
 
     #endregion
 }

@@ -2,42 +2,6 @@
   "version": 1,
   "dependencies": {
     "net7.0": {
-      "Dapper": {
-        "type": "Direct",
-        "requested": "[2.1.35, )",
-        "resolved": "2.1.35",
-        "contentHash": "YKRwjVfrG7GYOovlGyQoMvr1/IJdn+7QzNXJxyMh0YfFF5yvDmTYaJOVYWsckreNjGsGSEtrMTpnzxTUq/tZQw=="
-      },
-      "Microsoft.AspNetCore.Authentication.JwtBearer": {
-        "type": "Direct",
-        "requested": "[7.0.20, )",
-        "resolved": "7.0.20",
-        "contentHash": "lIjUAxtqNv+bD+Bnlksu96/haMLfuXA7nASXUnvxXfFWA3YEov7pM5AtvlelvQCtwFvu1LR4SFryHvLur491Qg==",
-        "dependencies": {
-          "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.35.0"
-        }
-      },
-      "Microsoft.AspNetCore.OpenApi": {
-        "type": "Direct",
-        "requested": "[7.0.20, )",
-        "resolved": "7.0.20",
-        "contentHash": "coCi7bh16o4B2qKbD7fng+4m1vu51L9MzTW+9NZp3NvLgAurDMT1kOg2uuycCN4BtEz3EYXlfJMJ2hK6EU7ISQ==",
-        "dependencies": {
-          "Microsoft.OpenApi": "1.4.3"
-        }
-      },
-      "Swashbuckle.AspNetCore": {
-        "type": "Direct",
-        "requested": "[6.7.0, )",
-        "resolved": "6.7.0",
-        "contentHash": "nrkZMoflCvTKj2yckJ1k/tQu53IRGHYkKp7ESiQETkAaUXzn05CYlCl/DY9kBBbFqefHWIwC/9VmYisD44jqlA==",
-        "dependencies": {
-          "Microsoft.Extensions.ApiDescription.Server": "6.0.5",
-          "Swashbuckle.AspNetCore.Swagger": "6.7.0",
-          "Swashbuckle.AspNetCore.SwaggerGen": "6.7.0",
-          "Swashbuckle.AspNetCore.SwaggerUI": "6.7.0"
-        }
-      },
       "Azure.Core": {
         "type": "Transitive",
         "resolved": "1.35.0",
@@ -140,11 +104,6 @@
           "Microsoft.Data.SqlClient": "5.1.5",
           "Microsoft.EntityFrameworkCore.Relational": "7.0.20"
         }
-      },
-      "Microsoft.Extensions.ApiDescription.Server": {
-        "type": "Transitive",
-        "resolved": "6.0.5",
-        "contentHash": "Ckb5EDBUNJdFWyajfXzUIMRkhf52fHZOQuuZg/oiu8y7zDCVwD0iHhew6MnThjHmevanpxL3f5ci2TtHQEN6bw=="
       },
       "Microsoft.Extensions.Caching.Abstractions": {
         "type": "Transitive",
@@ -297,11 +256,6 @@
         "resolved": "1.1.0",
         "contentHash": "aOZA3BWfz9RXjpzt0sRJJMjAscAUm3Hoa4UWAfceV9UTYxgwZ1lZt5nO2myFf+/jetYQo4uTP7zS8sJY67BBxg=="
       },
-      "Microsoft.OpenApi": {
-        "type": "Transitive",
-        "resolved": "1.6.14",
-        "contentHash": "tTaBT8qjk3xINfESyOPE2rIellPvB7qpVqiWiyA/lACVvz+xOGiXhFUfohcx82NLbi5avzLW0lx+s6oAqQijfw=="
-      },
       "Microsoft.SqlServer.Server": {
         "type": "Transitive",
         "resolved": "1.0.0",
@@ -324,27 +278,6 @@
         "dependencies": {
           "System.Memory": "4.5.5"
         }
-      },
-      "Swashbuckle.AspNetCore.Swagger": {
-        "type": "Transitive",
-        "resolved": "6.7.0",
-        "contentHash": "qI1ntGtNnt1Nksi/oDNkmCULVrImHyLWodJhQzghGj9W6uKYMqVl8Y7M2oU8VbHTQZFImD2kYR9ay8LZkJwaqA==",
-        "dependencies": {
-          "Microsoft.OpenApi": "1.6.14"
-        }
-      },
-      "Swashbuckle.AspNetCore.SwaggerGen": {
-        "type": "Transitive",
-        "resolved": "6.7.0",
-        "contentHash": "e2eRUBYnMBWzyl0esJfcB4YHuG/boD6nmuDcKdRa+nYPU/57+kbZ3Ot4TGpRDTJcZ0BrWoQiYe5mWRy6whvTkQ==",
-        "dependencies": {
-          "Swashbuckle.AspNetCore.Swagger": "6.7.0"
-        }
-      },
-      "Swashbuckle.AspNetCore.SwaggerUI": {
-        "type": "Transitive",
-        "resolved": "6.7.0",
-        "contentHash": "Oxyf8IcU28J0FlEVpBhywIAMRo1gvOERMyIZ56iOdyLJSkhz4MJRo4MDR++q+gh+R2f2+4KnATUvpU4wHweZJg=="
       },
       "System.Configuration.ConfigurationManager": {
         "type": "Transitive",
@@ -518,33 +451,15 @@
           "Microsoft.EntityFrameworkCore.SqlServer": "[7.0.20, )"
         }
       },
-      "rems.mapper": {
-        "type": "Project",
-        "dependencies": {
-          "REMS.Database": "[1.0.0, )",
-          "REMS.Models": "[1.0.0, )",
-          "REMS.Shared": "[1.0.0, )"
-        }
-      },
       "rems.models": {
         "type": "Project",
         "dependencies": {
           "REMS.Database": "[1.0.0, )"
         }
       },
-      "rems.modules": {
-        "type": "Project",
-        "dependencies": {
-          "REMS.Database": "[1.0.0, )",
-          "REMS.Mapper": "[1.0.0, )",
-          "REMS.Models": "[1.0.0, )",
-          "REMS.Shared": "[1.0.0, )"
-        }
-      },
       "rems.shared": {
         "type": "Project",
         "dependencies": {
-          "Dapper": "[2.1.35, )",
           "NUlid": "[1.7.2, )",
           "Newtonsoft.Json": "[13.0.3, )",
           "REMS.Database": "[1.0.0, )",

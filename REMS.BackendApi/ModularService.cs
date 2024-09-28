@@ -1,4 +1,7 @@
-﻿namespace REMS.BackendApi;
+﻿using Microsoft.Data.SqlClient;
+using REMS.Shared;
+
+namespace REMS.BackendApi;
 
 public static class ModularService
 {
@@ -16,15 +19,23 @@ public static class ModularService
             ServiceLifetime.Transient, ServiceLifetime.Transient);
         return builder;
     }
+    public static WebApplicationBuilder AddDpService(this WebApplicationBuilder builder)
+    {
+        builder.Services.AddScoped(n => new _DapperService(builder.Configuration.GetConnectionString("DbConnection")!));
+        return builder;
+    }
+
 
     public static WebApplicationBuilder AddDataAccessService(this WebApplicationBuilder builder)
     {
+        builder.Services.AddScoped<DA_Admin>();
         builder.Services.AddScoped<DA_Agent>();
         builder.Services.AddScoped<DA_Appointment>();
         builder.Services.AddScoped<DA_Client>();
         builder.Services.AddScoped<DA_Property>();
         builder.Services.AddScoped<DA_Review>();
         builder.Services.AddScoped<DA_Transaction>();
+        builder.Services.AddScoped<DA_Dashboard>();
         builder.Services.AddScoped<DA_Signin>();
         builder.Services.AddScoped<JwtTokenService>();
         return builder;
@@ -32,12 +43,14 @@ public static class ModularService
 
     public static WebApplicationBuilder AddBusinessLogicService(this WebApplicationBuilder builder)
     {
+        builder.Services.AddScoped<BL_Admin>();
         builder.Services.AddScoped<BL_Agent>();
         builder.Services.AddScoped<BL_Appointment>();
         builder.Services.AddScoped<BL_Client>();
         builder.Services.AddScoped<BL_Property>();
         builder.Services.AddScoped<BL_Review>();
         builder.Services.AddScoped<BL_Transaction>();
+        builder.Services.AddScoped<BL_Dashboard>();
         builder.Services.AddScoped<BL_Signin>();
         return builder;
     }
